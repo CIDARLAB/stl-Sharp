@@ -1,0 +1,1 @@
+The STL package, associated ANTLRv4 grammar files are covered by GNU GPL v3.0 license, see gpl.txt for more information.
