@@ -12,7 +12,7 @@ package hyness.stl;
  * @author Cristian-Ioan Vasile
  */
 
-enum Operation {
+public enum Operation {
     NOP, NOT, OR, AND, UNTIL, EVENT, ALWAYS, PRED, IMPLIES, BOOL, CONCAT;
     
     /**

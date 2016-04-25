@@ -11,7 +11,7 @@ package hyness.stl;
  * operators used in predicates of STL formulae.
  * @author Cristian-Ioan Vasile
  */
-enum RelOperation {
+public enum RelOperation {
     NOP, LT, LE, GT, GE, EQ;
     
     /**

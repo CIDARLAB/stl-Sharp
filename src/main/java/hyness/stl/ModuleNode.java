@@ -21,7 +21,7 @@ public class ModuleNode extends TreeNode {
     /**
      * The name of the translation map.
      */
-    String map;
+    public String map;
     
     /**
      * 

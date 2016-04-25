@@ -13,7 +13,7 @@ import java.util.Vector;
  */
 public class ModuleLeaf extends TreeNode {
     
-    String name;
+    public String name;
     Vector<String> signals;
     
     /**

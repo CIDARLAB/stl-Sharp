@@ -3,8 +3,22 @@
  * Hybrid and Networked Systems (HyNeSs) Group, BU Robotics Lab, Boston University
  * See license.txt file for license information.
  */
-package hyness.stl;
+package hyness.stl.grammar.flat;
 
+import hyness.stl.BooleanBinaryNode;
+import hyness.stl.BooleanLeaf;
+import hyness.stl.BooleanUnaryNode;
+import hyness.stl.ConcatenationNode;
+import hyness.stl.ConjunctionNode;
+import hyness.stl.DisjunctionNode;
+import hyness.stl.ImplicationNode;
+import hyness.stl.LinearPredicateLeaf;
+import hyness.stl.ModuleLeaf;
+import hyness.stl.ModuleNode;
+import hyness.stl.Pair;
+import hyness.stl.TemporalBinaryNode;
+import hyness.stl.TemporalUnaryNode;
+import hyness.stl.TreeNode;
 import java.util.HashMap;
 
 /**

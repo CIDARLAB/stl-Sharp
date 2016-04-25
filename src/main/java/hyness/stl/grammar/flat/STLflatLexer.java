@@ -5,7 +5,7 @@
  * Hybrid and Networked Systems (HyNeSs) Group, BU Robotics Lab, Boston University
  * See license.txt file for license information.
  */
-package hyness.stl;
+package hyness.stl.grammar.flat;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
