@@ -17,9 +17,11 @@ import hyness.stl.ModuleNode;
 import hyness.stl.NotNode;
 import hyness.stl.Operation;
 import hyness.stl.Pair;
+import hyness.stl.ParallelNode;
 import hyness.stl.RelOperation;
 import hyness.stl.TreeNode;
 import hyness.stl.UntilNode;
+import hyness.stl.distance.DistanceMetric;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -36,7 +38,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  */
 public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeNode>{
     
-    STLflat spec = null;
+    public STLflat spec = null;
     
     public static double maximumRobustness = 1e12;
     
@@ -132,6 +134,10 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
                 break;
             case CONCAT:
                 ret = new ConcatenationNode(visit(ctx.left), visit(ctx.right));
+                break;
+            case PARALLEL:
+                ret = new ParallelNode(visit(ctx.left),visit(ctx.right));
+                break;
             default:
                 System.out.println("default");
                 break;
@@ -157,11 +163,25 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
     }
     
     
+    public static STLflatAbstractSyntaxTreeExtractor getSTLflatAbstractSyntaxTreeExtractor(String spec){
+        STLflatLexer lexer = new STLflatLexer(new ANTLRInputStream(spec));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        
+        STLflatParser parser = new STLflatParser(tokens);
+        ParserRuleContext t = parser.specification();
+        
+        //System.out.println(t.toStringTree(parser) + "\n");
+        
+        STLflatAbstractSyntaxTreeExtractor ast = new STLflatAbstractSyntaxTreeExtractor();
+        ast.visit(t);
+        return ast;
+    }
+    
     /**
      * @param args
      */
     public static void main(String[] args) {
-        String spec = "phi1(u1,u2,y1,y2) >>_m1 phi2(u1,u2,y1,y2)\n"
+        String spec = "phi1(u1,u2,y1,y2) #_m1 phi2(u1,u2,y1,y2)\n"
                 + "\n"
                 + "phi1 = (!(u1 < 10) && (u2 > 2)) => (F[0, 2] y1 > 2 || G[1, 3] y2 <= 8)\n"
                 + "phi2 = ((u1 >= 1) && (u3 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
@@ -175,12 +195,12 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
         STLflatParser parser = new STLflatParser(tokens);
         ParserRuleContext t = parser.specification();
         
-        System.out.println(t.toStringTree(parser));
+        System.out.println(t.toStringTree(parser) + "\n");
         
         STLflatAbstractSyntaxTreeExtractor ast = new STLflatAbstractSyntaxTreeExtractor();
         ast.visit(t);
         
-        System.out.println("toSTL AST: " + ast.spec.toSTL());
+        System.out.println("toSTL AST::\n" + ast.spec.toSTL());
     }
 
 }

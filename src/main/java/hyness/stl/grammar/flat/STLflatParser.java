@@ -1,4 +1,4 @@
-// Generated from C:\Users\Cristian\Dropbox\work\workspace\STL\src\hyness\stl\STLflat.g4 by ANTLR 4.5.1
+// Generated from STLflat.g4 by ANTLR 4.5.3
 
 /**
  * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class STLflatParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -28,8 +28,8 @@ public class STLflatParser extends Parser {
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, BOOLEAN=36, VARIABLE=37, RATIONAL=38, 
-		WS=39, NEWLINE=40;
+		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, BOOLEAN=37, VARIABLE=38, 
+		RATIONAL=39, WS=40, NEWLINE=41;
 	public static final int
 		RULE_specification = 0, RULE_module = 1, RULE_moduleDescription = 2, RULE_property = 3, 
 		RULE_expr = 4, RULE_booleanExpr = 5, RULE_translationMap = 6, RULE_translationPair = 7;
@@ -39,16 +39,16 @@ public class STLflatParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'=>'", "'_'", "'&&'", "'||'", "'>>'", "'('", "','", "')'", "'='", 
-		"'!'", "'F'", "'['", "']'", "'G'", "'U'", "'-('", "'^'", "'sqrt('", "'log('", 
-		"'ln('", "'abs('", "'der('", "'int('", "'*'", "'/'", "'+'", "'-'", "'<'", 
-		"'<='", "'>='", "'>'", "'{'", "'}'", "'@'", "':'"
+		null, "'=>'", "'_'", "'&&'", "'||'", "'>>'", "'#'", "'('", "','", "')'", 
+		"'='", "'!'", "'F'", "'['", "']'", "'G'", "'U'", "'-('", "'^'", "'sqrt('", 
+		"'log('", "'ln('", "'abs('", "'der('", "'int('", "'*'", "'/'", "'+'", 
+		"'-'", "'<'", "'<='", "'>='", "'>'", "'{'", "'}'", "'@'", "':'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		"BOOLEAN", "VARIABLE", "RATIONAL", "WS", "NEWLINE"
+		null, "BOOLEAN", "VARIABLE", "RATIONAL", "WS", "NEWLINE"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -283,17 +283,17 @@ public class STLflatParser extends Parser {
 			setState(35);
 			((ModuleLeafContext)_localctx).moduleName = match(VARIABLE);
 			setState(36);
-			match(T__5);
+			match(T__6);
 			setState(37);
 			match(VARIABLE);
 			setState(42);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__6) {
+			while (_la==T__7) {
 				{
 				{
 				setState(38);
-				match(T__6);
+				match(T__7);
 				setState(39);
 				match(VARIABLE);
 				}
@@ -303,10 +303,10 @@ public class STLflatParser extends Parser {
 				_la = _input.LA(1);
 			}
 			setState(45);
-			match(T__7);
+			match(T__8);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(69);
+			setState(74);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -314,7 +314,8 @@ public class STLflatParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(67);
+					setState(72);
+					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 					case 1:
 						{
@@ -322,7 +323,7 @@ public class STLflatParser extends Parser {
 						((ModuleOpContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_module);
 						setState(47);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(48);
 						((ModuleOpContext)_localctx).op = match(T__0);
 						setState(49);
@@ -330,7 +331,7 @@ public class STLflatParser extends Parser {
 						setState(50);
 						((ModuleOpContext)_localctx).tmap = match(VARIABLE);
 						setState(51);
-						((ModuleOpContext)_localctx).right = module(6);
+						((ModuleOpContext)_localctx).right = module(7);
 						}
 						break;
 					case 2:
@@ -339,7 +340,7 @@ public class STLflatParser extends Parser {
 						((ModuleOpContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_module);
 						setState(52);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(53);
 						((ModuleOpContext)_localctx).op = match(T__2);
 						setState(54);
@@ -347,7 +348,7 @@ public class STLflatParser extends Parser {
 						setState(55);
 						((ModuleOpContext)_localctx).tmap = match(VARIABLE);
 						setState(56);
-						((ModuleOpContext)_localctx).right = module(5);
+						((ModuleOpContext)_localctx).right = module(6);
 						}
 						break;
 					case 3:
@@ -356,7 +357,7 @@ public class STLflatParser extends Parser {
 						((ModuleOpContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_module);
 						setState(57);
-						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(58);
 						((ModuleOpContext)_localctx).op = match(T__3);
 						setState(59);
@@ -364,7 +365,7 @@ public class STLflatParser extends Parser {
 						setState(60);
 						((ModuleOpContext)_localctx).tmap = match(VARIABLE);
 						setState(61);
-						((ModuleOpContext)_localctx).right = module(4);
+						((ModuleOpContext)_localctx).right = module(5);
 						}
 						break;
 					case 4:
@@ -373,7 +374,7 @@ public class STLflatParser extends Parser {
 						((ModuleOpContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_module);
 						setState(62);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(63);
 						((ModuleOpContext)_localctx).op = match(T__4);
 						setState(64);
@@ -381,13 +382,30 @@ public class STLflatParser extends Parser {
 						setState(65);
 						((ModuleOpContext)_localctx).tmap = match(VARIABLE);
 						setState(66);
+						((ModuleOpContext)_localctx).right = module(4);
+						}
+						break;
+					case 5:
+						{
+						_localctx = new ModuleOpContext(new ModuleContext(_parentctx, _parentState));
+						((ModuleOpContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_module);
+						setState(67);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						setState(68);
+						((ModuleOpContext)_localctx).op = match(T__5);
+						setState(69);
+						match(T__1);
+						setState(70);
+						((ModuleOpContext)_localctx).tmap = match(VARIABLE);
+						setState(71);
 						((ModuleOpContext)_localctx).right = module(3);
 						}
 						break;
 					}
 					} 
 				}
-				setState(71);
+				setState(76);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			}
@@ -436,11 +454,11 @@ public class STLflatParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(72);
+			setState(77);
 			((ModuleDescriptionContext)_localctx).moduleName = match(VARIABLE);
-			setState(73);
-			match(T__8);
-			setState(74);
+			setState(78);
+			match(T__9);
+			setState(79);
 			((ModuleDescriptionContext)_localctx).moduleFormula = property(0);
 			}
 		}
@@ -553,39 +571,30 @@ public class STLflatParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(98);
+			setState(103);
+			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
 				{
-				_localctx = new FormulaContext(_localctx);
+				_localctx = new ParpropContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(77);
-				((FormulaContext)_localctx).op = match(T__9);
-				setState(78);
-				((FormulaContext)_localctx).child = property(8);
+				setState(82);
+				match(T__6);
+				setState(83);
+				((ParpropContext)_localctx).child = property(0);
+				setState(84);
+				match(T__8);
 				}
 				break;
 			case 2:
 				{
-				_localctx = new FormulaContext(_localctx);
+				_localctx = new BooleanPredContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(79);
-				((FormulaContext)_localctx).op = match(T__10);
-				setState(80);
-				match(T__11);
-				setState(81);
-				((FormulaContext)_localctx).low = match(RATIONAL);
-				setState(82);
-				match(T__6);
-				setState(83);
-				((FormulaContext)_localctx).high = match(RATIONAL);
-				setState(84);
-				match(T__12);
-				setState(85);
-				((FormulaContext)_localctx).child = property(7);
+				setState(86);
+				booleanExpr();
 				}
 				break;
 			case 3:
@@ -593,47 +602,57 @@ public class STLflatParser extends Parser {
 				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(86);
-				((FormulaContext)_localctx).op = match(T__13);
 				setState(87);
-				match(T__11);
+				((FormulaContext)_localctx).op = match(T__10);
 				setState(88);
-				((FormulaContext)_localctx).low = match(RATIONAL);
-				setState(89);
-				match(T__6);
-				setState(90);
-				((FormulaContext)_localctx).high = match(RATIONAL);
-				setState(91);
-				match(T__12);
-				setState(92);
-				((FormulaContext)_localctx).child = property(6);
+				((FormulaContext)_localctx).child = property(9);
 				}
 				break;
 			case 4:
 				{
-				_localctx = new ParpropContext(_localctx);
+				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(93);
-				match(T__5);
-				setState(94);
-				((ParpropContext)_localctx).child = property(0);
-				setState(95);
+				setState(89);
+				((FormulaContext)_localctx).op = match(T__11);
+				setState(90);
+				match(T__12);
+				setState(91);
+				((FormulaContext)_localctx).low = match(RATIONAL);
+				setState(92);
 				match(T__7);
+				setState(93);
+				((FormulaContext)_localctx).high = match(RATIONAL);
+				setState(94);
+				match(T__13);
+				setState(95);
+				((FormulaContext)_localctx).child = property(8);
 				}
 				break;
 			case 5:
 				{
-				_localctx = new BooleanPredContext(_localctx);
+				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
+				setState(96);
+				((FormulaContext)_localctx).op = match(T__14);
 				setState(97);
-				booleanExpr();
+				match(T__12);
+				setState(98);
+				((FormulaContext)_localctx).low = match(RATIONAL);
+				setState(99);
+				match(T__7);
+				setState(100);
+				((FormulaContext)_localctx).high = match(RATIONAL);
+				setState(101);
+				match(T__13);
+				setState(102);
+				((FormulaContext)_localctx).child = property(7);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(122);
+			setState(130);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -641,19 +660,20 @@ public class STLflatParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(120);
+					setState(128);
+					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 					case 1:
 						{
 						_localctx = new FormulaContext(new PropertyContext(_parentctx, _parentState));
 						((FormulaContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_property);
-						setState(100);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(101);
+						setState(105);
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
+						setState(106);
 						((FormulaContext)_localctx).op = match(T__0);
-						setState(102);
-						((FormulaContext)_localctx).right = property(6);
+						setState(107);
+						((FormulaContext)_localctx).right = property(7);
 						}
 						break;
 					case 2:
@@ -661,12 +681,12 @@ public class STLflatParser extends Parser {
 						_localctx = new FormulaContext(new PropertyContext(_parentctx, _parentState));
 						((FormulaContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_property);
-						setState(103);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(104);
+						setState(108);
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						setState(109);
 						((FormulaContext)_localctx).op = match(T__2);
-						setState(105);
-						((FormulaContext)_localctx).right = property(5);
+						setState(110);
+						((FormulaContext)_localctx).right = property(6);
 						}
 						break;
 					case 3:
@@ -674,12 +694,12 @@ public class STLflatParser extends Parser {
 						_localctx = new FormulaContext(new PropertyContext(_parentctx, _parentState));
 						((FormulaContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_property);
-						setState(106);
-						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(107);
+						setState(111);
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						setState(112);
 						((FormulaContext)_localctx).op = match(T__3);
-						setState(108);
-						((FormulaContext)_localctx).right = property(4);
+						setState(113);
+						((FormulaContext)_localctx).right = property(5);
 						}
 						break;
 					case 4:
@@ -687,12 +707,12 @@ public class STLflatParser extends Parser {
 						_localctx = new FormulaContext(new PropertyContext(_parentctx, _parentState));
 						((FormulaContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_property);
-						setState(109);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(110);
+						setState(114);
+						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
+						setState(115);
 						((FormulaContext)_localctx).op = match(T__4);
-						setState(111);
-						((FormulaContext)_localctx).right = property(3);
+						setState(116);
+						((FormulaContext)_localctx).right = property(4);
 						}
 						break;
 					case 5:
@@ -700,28 +720,41 @@ public class STLflatParser extends Parser {
 						_localctx = new FormulaContext(new PropertyContext(_parentctx, _parentState));
 						((FormulaContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_property);
-						setState(112);
-						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(113);
-						((FormulaContext)_localctx).op = match(T__14);
-						setState(114);
-						match(T__11);
-						setState(115);
-						((FormulaContext)_localctx).low = match(RATIONAL);
-						setState(116);
-						match(T__6);
 						setState(117);
-						((FormulaContext)_localctx).high = match(RATIONAL);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(118);
-						match(T__12);
+						((FormulaContext)_localctx).op = match(T__5);
 						setState(119);
+						((FormulaContext)_localctx).right = property(3);
+						}
+						break;
+					case 6:
+						{
+						_localctx = new FormulaContext(new PropertyContext(_parentctx, _parentState));
+						((FormulaContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_property);
+						setState(120);
+						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
+						setState(121);
+						((FormulaContext)_localctx).op = match(T__15);
+						setState(122);
+						match(T__12);
+						setState(123);
+						((FormulaContext)_localctx).low = match(RATIONAL);
+						setState(124);
+						match(T__7);
+						setState(125);
+						((FormulaContext)_localctx).high = match(RATIONAL);
+						setState(126);
+						match(T__13);
+						setState(127);
 						((FormulaContext)_localctx).right = property(2);
 						}
 						break;
 					}
 					} 
 				}
-				setState(124);
+				setState(132);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			}
@@ -782,53 +815,53 @@ public class STLflatParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(136);
+			setState(144);
 			switch (_input.LA(1)) {
-			case T__5:
-			case T__15:
+			case T__6:
+			case T__16:
 				{
-				setState(126);
+				setState(134);
 				_la = _input.LA(1);
-				if ( !(_la==T__5 || _la==T__15) ) {
+				if ( !(_la==T__6 || _la==T__16) ) {
 				_errHandler.recoverInline(this);
 				} else {
 					consume();
 				}
-				setState(127);
+				setState(135);
 				expr(0);
-				setState(128);
-				match(T__7);
+				setState(136);
+				match(T__8);
 				}
 				break;
-			case T__17:
 			case T__18:
 			case T__19:
 			case T__20:
 			case T__21:
 			case T__22:
+			case T__23:
 				{
-				setState(130);
+				setState(138);
 				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__18) | (1L << T__19) | (1L << T__20) | (1L << T__21) | (1L << T__22))) != 0)) ) {
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__18) | (1L << T__19) | (1L << T__20) | (1L << T__21) | (1L << T__22) | (1L << T__23))) != 0)) ) {
 				_errHandler.recoverInline(this);
 				} else {
 					consume();
 				}
-				setState(131);
+				setState(139);
 				expr(0);
-				setState(132);
-				match(T__7);
+				setState(140);
+				match(T__8);
 				}
 				break;
 			case RATIONAL:
 				{
-				setState(134);
+				setState(142);
 				match(RATIONAL);
 				}
 				break;
 			case VARIABLE:
 				{
-				setState(135);
+				setState(143);
 				match(VARIABLE);
 				}
 				break;
@@ -836,7 +869,7 @@ public class STLflatParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(149);
+			setState(157);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -844,17 +877,18 @@ public class STLflatParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(147);
+					setState(155);
+					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 					case 1:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(138);
+						setState(146);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
-						setState(139);
-						match(T__16);
-						setState(140);
+						setState(147);
+						match(T__17);
+						setState(148);
 						expr(7);
 						}
 						break;
@@ -862,16 +896,16 @@ public class STLflatParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(141);
+						setState(149);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(142);
+						setState(150);
 						_la = _input.LA(1);
-						if ( !(_la==T__23 || _la==T__24) ) {
+						if ( !(_la==T__24 || _la==T__25) ) {
 						_errHandler.recoverInline(this);
 						} else {
 							consume();
 						}
-						setState(143);
+						setState(151);
 						expr(5);
 						}
 						break;
@@ -879,23 +913,23 @@ public class STLflatParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(144);
+						setState(152);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(145);
+						setState(153);
 						_la = _input.LA(1);
-						if ( !(_la==T__25 || _la==T__26) ) {
+						if ( !(_la==T__26 || _la==T__27) ) {
 						_errHandler.recoverInline(this);
 						} else {
 							consume();
 						}
-						setState(146);
+						setState(154);
 						expr(4);
 						}
 						break;
 					}
 					} 
 				}
-				setState(151);
+				setState(159);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
 			}
@@ -947,38 +981,38 @@ public class STLflatParser extends Parser {
 		enterRule(_localctx, 10, RULE_booleanExpr);
 		int _la;
 		try {
-			setState(157);
+			setState(165);
 			switch (_input.LA(1)) {
-			case T__5:
-			case T__15:
-			case T__17:
+			case T__6:
+			case T__16:
 			case T__18:
 			case T__19:
 			case T__20:
 			case T__21:
 			case T__22:
+			case T__23:
 			case VARIABLE:
 			case RATIONAL:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(152);
+				setState(160);
 				((BooleanExprContext)_localctx).left = expr(0);
-				setState(153);
+				setState(161);
 				((BooleanExprContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__8) | (1L << T__27) | (1L << T__28) | (1L << T__29) | (1L << T__30))) != 0)) ) {
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__9) | (1L << T__28) | (1L << T__29) | (1L << T__30) | (1L << T__31))) != 0)) ) {
 					((BooleanExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				} else {
 					consume();
 				}
-				setState(154);
+				setState(162);
 				((BooleanExprContext)_localctx).right = expr(0);
 				}
 				break;
 			case BOOLEAN:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(156);
+				setState(164);
 				((BooleanExprContext)_localctx).op = match(BOOLEAN);
 				}
 				break;
@@ -1032,30 +1066,30 @@ public class STLflatParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(159);
+			setState(167);
 			((TranslationMapContext)_localctx).tmapName = match(VARIABLE);
-			setState(160);
-			match(T__31);
-			setState(161);
+			setState(168);
+			match(T__32);
+			setState(169);
 			translationPair();
-			setState(166);
+			setState(174);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__6) {
+			while (_la==T__7) {
 				{
 				{
-				setState(162);
-				match(T__6);
-				setState(163);
+				setState(170);
+				match(T__7);
+				setState(171);
 				translationPair();
 				}
 				}
-				setState(168);
+				setState(176);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(169);
-			match(T__32);
+			setState(177);
+			match(T__33);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1103,22 +1137,22 @@ public class STLflatParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(171);
+			setState(179);
 			((TranslationPairContext)_localctx).key = match(VARIABLE);
-			setState(174);
+			setState(182);
 			_la = _input.LA(1);
-			if (_la==T__33) {
+			if (_la==T__34) {
 				{
-				setState(172);
-				match(T__33);
-				setState(173);
+				setState(180);
+				match(T__34);
+				setState(181);
 				((TranslationPairContext)_localctx).moduleName = match(VARIABLE);
 				}
 			}
 
-			setState(176);
-			match(T__34);
-			setState(177);
+			setState(184);
+			match(T__35);
+			setState(185);
 			((TranslationPairContext)_localctx).value = match(VARIABLE);
 			}
 		}
@@ -1147,97 +1181,105 @@ public class STLflatParser extends Parser {
 	private boolean module_sempred(ModuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 5);
+			return precpred(_ctx, 6);
 		case 1:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 5);
 		case 2:
-			return precpred(_ctx, 3);
+			return precpred(_ctx, 4);
 		case 3:
+			return precpred(_ctx, 3);
+		case 4:
 			return precpred(_ctx, 2);
 		}
 		return true;
 	}
 	private boolean property_sempred(PropertyContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 4:
-			return precpred(_ctx, 5);
 		case 5:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 6);
 		case 6:
-			return precpred(_ctx, 3);
+			return precpred(_ctx, 5);
 		case 7:
-			return precpred(_ctx, 2);
+			return precpred(_ctx, 4);
 		case 8:
+			return precpred(_ctx, 3);
+		case 9:
+			return precpred(_ctx, 2);
+		case 10:
 			return precpred(_ctx, 1);
 		}
 		return true;
 	}
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 9:
-			return precpred(_ctx, 6);
-		case 10:
-			return precpred(_ctx, 4);
 		case 11:
+			return precpred(_ctx, 6);
+		case 12:
+			return precpred(_ctx, 4);
+		case 13:
 			return precpred(_ctx, 3);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3*\u00b6\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3+\u00be\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\3\2\3\2\3\2"+
 		"\3\2\3\2\6\2\31\n\2\r\2\16\2\32\3\2\3\2\3\2\3\2\6\2!\n\2\r\2\16\2\"\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\7\3+\n\3\f\3\16\3.\13\3\3\3\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3F"+
-		"\n\3\f\3\16\3I\13\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
-		"\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5e\n\5\3\5\3"+
-		"\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5"+
-		"\3\5\7\5{\n\5\f\5\16\5~\13\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3"+
-		"\6\5\6\u008b\n\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6\u0096\n\6\f\6"+
-		"\16\6\u0099\13\6\3\7\3\7\3\7\3\7\3\7\5\7\u00a0\n\7\3\b\3\b\3\b\3\b\3\b"+
-		"\7\b\u00a7\n\b\f\b\16\b\u00aa\13\b\3\b\3\b\3\t\3\t\3\t\5\t\u00b1\n\t\3"+
-		"\t\3\t\3\t\3\t\2\5\4\b\n\n\2\4\6\b\n\f\16\20\2\7\4\2\b\b\22\22\3\2\24"+
-		"\31\3\2\32\33\3\2\34\35\4\2\13\13\36!\u00c6\2\22\3\2\2\2\4$\3\2\2\2\6"+
-		"J\3\2\2\2\bd\3\2\2\2\n\u008a\3\2\2\2\f\u009f\3\2\2\2\16\u00a1\3\2\2\2"+
-		"\20\u00ad\3\2\2\2\22\23\5\4\3\2\23\24\7*\2\2\24\30\7*\2\2\25\26\5\6\4"+
-		"\2\26\27\7*\2\2\27\31\3\2\2\2\30\25\3\2\2\2\31\32\3\2\2\2\32\30\3\2\2"+
-		"\2\32\33\3\2\2\2\33\34\3\2\2\2\34 \7*\2\2\35\36\5\16\b\2\36\37\7*\2\2"+
-		"\37!\3\2\2\2 \35\3\2\2\2!\"\3\2\2\2\" \3\2\2\2\"#\3\2\2\2#\3\3\2\2\2$"+
-		"%\b\3\1\2%&\7\'\2\2&\'\7\b\2\2\',\7\'\2\2()\7\t\2\2)+\7\'\2\2*(\3\2\2"+
-		"\2+.\3\2\2\2,*\3\2\2\2,-\3\2\2\2-/\3\2\2\2.,\3\2\2\2/\60\7\n\2\2\60G\3"+
-		"\2\2\2\61\62\f\7\2\2\62\63\7\3\2\2\63\64\7\4\2\2\64\65\7\'\2\2\65F\5\4"+
-		"\3\b\66\67\f\6\2\2\678\7\5\2\289\7\4\2\29:\7\'\2\2:F\5\4\3\7;<\f\5\2\2"+
-		"<=\7\6\2\2=>\7\4\2\2>?\7\'\2\2?F\5\4\3\6@A\f\4\2\2AB\7\7\2\2BC\7\4\2\2"+
-		"CD\7\'\2\2DF\5\4\3\5E\61\3\2\2\2E\66\3\2\2\2E;\3\2\2\2E@\3\2\2\2FI\3\2"+
-		"\2\2GE\3\2\2\2GH\3\2\2\2H\5\3\2\2\2IG\3\2\2\2JK\7\'\2\2KL\7\13\2\2LM\5"+
-		"\b\5\2M\7\3\2\2\2NO\b\5\1\2OP\7\f\2\2Pe\5\b\5\nQR\7\r\2\2RS\7\16\2\2S"+
-		"T\7(\2\2TU\7\t\2\2UV\7(\2\2VW\7\17\2\2We\5\b\5\tXY\7\20\2\2YZ\7\16\2\2"+
-		"Z[\7(\2\2[\\\7\t\2\2\\]\7(\2\2]^\7\17\2\2^e\5\b\5\b_`\7\b\2\2`a\5\b\5"+
-		"\2ab\7\n\2\2be\3\2\2\2ce\5\f\7\2dN\3\2\2\2dQ\3\2\2\2dX\3\2\2\2d_\3\2\2"+
-		"\2dc\3\2\2\2e|\3\2\2\2fg\f\7\2\2gh\7\3\2\2h{\5\b\5\bij\f\6\2\2jk\7\5\2"+
-		"\2k{\5\b\5\7lm\f\5\2\2mn\7\6\2\2n{\5\b\5\6op\f\4\2\2pq\7\7\2\2q{\5\b\5"+
-		"\5rs\f\3\2\2st\7\21\2\2tu\7\16\2\2uv\7(\2\2vw\7\t\2\2wx\7(\2\2xy\7\17"+
-		"\2\2y{\5\b\5\4zf\3\2\2\2zi\3\2\2\2zl\3\2\2\2zo\3\2\2\2zr\3\2\2\2{~\3\2"+
-		"\2\2|z\3\2\2\2|}\3\2\2\2}\t\3\2\2\2~|\3\2\2\2\177\u0080\b\6\1\2\u0080"+
-		"\u0081\t\2\2\2\u0081\u0082\5\n\6\2\u0082\u0083\7\n\2\2\u0083\u008b\3\2"+
-		"\2\2\u0084\u0085\t\3\2\2\u0085\u0086\5\n\6\2\u0086\u0087\7\n\2\2\u0087"+
-		"\u008b\3\2\2\2\u0088\u008b\7(\2\2\u0089\u008b\7\'\2\2\u008a\177\3\2\2"+
-		"\2\u008a\u0084\3\2\2\2\u008a\u0088\3\2\2\2\u008a\u0089\3\2\2\2\u008b\u0097"+
-		"\3\2\2\2\u008c\u008d\f\b\2\2\u008d\u008e\7\23\2\2\u008e\u0096\5\n\6\t"+
-		"\u008f\u0090\f\6\2\2\u0090\u0091\t\4\2\2\u0091\u0096\5\n\6\7\u0092\u0093"+
-		"\f\5\2\2\u0093\u0094\t\5\2\2\u0094\u0096\5\n\6\6\u0095\u008c\3\2\2\2\u0095"+
-		"\u008f\3\2\2\2\u0095\u0092\3\2\2\2\u0096\u0099\3\2\2\2\u0097\u0095\3\2"+
-		"\2\2\u0097\u0098\3\2\2\2\u0098\13\3\2\2\2\u0099\u0097\3\2\2\2\u009a\u009b"+
-		"\5\n\6\2\u009b\u009c\t\6\2\2\u009c\u009d\5\n\6\2\u009d\u00a0\3\2\2\2\u009e"+
-		"\u00a0\7&\2\2\u009f\u009a\3\2\2\2\u009f\u009e\3\2\2\2\u00a0\r\3\2\2\2"+
-		"\u00a1\u00a2\7\'\2\2\u00a2\u00a3\7\"\2\2\u00a3\u00a8\5\20\t\2\u00a4\u00a5"+
-		"\7\t\2\2\u00a5\u00a7\5\20\t\2\u00a6\u00a4\3\2\2\2\u00a7\u00aa\3\2\2\2"+
-		"\u00a8\u00a6\3\2\2\2\u00a8\u00a9\3\2\2\2\u00a9\u00ab\3\2\2\2\u00aa\u00a8"+
-		"\3\2\2\2\u00ab\u00ac\7#\2\2\u00ac\17\3\2\2\2\u00ad\u00b0\7\'\2\2\u00ae"+
-		"\u00af\7$\2\2\u00af\u00b1\7\'\2\2\u00b0\u00ae\3\2\2\2\u00b0\u00b1\3\2"+
-		"\2\2\u00b1\u00b2\3\2\2\2\u00b2\u00b3\7%\2\2\u00b3\u00b4\7\'\2\2\u00b4"+
-		"\21\3\2\2\2\20\32\",EGdz|\u008a\u0095\u0097\u009f\u00a8\u00b0";
+		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
+		"\3\3\3\3\3\3\3\7\3K\n\3\f\3\16\3N\13\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5"+
+		"\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\5\5j\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\7\5\u0083\n\5\f\5\16\5\u0086\13\5\3"+
+		"\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6\u0093\n\6\3\6\3\6\3\6\3"+
+		"\6\3\6\3\6\3\6\3\6\3\6\7\6\u009e\n\6\f\6\16\6\u00a1\13\6\3\7\3\7\3\7\3"+
+		"\7\3\7\5\7\u00a8\n\7\3\b\3\b\3\b\3\b\3\b\7\b\u00af\n\b\f\b\16\b\u00b2"+
+		"\13\b\3\b\3\b\3\t\3\t\3\t\5\t\u00b9\n\t\3\t\3\t\3\t\3\t\2\5\4\b\n\n\2"+
+		"\4\6\b\n\f\16\20\2\7\4\2\t\t\23\23\3\2\25\32\3\2\33\34\3\2\35\36\4\2\f"+
+		"\f\37\"\u00d0\2\22\3\2\2\2\4$\3\2\2\2\6O\3\2\2\2\bi\3\2\2\2\n\u0092\3"+
+		"\2\2\2\f\u00a7\3\2\2\2\16\u00a9\3\2\2\2\20\u00b5\3\2\2\2\22\23\5\4\3\2"+
+		"\23\24\7+\2\2\24\30\7+\2\2\25\26\5\6\4\2\26\27\7+\2\2\27\31\3\2\2\2\30"+
+		"\25\3\2\2\2\31\32\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\34\3\2\2\2\34"+
+		" \7+\2\2\35\36\5\16\b\2\36\37\7+\2\2\37!\3\2\2\2 \35\3\2\2\2!\"\3\2\2"+
+		"\2\" \3\2\2\2\"#\3\2\2\2#\3\3\2\2\2$%\b\3\1\2%&\7(\2\2&\'\7\t\2\2\',\7"+
+		"(\2\2()\7\n\2\2)+\7(\2\2*(\3\2\2\2+.\3\2\2\2,*\3\2\2\2,-\3\2\2\2-/\3\2"+
+		"\2\2.,\3\2\2\2/\60\7\13\2\2\60L\3\2\2\2\61\62\f\b\2\2\62\63\7\3\2\2\63"+
+		"\64\7\4\2\2\64\65\7(\2\2\65K\5\4\3\t\66\67\f\7\2\2\678\7\5\2\289\7\4\2"+
+		"\29:\7(\2\2:K\5\4\3\b;<\f\6\2\2<=\7\6\2\2=>\7\4\2\2>?\7(\2\2?K\5\4\3\7"+
+		"@A\f\5\2\2AB\7\7\2\2BC\7\4\2\2CD\7(\2\2DK\5\4\3\6EF\f\4\2\2FG\7\b\2\2"+
+		"GH\7\4\2\2HI\7(\2\2IK\5\4\3\5J\61\3\2\2\2J\66\3\2\2\2J;\3\2\2\2J@\3\2"+
+		"\2\2JE\3\2\2\2KN\3\2\2\2LJ\3\2\2\2LM\3\2\2\2M\5\3\2\2\2NL\3\2\2\2OP\7"+
+		"(\2\2PQ\7\f\2\2QR\5\b\5\2R\7\3\2\2\2ST\b\5\1\2TU\7\t\2\2UV\5\b\5\2VW\7"+
+		"\13\2\2Wj\3\2\2\2Xj\5\f\7\2YZ\7\r\2\2Zj\5\b\5\13[\\\7\16\2\2\\]\7\17\2"+
+		"\2]^\7)\2\2^_\7\n\2\2_`\7)\2\2`a\7\20\2\2aj\5\b\5\nbc\7\21\2\2cd\7\17"+
+		"\2\2de\7)\2\2ef\7\n\2\2fg\7)\2\2gh\7\20\2\2hj\5\b\5\tiS\3\2\2\2iX\3\2"+
+		"\2\2iY\3\2\2\2i[\3\2\2\2ib\3\2\2\2j\u0084\3\2\2\2kl\f\b\2\2lm\7\3\2\2"+
+		"m\u0083\5\b\5\tno\f\7\2\2op\7\5\2\2p\u0083\5\b\5\bqr\f\6\2\2rs\7\6\2\2"+
+		"s\u0083\5\b\5\7tu\f\5\2\2uv\7\7\2\2v\u0083\5\b\5\6wx\f\4\2\2xy\7\b\2\2"+
+		"y\u0083\5\b\5\5z{\f\3\2\2{|\7\22\2\2|}\7\17\2\2}~\7)\2\2~\177\7\n\2\2"+
+		"\177\u0080\7)\2\2\u0080\u0081\7\20\2\2\u0081\u0083\5\b\5\4\u0082k\3\2"+
+		"\2\2\u0082n\3\2\2\2\u0082q\3\2\2\2\u0082t\3\2\2\2\u0082w\3\2\2\2\u0082"+
+		"z\3\2\2\2\u0083\u0086\3\2\2\2\u0084\u0082\3\2\2\2\u0084\u0085\3\2\2\2"+
+		"\u0085\t\3\2\2\2\u0086\u0084\3\2\2\2\u0087\u0088\b\6\1\2\u0088\u0089\t"+
+		"\2\2\2\u0089\u008a\5\n\6\2\u008a\u008b\7\13\2\2\u008b\u0093\3\2\2\2\u008c"+
+		"\u008d\t\3\2\2\u008d\u008e\5\n\6\2\u008e\u008f\7\13\2\2\u008f\u0093\3"+
+		"\2\2\2\u0090\u0093\7)\2\2\u0091\u0093\7(\2\2\u0092\u0087\3\2\2\2\u0092"+
+		"\u008c\3\2\2\2\u0092\u0090\3\2\2\2\u0092\u0091\3\2\2\2\u0093\u009f\3\2"+
+		"\2\2\u0094\u0095\f\b\2\2\u0095\u0096\7\24\2\2\u0096\u009e\5\n\6\t\u0097"+
+		"\u0098\f\6\2\2\u0098\u0099\t\4\2\2\u0099\u009e\5\n\6\7\u009a\u009b\f\5"+
+		"\2\2\u009b\u009c\t\5\2\2\u009c\u009e\5\n\6\6\u009d\u0094\3\2\2\2\u009d"+
+		"\u0097\3\2\2\2\u009d\u009a\3\2\2\2\u009e\u00a1\3\2\2\2\u009f\u009d\3\2"+
+		"\2\2\u009f\u00a0\3\2\2\2\u00a0\13\3\2\2\2\u00a1\u009f\3\2\2\2\u00a2\u00a3"+
+		"\5\n\6\2\u00a3\u00a4\t\6\2\2\u00a4\u00a5\5\n\6\2\u00a5\u00a8\3\2\2\2\u00a6"+
+		"\u00a8\7\'\2\2\u00a7\u00a2\3\2\2\2\u00a7\u00a6\3\2\2\2\u00a8\r\3\2\2\2"+
+		"\u00a9\u00aa\7(\2\2\u00aa\u00ab\7#\2\2\u00ab\u00b0\5\20\t\2\u00ac\u00ad"+
+		"\7\n\2\2\u00ad\u00af\5\20\t\2\u00ae\u00ac\3\2\2\2\u00af\u00b2\3\2\2\2"+
+		"\u00b0\u00ae\3\2\2\2\u00b0\u00b1\3\2\2\2\u00b1\u00b3\3\2\2\2\u00b2\u00b0"+
+		"\3\2\2\2\u00b3\u00b4\7$\2\2\u00b4\17\3\2\2\2\u00b5\u00b8\7(\2\2\u00b6"+
+		"\u00b7\7%\2\2\u00b7\u00b9\7(\2\2\u00b8\u00b6\3\2\2\2\u00b8\u00b9\3\2\2"+
+		"\2\u00b9\u00ba\3\2\2\2\u00ba\u00bb\7&\2\2\u00bb\u00bc\7(\2\2\u00bc\21"+
+		"\3\2\2\2\20\32\",JLi\u0082\u0084\u0092\u009d\u009f\u00a7\u00b0\u00b8";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

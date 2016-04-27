@@ -16,6 +16,7 @@ import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.ModuleLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.Pair;
+import hyness.stl.ParallelNode;
 import hyness.stl.TemporalBinaryNode;
 import hyness.stl.TemporalUnaryNode;
 import hyness.stl.TreeNode;
@@ -28,11 +29,11 @@ import java.util.HashMap;
 public class STLflat {
     public static final String IOMAP = "io";
     
-    TreeNode module;
+    public TreeNode module;
     
-    HashMap<String, TreeNode> modules;
+    public HashMap<String, TreeNode> modules;
     
-    HashMap<String, HashMap<Pair<String, Boolean>, String>> maps;
+    public HashMap<String, HashMap<Pair<String, Boolean>, String>> maps;
     
     /**
      * 
@@ -75,7 +76,11 @@ public class STLflat {
         } else if(node instanceof ConcatenationNode) {
             translate(((ConcatenationNode)node).left, map, side);
             translate(((ConcatenationNode)node).right, map, side);
-        } else {
+        } else if(node instanceof ParallelNode) {
+            translate(((ParallelNode)node).left, map, side);
+            translate(((ParallelNode)node).right, map, side);
+        }
+        else {
             throw new IllegalArgumentException("Unknown operation in STL formula!");
         }
         return node;
@@ -87,6 +92,18 @@ public class STLflat {
      */
     public TreeNode toSTL() {
         return translate(toSTL(this.module), maps.get(IOMAP), null);
+    }
+    
+    @Override
+    public String toString(){
+        String stlb = "";
+        stlb += "Module :: \n";
+        stlb += this.module.toString();
+        stlb += "\nModule Map :: \n";
+        stlb += this.modules;
+        stlb += "\nMaps :: \n";
+        stlb += this.maps;
+        return stlb;
     }
     
     /**
@@ -118,10 +135,13 @@ public class STLflat {
                 case CONCAT:
                     ret = new ConcatenationNode(left, right);
                     break;
+                case PARALLEL:
+                    ret = new ParallelNode(left,right);
+                    break;
                 default:
                     throw new UnsupportedOperationException(
                             "Modules can only be composed using disjunction, "
-                            + "conjunction, implication or concatenation!");
+                            + "conjunction, implication or concatenation or parallel!");
             }
             return ret;
         } else {
