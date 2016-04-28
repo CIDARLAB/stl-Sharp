@@ -6,6 +6,9 @@
 package hyness.stl.distance;
 
 import hyness.stl.ConcatenationNode;
+import hyness.stl.ConjunctionNode;
+import hyness.stl.DisjunctionNode;
+import hyness.stl.ImplicationNode;
 import hyness.stl.ModuleNode;
 import hyness.stl.Operation;
 import hyness.stl.Pair;
@@ -85,14 +88,57 @@ public class DistanceMetric {
             if (spec1 instanceof ModuleNode) {
                 TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
                 TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                return (max(computeDistance(left.negate(),spec2),computeDistance(right,spec2)) - ((computeDistance(left.negate(),right))/2));
             }
+            ImplicationNode impNode = (ImplicationNode)spec1;
+            return (max(computeDistance(impNode.left.negate(),spec2),computeDistance(impNode.right,spec2)) - ((computeDistance(impNode.left.negate(),impNode.right))/2));
         } else if (spec2.op.equals(Operation.IMPLIES)){
             if (spec2 instanceof ModuleNode) {
                 TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
                 TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                return (max(computeDistance(spec1,left.negate()),computeDistance(spec1,right)) - ((computeDistance(left.negate(),right))/2));
             }
+            ImplicationNode impNode = (ImplicationNode)spec2;
+            return (max(computeDistance(spec1,impNode.left.negate()),computeDistance(spec1,impNode.right)) - ((computeDistance(impNode.left.negate(),impNode.right))/2));
         }
+        //One of them is Conjunction
+        else if (spec1.op.equals(Operation.AND)) {
+            if (spec1 instanceof ModuleNode) {
+                TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
+                TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                return (max(computeDistance(left,spec2),computeDistance(right,spec2)) - ((computeDistance(left,right))/2));
+            }
+            ConjunctionNode andNode = (ConjunctionNode)spec1;
+            return (max(computeDistance(andNode.left,spec2),computeDistance(andNode.right,spec2)) - ((computeDistance(andNode.left,andNode.right))/2));
         
+        } else if (spec2.op.equals(Operation.AND)){
+            if (spec2 instanceof ModuleNode) {
+                TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
+                TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                return (max(computeDistance(spec1,left),computeDistance(spec1,right)) - ((computeDistance(left,right))/2));
+            }
+            ConjunctionNode andNode = (ConjunctionNode)spec2;
+            return (max(computeDistance(spec1,andNode.left),computeDistance(spec1,andNode.right)) - ((computeDistance(andNode.left,andNode.right))/2));
+        }
+        //One of them is Disjunction
+        else if (spec1.op.equals(Operation.OR)) {
+            if (spec1 instanceof ModuleNode) {
+                TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
+                TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                return min(computeDistance(left,spec2),computeDistance(right,spec2));
+            }
+            DisjunctionNode orNode = (DisjunctionNode)spec1;
+            return min(computeDistance(orNode.left,spec2),computeDistance(orNode.right,spec2));
+        
+        } else if (spec2.op.equals(Operation.OR)){
+            if (spec2 instanceof ModuleNode) {
+                TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
+                TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                return min(computeDistance(spec1,left),computeDistance(spec1,right));
+            }
+            DisjunctionNode orNode = (DisjunctionNode)spec2;
+            return min(computeDistance(spec1,orNode.left),computeDistance(spec1,orNode.right));
+        }
         /*
         else if (spec1.op.equals(Operation.)) {
             if (spec1 instanceof ModuleNode) {
@@ -112,8 +158,13 @@ public class DistanceMetric {
     }
     
     
-    public static double max(double num1, double num2){
+    private static double max(double num1, double num2){
         if(num1 > num2)
+            return num1;
+        return num2;
+    }
+    private static double min(double num1, double num2){
+        if(num1 < num2)
             return num1;
         return num2;
     }
