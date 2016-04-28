@@ -19,5 +19,10 @@ public class DisjunctionNode extends BooleanBinaryNode {
     public double robustness(Trace s, double t) {
         return Math.max(left.robustness(s, t), right.robustness(s, t));
     }
+
+    @Override
+    public TreeNode negate() {
+        return new ConjunctionNode(left.negate(),right.negate());
+    }
     
 }

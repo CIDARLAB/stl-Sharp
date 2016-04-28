@@ -84,9 +84,9 @@ public class DistanceMetricTest {
         DistanceMetric dist = new DistanceMetric();
         
         
-        //dist.computeDistance(stlspec1.spec, stlspec2.spec);
+        dist.computeDistance(stlspec1.spec, stlspec2.spec);
         
-        if(stlspec1.spec.module instanceof ModuleNode){
+        /*if(stlspec1.spec.module instanceof ModuleNode){
             System.out.println("Spec 1 is a Module Node");
             TreeNode leftname = ((ModuleNode)stlspec1.spec.module).left;
             TreeNode rightname = ((ModuleNode)stlspec1.spec.module).right;
@@ -106,6 +106,7 @@ public class DistanceMetricTest {
             System.out.println("leftright class " + leftright.getClass());
             System.out.println("leftright to string :: \n" + leftright.toString());
             
+            
             if(left instanceof ParallelNode){
                 System.out.println("Left of Spec 1 is a parallel node");
             }
@@ -117,7 +118,7 @@ public class DistanceMetricTest {
         
     
         
-        System.out.println("\n\nSTL Spec1 :: " + stlspec1.spec.toString());
+        System.out.println("\n\nSTL Spec1 :: " + stlspec1.spec.toString());*/
         
     }
     

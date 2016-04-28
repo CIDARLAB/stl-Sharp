@@ -27,4 +27,11 @@ public class EventNode extends TemporalUnaryNode {
         }
         return value;
     }
+
+    @Override
+    public TreeNode negate() {
+        return new EventNode(this.child.negate(),this.low,this.high);
+    }
+    
+    
 }

@@ -45,5 +45,10 @@ public class ConcatenationNode extends TreeNode {
     public String toString() {
         return "(" + Operation.CONCAT + " " + left + " " + right + ")";
     }
+
+    @Override
+    public TreeNode negate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

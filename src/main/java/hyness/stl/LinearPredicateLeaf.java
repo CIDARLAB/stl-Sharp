@@ -59,4 +59,29 @@ public class LinearPredicateLeaf extends TreeNode {
     public String toString() {
         return "(" + variable + " " + rop + " " + threshold + ")";
     } 
+
+    @Override
+    public TreeNode negate() {
+        RelOperation newRop;
+        switch(this.rop){
+            case LT:
+                newRop = RelOperation.GE;
+                break;
+            case LE:
+                newRop = RelOperation.GT;
+                break;
+            case GT:
+                newRop = RelOperation.LE;
+                break;
+            case GE:
+                newRop = RelOperation.LT;
+                break;
+            case EQ:
+                newRop = RelOperation.EQ;
+                break;
+            default: 
+                throw new RuntimeException("Unknown relation!");
+        }
+        return new LinearPredicateLeaf(newRop,this.variable,this.threshold);
+    }
 }

@@ -27,5 +27,10 @@ public class AlwaysNode extends TemporalUnaryNode {
         }
         return value;
     }
+
+    @Override
+    public TreeNode negate() {
+        return new AlwaysNode(this.child.negate(),this.low,this.high);
+    }
     
 }

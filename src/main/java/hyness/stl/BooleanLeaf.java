@@ -30,4 +30,9 @@ public class BooleanLeaf extends TreeNode {
     public String toString() {
         return "(Bool " + value + ")"; 
     }
+
+    @Override
+    public TreeNode negate() {
+        return new BooleanLeaf(!this.value);
+    }
 }

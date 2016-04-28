@@ -19,5 +19,10 @@ public class NotNode extends BooleanUnaryNode {
     public double robustness(Trace s, double t) {
         return -this.child.robustness(s, t);
     }
+
+    @Override
+    public TreeNode negate() {
+        return this.child;
+    }
     
 }

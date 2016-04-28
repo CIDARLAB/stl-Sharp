@@ -19,5 +19,10 @@ public class ImplicationNode extends BooleanBinaryNode {
     public double robustness(Trace s, double t) {
         return Math.min(-left.robustness(s, t), right.robustness(s, t));
     }
+
+    @Override
+    public TreeNode negate() {
+        return new DisjunctionNode(this.left,this.right.negate());
+    }
     
 }

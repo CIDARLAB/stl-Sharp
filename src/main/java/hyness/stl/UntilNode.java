@@ -39,5 +39,10 @@ public class UntilNode extends TemporalBinaryNode {
         }
         return value;
     }
+
+    @Override
+    public TreeNode negate() {
+        return new UntilNode(this.left.negate(),this.right.negate(),this.low,this.high);
+    }
     
 }

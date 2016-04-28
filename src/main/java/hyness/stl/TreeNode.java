@@ -26,6 +26,8 @@ public abstract class TreeNode {
         this.op  = op;
     }
     
+    abstract public TreeNode negate();
+    
     abstract public double robustness(Trace s, double t);
 }
 
