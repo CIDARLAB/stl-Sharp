@@ -150,6 +150,30 @@ public class STLflatBaseListener implements STLflatListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTranslationPair(STLflatParser.TranslationPairContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLimitMap(STLflatParser.LimitMapContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLimitMap(STLflatParser.LimitMapContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLimitPair(STLflatParser.LimitPairContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLimitPair(STLflatParser.LimitPairContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

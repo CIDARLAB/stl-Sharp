@@ -88,4 +88,16 @@ public interface STLflatVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTranslationPair(STLflatParser.TranslationPairContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link STLflatParser#limitMap}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLimitMap(STLflatParser.LimitMapContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link STLflatParser#limitPair}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLimitPair(STLflatParser.LimitPairContext ctx);
 }

@@ -44,7 +44,9 @@ public class DistanceMetricTest {
                 + "phi2 = ((u1 >= 1) && (u3 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
                 + "\n"
                 + "m1 { u1@left: u1, u2@left: u2, y1@left: a1, y2@left: a2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
-                + "io {u1: u1, u2: u2, y1: y}\n";
+                + "io {u1: u1, u2: u2, y1: y}\n"
+                + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
+                ;
          
         spec2 = "phi1(u1,u2,y1,y2) >>_m1 phi2(u1,u2,y1,y2)\n"
                 + "\n"
@@ -52,7 +54,9 @@ public class DistanceMetricTest {
                 + "phi2 = ((u1 >= 1) && (u3 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
                 + "\n"
                 + "m1 { u1@left: u1, u2@left: u2, y1@left: a1, y2@left: a2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
-                + "io {u1: u1, u2: u2, y1: y}\n";
+                + "io {u1: u1, u2: u2, y1: y}\n"
+                + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
+                ;
          
          
     }
@@ -83,8 +87,11 @@ public class DistanceMetricTest {
         
         DistanceMetric dist = new DistanceMetric();
         
+        //System.out.println("Spec 1 mumax :: " + stlspec1.spec.getMumax());
+        //System.out.println("Spec 2 mumax :: " + stlspec2.spec.getMumax());
         
         dist.computeDistance(stlspec1.spec, stlspec2.spec);
+        
         
         /*if(stlspec1.spec.module instanceof ModuleNode){
             System.out.println("Spec 1 is a Module Node");

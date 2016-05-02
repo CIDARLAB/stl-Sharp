@@ -134,4 +134,24 @@ public interface STLflatListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTranslationPair(STLflatParser.TranslationPairContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link STLflatParser#limitMap}.
+	 * @param ctx the parse tree
+	 */
+	void enterLimitMap(STLflatParser.LimitMapContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link STLflatParser#limitMap}.
+	 * @param ctx the parse tree
+	 */
+	void exitLimitMap(STLflatParser.LimitMapContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link STLflatParser#limitPair}.
+	 * @param ctx the parse tree
+	 */
+	void enterLimitPair(STLflatParser.LimitPairContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link STLflatParser#limitPair}.
+	 * @param ctx the parse tree
+	 */
+	void exitLimitPair(STLflatParser.LimitPairContext ctx);
 }

@@ -20,7 +20,12 @@ import hyness.stl.ParallelNode;
 import hyness.stl.TemporalBinaryNode;
 import hyness.stl.TemporalUnaryNode;
 import hyness.stl.TreeNode;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import lombok.Getter;
 
 /**
  * @author Cristian-Ioan Vasile
@@ -34,6 +39,21 @@ public class STLflat {
     public HashMap<String, TreeNode> modules;
     
     public HashMap<String, HashMap<Pair<String, Boolean>, String>> maps;
+    public HashMap<String, HashMap<String,Double>> limitsMap;
+    
+    public double getMumax(){
+        double max = Double.POSITIVE_INFINITY;
+        //Set<String> signals = new HashSet<String>();
+        for(String signal:this.limitsMap.keySet()){
+            double diff = this.limitsMap.get(signal).get("max") - this.limitsMap.get(signal).get("min");
+            if(diff < max){
+                max = diff;
+            }
+        }
+        
+        return max;
+    }
+    
     
     /**
      * 
@@ -42,6 +62,7 @@ public class STLflat {
         this.module = module;
         this.modules = new HashMap<String, TreeNode>();
         this.maps = new HashMap<String, HashMap<Pair<String, Boolean>,String>>();
+        limitsMap = new HashMap<String,HashMap<String,Double>>();
     }
     
     /**

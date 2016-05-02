@@ -79,6 +79,19 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
             spec.maps.put(mapName, map);
         }
         
+        // add limit maps
+        STLflatParser.LimitMapContext lctx = ctx.limitMap();
+        String lmapName = lctx.lmapName.getText(); //Relevant?
+        for(STLflatParser.LimitPairContext lpctx : lctx.limitPair()){
+            double maxVal = Double.valueOf(lpctx.maxValue.getText());
+            double minVal = Double.valueOf(lpctx.minValue.getText());
+            String signal = lpctx.sigName.getText();
+            HashMap<String,Double> maxmin = new HashMap<String,Double>();
+            maxmin.put("max", maxVal);
+            maxmin.put("min", minVal);
+            spec.limitsMap.put(signal, maxmin);
+        }
+        
         return null;
     }
     
@@ -184,11 +197,12 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
         String spec = "phi1(u1,u2,y1,y2) #_m1 phi2(u1,u2,y1,y2)\n"
                 + "\n"
                 + "phi1 = (!(u1 < 10) && (u2 > 2)) => (F[0, 2] y1 > 2 || G[1, 3] y2 <= 8)\n"
-                + "phi2 = ((u1 >= 1) && (u3 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
+                + "phi2 = ((u1 >= 1) && (u2 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
                 + "\n"
                 + "m1 { u1@left: u1, u2@left: u2, y1@left: a1, y2@left: a2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
-                + "io {u1: u1, u2: u2, y1: y}\n";
-        
+                + "io {u1: u1, u2: u2, y1: y}\n"
+                + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
+                ;
         STLflatLexer lexer = new STLflatLexer(new ANTLRInputStream(spec));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         
