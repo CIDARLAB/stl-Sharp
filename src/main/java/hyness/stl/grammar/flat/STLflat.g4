@@ -10,7 +10,7 @@ package hyness.stl.grammar.flat;
 }
 
 
-specification : spec=module NEWLINE NEWLINE (moduleDescription NEWLINE)+ NEWLINE (translationMap NEWLINE)+;
+specification : spec=module NEWLINE NEWLINE (moduleDescription NEWLINE)+ NEWLINE (translationMap NEWLINE)+ (limitMap NEWLINE)+;
 
 module:
          left=module op='=>' '_' tmap=VARIABLE right=module #moduleOp
@@ -51,6 +51,9 @@ booleanExpr:
     ;
 translationMap: tmapName=VARIABLE '{' translationPair (',' translationPair)* '}';
 translationPair: key=VARIABLE ('@' moduleName=VARIABLE)? ':' value=VARIABLE;
+
+limitMap : '[' limitPair (',' limitPair)* ']';
+limitPair : '{' sigName=VARIABLE ':' '{' 'max' ':' maxValue=RATIONAL ',' 'min' ':' minValue=RATIONAL '}' '}';
 
 BOOLEAN : ('true'|'false');
 VARIABLE : ([a-z]|[A-Z])([a-z]|[A-Z]|[0-9]|'_')*;

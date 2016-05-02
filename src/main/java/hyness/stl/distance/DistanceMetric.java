@@ -5,6 +5,7 @@
  */
 package hyness.stl.distance;
 
+import hyness.stl.BooleanLeaf;
 import hyness.stl.ConcatenationNode;
 import hyness.stl.ConjunctionNode;
 import hyness.stl.DisjunctionNode;
@@ -17,6 +18,8 @@ import hyness.stl.TreeNode;
 import hyness.stl.grammar.flat.STLflat;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -24,12 +27,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DistanceMetric {
     
+    @Getter
+    private double muMax;
     
     private HashMap<String, TreeNode> spec1Modules;
     private HashMap<String, HashMap<Pair<String, Boolean>, String>> spec1Maps;
     private HashMap<String, TreeNode> spec2Modules;
     private HashMap<String, HashMap<Pair<String, Boolean>, String>> spec2Maps;
     private AtomicInteger counter;
+    
     public DistanceMetric(){
         spec1Modules = new HashMap();
         spec2Modules = new HashMap();
@@ -37,6 +43,12 @@ public class DistanceMetric {
         spec2Maps = new HashMap();
         counter = new AtomicInteger(0);
     }
+    
+    private void setMuMax(STLflat spec1, STLflat spec2){
+       this.muMax = Double.MAX_VALUE; 
+       
+    }
+    
     public double computeDistance(STLflat spec1, STLflat spec2){
         spec1Modules = spec1.modules;
         spec2Modules = spec2.modules;
@@ -48,7 +60,7 @@ public class DistanceMetric {
     
     
     private double computeDistance(TreeNode spec1,TreeNode spec2){
-        double dist = Double.NaN;
+        double dist = muMax;
         
         System.out.println("Iteration :: " + counter.getAndIncrement());
         System.out.println("Spec1  :: " + spec1.toString());
@@ -83,7 +95,7 @@ public class DistanceMetric {
                 TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
             }
         }
-        //One of them is an Implies.. Need some sort of negation operator
+        //One of them is an Implies.. 
          else if (spec1.op.equals(Operation.IMPLIES)) {
             if (spec1 instanceof ModuleNode) {
                 TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
@@ -139,6 +151,19 @@ public class DistanceMetric {
             DisjunctionNode orNode = (DisjunctionNode)spec2;
             return min(computeDistance(spec1,orNode.left),computeDistance(spec1,orNode.right));
         }
+        
+        //Both are instances of BooleanLeaf
+        else if( (spec1 instanceof BooleanLeaf) && (spec2 instanceof BooleanLeaf)){
+            BooleanLeaf bspec1 = (BooleanLeaf)spec1;
+            BooleanLeaf bspec2 = (BooleanLeaf)spec2;
+            if(bspec1.value == bspec2.value){
+                return 0;
+            }
+            return muMax;
+        }
+        
+        
+        
         /*
         else if (spec1.op.equals(Operation.)) {
             if (spec1 instanceof ModuleNode) {
