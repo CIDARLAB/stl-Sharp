@@ -5,6 +5,7 @@
  */
 package hyness.stl.distance;
 
+import hyness.stl.metrics.DistanceMetric;
 import hyness.stl.ConcatenationNode;
 import hyness.stl.ImplicationNode;
 import hyness.stl.ModuleNode;
@@ -41,7 +42,7 @@ public class DistanceMetricTest {
         spec1 = "phi1(u1,u2,y1,y2) >>_m1 phi2(u1,u2,y1,y2)\n"
                 + "\n"
                 + "phi1 = (!(u1 < 10) && (u2 > 2)) => (F[0, 2] y1 > 2 || G[1, 3] y2 <= 8)\n"
-                + "phi2 = ((u1 >= 1) && (u3 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
+                + "phi2 = ((u1 >= 1) && (u2 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
                 + "\n"
                 + "m1 { u1@left: u1, u2@left: u2, y1@left: a1, y2@left: a2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
                 + "io {u1: u1, u2: u2, y1: y}\n"
@@ -51,7 +52,7 @@ public class DistanceMetricTest {
         spec2 = "phi1(u1,u2,y1,y2) >>_m1 phi2(u1,u2,y1,y2)\n"
                 + "\n"
                 + "phi1 = (!(u1 < 10) && (u2 > 2)) => (F[0, 2] y1 > 2 || G[1, 3] y2 <= 8)\n"
-                + "phi2 = ((u1 >= 1) && (u3 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
+                + "phi2 = ((u1 >= 1) && (u2 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
                 + "\n"
                 + "m1 { u1@left: u1, u2@left: u2, y1@left: a1, y2@left: a2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
                 + "io {u1: u1, u2: u2, y1: y}\n"

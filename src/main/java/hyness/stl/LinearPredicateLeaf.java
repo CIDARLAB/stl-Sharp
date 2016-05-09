@@ -76,9 +76,8 @@ public class LinearPredicateLeaf extends TreeNode {
             case GE:
                 newRop = RelOperation.LT;
                 break;
-            case EQ:
-                newRop = RelOperation.EQ;
-                break;
+            case EQ: //Change this line..
+                return new ConjunctionNode(new LinearPredicateLeaf(RelOperation.GT,this.variable, this.threshold),new LinearPredicateLeaf(RelOperation.LT,this.variable,this.threshold));
             default: 
                 throw new RuntimeException("Unknown relation!");
         }
