@@ -15,6 +15,7 @@ import hyness.stl.grammar.flat.STLflat;
 import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
 import hyness.stl.grammar.flat.STLflatLexer;
 import hyness.stl.grammar.flat.STLflatParser;
+import java.math.BigDecimal;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -58,7 +59,7 @@ public class DistanceMetricTest {
                 + "io {u1: u1, u2: u2, y1: y}\n"
                 + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
                 ;
-         
+        
          
     }
     
@@ -91,8 +92,8 @@ public class DistanceMetricTest {
         //System.out.println("Spec 1 mumax :: " + stlspec1.spec.getMumax());
         //System.out.println("Spec 2 mumax :: " + stlspec2.spec.getMumax());
         
-        dist.computeDistance(stlspec1.spec, stlspec2.spec);
-        
+        BigDecimal val = dist.computeDistance(stlspec1.spec, stlspec2.spec);
+        System.out.println("Distance :: \n" + val);
         
         /*if(stlspec1.spec.module instanceof ModuleNode){
             System.out.println("Spec 1 is a Module Node");
