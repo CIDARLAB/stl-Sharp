@@ -34,6 +34,10 @@ public class DistanceMetricTest {
     
     public static String spec1;
     public static String spec2;
+    public static String spec3;
+    public static String spec4;
+    public static String spec5;
+    
     
     public DistanceMetricTest() {
     }
@@ -50,14 +54,33 @@ public class DistanceMetricTest {
                 + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
                 ;
          
-        spec2 = "phi1(u1,u2,y1,y2) >>_m1 phi2(u1,u2,y1,y2)\n"
+        
+        spec2 = "phi1(u1) >>_m1 phi2(u1)\n"
                 + "\n"
-                + "phi1 = (!(u1 < 10) && (u2 > 2)) => (F[0, 2] y1 > 2 || G[1, 3] y2 <= 8)\n"
-                + "phi2 = ((u1 >= 1) && (u2 <= 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 >= 3)\n"
+                + "phi1 = (u1 < 6)\n"
+                + "phi2 = (u1 >= 2)\n"
                 + "\n"
                 + "m1 { u1@left: u1, u2@left: u2, y1@left: a1, y2@left: a2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
                 + "io {u1: u1, u2: u2, y1: y}\n"
                 + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
+                ;
+        
+        spec3 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (u1 <= 7) \n"
+                + "\n"
+                + "m1 { u1@left: u1, u2@left: u2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
+                + "io {u1: u1, u2: u2, y1: y}\n"
+                + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}}]\n"
+                ;
+        
+        spec4 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (u1 <= 3) \n"
+                + "\n"
+                + "m1 { u1@left: u1, u2@left: u2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
+                + "io {u1: u1, u2: u2, y1: y}\n"
+                + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}}]\n"
                 ;
         
          
@@ -83,17 +106,25 @@ public class DistanceMetricTest {
         
         STLflatAbstractSyntaxTreeExtractor stlspec1 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlspec2 = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor stlspec3 = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor stlspec4 = new STLflatAbstractSyntaxTreeExtractor();
         
         stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1);
         stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
+        
+        stlspec3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
+        stlspec4 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec4);
         
         DistanceMetric dist = new DistanceMetric();
         
         //System.out.println("Spec 1 mumax :: " + stlspec1.spec.getMumax());
         //System.out.println("Spec 2 mumax :: " + stlspec2.spec.getMumax());
         
-        BigDecimal val = dist.computeDistance(stlspec1.spec, stlspec2.spec);
+        BigDecimal val = dist.computeDistance(stlspec1.spec, stlspec1.spec);
+        
         System.out.println("Distance :: \n" + val);
+        
+        //System.out.println(spec1);
         
         /*if(stlspec1.spec.module instanceof ModuleNode){
             System.out.println("Spec 1 is a Module Node");

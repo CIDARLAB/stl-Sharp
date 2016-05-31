@@ -15,6 +15,7 @@ import hyness.stl.EventNode;
 import hyness.stl.ImplicationNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.ModuleNode;
+import hyness.stl.NotNode;
 import hyness.stl.Operation;
 import hyness.stl.Pair;
 import hyness.stl.ParallelNode;
@@ -126,7 +127,7 @@ public class DistanceMetric {
         double min = limitsMap.get(signal).get("min");
 
         sigCap = BigDecimal.valueOf((double)(max - value) / (max - min));
-        System.out.println("SIG CAP VALUE for signal " + signal + " with value " + value + " :: " + sigCap);
+        //System.out.println("SIG CAP VALUE for signal " + signal + " with value " + value + " :: " + sigCap);
         return sigCap;
 
     }
@@ -137,22 +138,22 @@ public class DistanceMetric {
         System.out.println("Iteration :: " + counter.getAndIncrement());
         System.out.println("Spec1  :: " + spec1.toString());
         System.out.println("Spec2  :: " + spec2.toString());
-
+        
         //Either one has a Concatenation operator //Implement some optimization algo here...
         if (spec1.op.equals(Operation.CONCAT)) {
             if (spec1 instanceof ModuleNode) {
                 TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
                 TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
-                return max(computeDistance(left, spec2), computeDistance(right, spec2));
+                return min(computeDistance(left, spec2), computeDistance(right, spec2));
             }
-            return max(computeDistance(((ConcatenationNode) spec1).left, spec2), computeDistance(((ConcatenationNode) spec1).right, spec2));
+            return min(computeDistance(((ConcatenationNode) spec1).left, spec2), computeDistance(((ConcatenationNode) spec1).right, spec2));
         } else if (spec2.op.equals(Operation.CONCAT)) {
             if (spec2 instanceof ModuleNode) {
                 TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
                 TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
-                return max(computeDistance(spec1, left), computeDistance(spec1, right));
+                return min(computeDistance(spec1, left), computeDistance(spec1, right));
             }
-            return max(computeDistance(spec1, ((ConcatenationNode) spec2).left), computeDistance(spec1, ((ConcatenationNode) spec2).right));
+            return min(computeDistance(spec1, ((ConcatenationNode) spec2).left), computeDistance(spec1, ((ConcatenationNode) spec2).right));
         } 
 
         //Either one of them has a Parallel operator
@@ -167,7 +168,15 @@ public class DistanceMetric {
                 TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
             }
         } 
-            
+        
+        //One of them is a NOT gate
+        else if (spec1 instanceof NotNode){
+            return computeDistance(spec1.negate(),spec2);
+        }
+        else if(spec2 instanceof NotNode){
+            return computeDistance(spec1,spec2.negate());
+        }
+        
         //One of them is an Implies.. 
         else if (spec1.op.equals(Operation.IMPLIES)) {
             if (spec1 instanceof ModuleNode) {
@@ -283,9 +292,16 @@ public class DistanceMetric {
             //Spec1 is gt or ge
             if (lspec1.rop.equals(RelOperation.GE) || lspec1.rop.equals(RelOperation.GT)) {
                 if (lspec2.rop.equals(RelOperation.LE) || lspec2.rop.equals(RelOperation.LT)) {
+                    //Use New formula
+                    BigDecimal d1 = getSignalCap(lspec1.variable,lspec1.threshold);
+                    BigDecimal d2 = BigDecimal.ONE.subtract(getSignalCap(lspec2.variable,lspec2.threshold));
+                    BigDecimal absdiff = d1.subtract(d2).abs();
+                    System.out.println("Distance Value :" + this.muMax.multiply(d1.add(d2.add(absdiff)).divide(BigDecimal.valueOf(2))));
+                    return this.muMax.multiply(d1.add(d2.add(absdiff)).divide(BigDecimal.valueOf(2)));
+                    
                     // mumax * abs(spec1_cap - (1 - spec2_cap))
-                    System.out.println("Distance Value :" + this.muMax.multiply((getSignalCap(lspec1.variable, lspec1.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec2.variable, lspec2.threshold))))).abs()));
-                    return (this.muMax.multiply((getSignalCap(lspec1.variable, lspec1.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec2.variable, lspec2.threshold))))).abs()));
+                    //System.out.println("Distance Value :" + this.muMax.multiply((getSignalCap(lspec1.variable, lspec1.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec2.variable, lspec2.threshold))))).abs()));
+                    //return (this.muMax.multiply((getSignalCap(lspec1.variable, lspec1.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec2.variable, lspec2.threshold))))).abs()));
                     
                     //return (this.muMax * Math.abs(getSignalCap(lspec1.variable, lspec1.threshold) - (1 - getSignalCap(lspec2.variable, lspec2.threshold))));
                 } else if (lspec2.rop.equals(RelOperation.GE) || lspec2.rop.equals(RelOperation.GT)) {
@@ -303,8 +319,14 @@ public class DistanceMetric {
                     //return (this.muMax * (Math.abs(getSignalCap(lspec1.variable, lspec1.threshold) - getSignalCap(lspec2.variable, lspec2.threshold))));
                 } else if (lspec2.rop.equals(RelOperation.GE) || lspec2.rop.equals(RelOperation.GT)) {
                     // mumax * abs(spec2_cap - (1 - spec1_cap))
-                    System.out.println("Distance Value :" + (this.muMax.multiply((getSignalCap(lspec2.variable, lspec2.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec1.variable, lspec1.threshold))))).abs())));
-                    return (this.muMax.multiply((getSignalCap(lspec2.variable, lspec2.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec1.variable, lspec1.threshold))))).abs()));
+                    BigDecimal d1 = getSignalCap(lspec2.variable,lspec2.threshold);
+                    BigDecimal d2 = BigDecimal.ONE.subtract(getSignalCap(lspec1.variable,lspec1.threshold));
+                    BigDecimal absdiff = d1.subtract(d2).abs();                    
+                    System.out.println("Distance Value :" + this.muMax.multiply(d1.add(d2.add(absdiff)).divide(BigDecimal.valueOf(2))));
+                    return this.muMax.multiply(d1.add(d2.add(absdiff)).divide(BigDecimal.valueOf(2)));
+                    
+                    //System.out.println("Distance Value :" + (this.muMax.multiply((getSignalCap(lspec2.variable, lspec2.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec1.variable, lspec1.threshold))))).abs())));
+                    //return (this.muMax.multiply((getSignalCap(lspec2.variable, lspec2.threshold).subtract((BigDecimal.ONE.subtract(getSignalCap(lspec1.variable, lspec1.threshold))))).abs()));
                     //return (this.muMax * Math.abs(getSignalCap(lspec2.variable, lspec2.threshold) - (1 - getSignalCap(lspec1.variable, lspec1.threshold))));
                 }
             }
