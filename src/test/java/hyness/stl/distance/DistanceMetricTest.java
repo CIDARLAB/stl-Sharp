@@ -70,8 +70,8 @@ public class DistanceMetricTest {
                 + "phi1 = (u1 <= 7) \n"
                 + "\n"
                 + "m1 { u1@left: u1, u2@left: u2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
-                + "io {u1: u1, u2: u2, y1: y}\n"
-                + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}}]\n"
+                + "io {u1: u1, u1: y}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
         
         spec4 = "phi1(u1)\n"
@@ -120,7 +120,7 @@ public class DistanceMetricTest {
         //System.out.println("Spec 1 mumax :: " + stlspec1.spec.getMumax());
         //System.out.println("Spec 2 mumax :: " + stlspec2.spec.getMumax());
         
-        BigDecimal val = dist.computeDistance(stlspec1.spec, stlspec1.spec);
+        BigDecimal val = dist.computeDistance(stlspec3.spec, stlspec3.spec);
         
         System.out.println("Distance :: \n" + val);
         

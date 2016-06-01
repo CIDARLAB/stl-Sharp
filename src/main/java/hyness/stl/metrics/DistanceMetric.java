@@ -14,6 +14,7 @@ import hyness.stl.DisjunctionNode;
 import hyness.stl.EventNode;
 import hyness.stl.ImplicationNode;
 import hyness.stl.LinearPredicateLeaf;
+import hyness.stl.ModuleLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.NotNode;
 import hyness.stl.Operation;
@@ -138,6 +139,8 @@ public class DistanceMetric {
         System.out.println("Iteration :: " + counter.getAndIncrement());
         System.out.println("Spec1  :: " + spec1.toString());
         System.out.println("Spec2  :: " + spec2.toString());
+        System.out.println("Spec1 Tree Node :: " + spec1.getClass().getCanonicalName());
+        System.out.println("Spec2 Tree Node :: " + spec2.getClass().getCanonicalName());
         
         //Either one has a Concatenation operator //Implement some optimization algo here...
         if (spec1.op.equals(Operation.CONCAT)) {
@@ -273,6 +276,16 @@ public class DistanceMetric {
         else if(spec2 instanceof UntilNode){
             UntilNode unode = (UntilNode)spec2;
             return max(computeDistance(spec1,unode.left),computeDistance(spec1,unode.right));
+        }
+        
+        //One of them is a ModuleLeaf
+        else if(spec1 instanceof ModuleLeaf){
+            TreeNode spec1leaf = spec1Modules.get(((ModuleLeaf)spec1).name);
+            return computeDistance(spec1leaf,spec2);
+        }
+        else if(spec2 instanceof ModuleLeaf){
+            TreeNode spec2leaf = spec2Modules.get(((ModuleLeaf)spec2).name);
+            return computeDistance(spec1,spec2leaf);
         }
         
         //Both are instances of BooleanLeaf
