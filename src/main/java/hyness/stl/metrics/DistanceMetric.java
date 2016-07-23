@@ -260,7 +260,7 @@ public class DistanceMetric {
             AlwaysNode anode = (AlwaysNode) spec1;
             double spec1Time = timeMetric1.computeTimeHorizon(anode);
             if(anode.high < (anode.low + spec1Time)){
-                return this.muMax;
+                //return this.muMax;
             }
             return computeDistance(anode.child, spec2);
         } 
@@ -268,7 +268,7 @@ public class DistanceMetric {
             AlwaysNode anode = (AlwaysNode) spec2;
             double spec2Time = timeMetric2.computeTimeHorizon(anode);
             if(anode.high < (anode.low + spec2Time)){
-                return this.muMax;
+                //return this.muMax;
             }
             return computeDistance(spec1, anode.child);
         } 
@@ -278,14 +278,14 @@ public class DistanceMetric {
             EventNode enode = (EventNode) spec1;
             double spec1Time = timeMetric1.computeTimeHorizon(enode);
             if(enode.high < (enode.low + spec1Time)){
-                return this.muMax;
+                //return this.muMax;
             }
             return computeDistance(enode.child, spec2);
         } else if (spec2 instanceof EventNode) {
             EventNode enode = (EventNode) spec2;
             double spec2Time = timeMetric2.computeTimeHorizon(enode);
             if(enode.high < (enode.low + spec2Time)){
-                return this.muMax;
+                //return this.muMax;
             }
             return computeDistance(spec1, enode.child);
         } 
@@ -295,14 +295,14 @@ public class DistanceMetric {
             UntilNode unode = (UntilNode) spec1;
             double spec1Time = timeMetric1.computeTimeHorizon(unode);
             if(unode.high < (unode.low + spec1Time)){
-                return this.muMax;
+                //return this.muMax;
             }
             return max(computeDistance(unode.left, spec2), computeDistance(unode.right, spec2));
         } else if (spec2 instanceof UntilNode) {
             UntilNode unode = (UntilNode) spec2;
             double spec2Time = timeMetric2.computeTimeHorizon(unode);
             if(unode.high < (unode.low + spec2Time)){
-                return this.muMax;
+                //return this.muMax;
             }
             return max(computeDistance(spec1, unode.left), computeDistance(spec1, unode.right));
         }

@@ -70,6 +70,15 @@ public class DistanceMetricTest {
                 + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}}]\n"
                 ;
         
+        
+        spec5 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = G[1, 4] (u1 < 7) && G[1, 4] (u1 >=2)\n"
+                + "\n"
+                + "m1 { u1@left: u1, u2@left: u2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
+                + "io {u1: u1, u1: y}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
          
     }
     
@@ -95,6 +104,7 @@ public class DistanceMetricTest {
         STLflatAbstractSyntaxTreeExtractor stlspec2 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlspec3 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlspec4 = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor stlspec5 = new STLflatAbstractSyntaxTreeExtractor();
         
         stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1);
         stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
@@ -102,12 +112,16 @@ public class DistanceMetricTest {
         stlspec3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
         stlspec4 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec4);
         
+        
+        stlspec5 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec5);
+        
+        
         DistanceMetric dist = new DistanceMetric();
         
         //System.out.println("Spec 1 mumax :: " + stlspec1.spec.getMumax());
         //System.out.println("Spec 2 mumax :: " + stlspec2.spec.getMumax());
         
-        BigDecimal val = dist.computeDistance(stlspec2.spec, stlspec4.spec);
+        BigDecimal val = dist.computeDistance(stlspec5.spec, stlspec5.spec);
         
         System.out.println("Distance :: \n" + val);
         
