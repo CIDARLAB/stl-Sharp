@@ -1,14 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright (C) 2015-2016 Curtis Madsen <ckmadsen@bu.edu>
+ * CIDAR LAB & Hybrid and Networked Systems (HyNeSs) Group, BU Robotics Lab,
+ * Boston University See license.txt file for license information.
  */
 package hyness.stl;
 
 /**
  *
- * @author ckmadsen
+ * @author Curtis Madsen
  */
-public class Module {
+public interface Module {
     
 }
