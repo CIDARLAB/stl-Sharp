@@ -14,6 +14,7 @@ import hyness.stl.DisjunctionNode;
 import hyness.stl.EventNode;
 import hyness.stl.ImplicationNode;
 import hyness.stl.LinearPredicateLeaf;
+import hyness.stl.Module;
 import hyness.stl.ModuleLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.NotNode;
@@ -43,9 +44,9 @@ public class DistanceMetric {
 
     private TimeMetric timeMetric1;
     private TimeMetric timeMetric2;
-    private HashMap<String, TreeNode> spec1Modules;
+    private HashMap<String, Module> spec1Modules;
     private HashMap<String, HashMap<Pair<String, Boolean>, String>> spec1Maps;
-    private HashMap<String, TreeNode> spec2Modules;
+    private HashMap<String, Module> spec2Modules;
     private HashMap<String, HashMap<Pair<String, Boolean>, String>> spec2Maps;
     private HashMap<String, HashMap<String, Double>> limitsMap;
     private AtomicInteger counter;
@@ -142,6 +143,15 @@ public class DistanceMetric {
         return sigCap;
 
     }
+    
+    private TreeNode getTreeNodeFromModule(Module mod) {
+        if (mod instanceof TreeNode) {
+            return (TreeNode) mod;
+        }
+        else {
+            return ((STLflat) mod).toSTL();
+        }
+    }
 
     private BigDecimal computeDistance(TreeNode spec1, TreeNode spec2) {
         BigDecimal dist = null;
@@ -154,15 +164,15 @@ public class DistanceMetric {
         //Either one has a Concatenation operator //Implement some optimization algo here...
         if (spec1.op.equals(Operation.CONCAT)) {
             if (spec1 instanceof ModuleNode) {
-                TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
-                TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).right).toString()));
                 return min(computeDistance(left, spec2), computeDistance(right, spec2));
             }
             return min(computeDistance(((ConcatenationNode) spec1).left, spec2), computeDistance(((ConcatenationNode) spec1).right, spec2));
         } else if (spec2.op.equals(Operation.CONCAT)) {
             if (spec2 instanceof ModuleNode) {
-                TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
-                TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).right).toString()));
                 return min(computeDistance(spec1, left), computeDistance(spec1, right));
             }
             return min(computeDistance(spec1, ((ConcatenationNode) spec2).left), computeDistance(spec1, ((ConcatenationNode) spec2).right));
@@ -171,13 +181,13 @@ public class DistanceMetric {
         //Either one of them has a Parallel operator
         else if (spec1.op.equals(Operation.PARALLEL)) {
             if (spec1 instanceof ModuleNode) {
-                TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
-                TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).right).toString()));
             }
         } else if (spec2.op.equals(Operation.PARALLEL)) {
             if (spec2 instanceof ModuleNode) {
-                TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
-                TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).right).toString()));
             }
         }
         
@@ -191,8 +201,8 @@ public class DistanceMetric {
         //One of them is an Implies.. 
         else if (spec1.op.equals(Operation.IMPLIES)) {
             if (spec1 instanceof ModuleNode) {
-                TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
-                TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).right).toString()));
                 return (max(computeDistance(left.negate(), spec2), computeDistance(right, spec2)).subtract(((computeDistance(left.negate(), right)).divide(BigDecimal.valueOf(2.0)))));
                 //return (max(computeDistance(left.negate(), spec2), computeDistance(right, spec2)) - ((computeDistance(left.negate(), right)) / 2.0));
             }
@@ -201,8 +211,8 @@ public class DistanceMetric {
             //return (max(computeDistance(impNode.left.negate(), spec2), computeDistance(impNode.right, spec2)) - ((computeDistance(impNode.left.negate(), impNode.right)) / 2.0));
         } else if (spec2.op.equals(Operation.IMPLIES)) {
             if (spec2 instanceof ModuleNode) {
-                TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
-                TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).right).toString()));
                 return (max(computeDistance(spec1, left.negate()), computeDistance(spec1, right)).subtract(((computeDistance(left.negate(), right)).divide(BigDecimal.valueOf(2.0)))));
                 //return (max(computeDistance(spec1, left.negate()), computeDistance(spec1, right)) - ((computeDistance(left.negate(), right)) / 2.0));
             }
@@ -214,8 +224,8 @@ public class DistanceMetric {
         //One of them is Conjunction
         else if (spec1.op.equals(Operation.AND)) {
             if (spec1 instanceof ModuleNode) {
-                TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
-                TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).right).toString()));
                 return (max(computeDistance(left, spec2), computeDistance(right, spec2)).subtract(((computeDistance(left, right)).divide(BigDecimal.valueOf(2.0)))));
                 //return (max(computeDistance(left, spec2), computeDistance(right, spec2)) - ((computeDistance(left, right)) / 2.0));
             }
@@ -225,8 +235,8 @@ public class DistanceMetric {
 
         } else if (spec2.op.equals(Operation.AND)) {
             if (spec2 instanceof ModuleNode) {
-                TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
-                TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).right).toString()));
                 return (max(computeDistance(spec1, left), computeDistance(spec1, right)).subtract(((computeDistance(left, right)).divide(BigDecimal.valueOf(2.0)))));
                 //return (max(computeDistance(spec1, left), computeDistance(spec1, right)) - ((computeDistance(left, right)) / 2.0));
             }
@@ -238,8 +248,8 @@ public class DistanceMetric {
         //One of them is Disjunction
         else if (spec1.op.equals(Operation.OR)) {
             if (spec1 instanceof ModuleNode) {
-                TreeNode left = spec1Modules.get((((ModuleNode) spec1).left).toString());
-                TreeNode right = spec1Modules.get((((ModuleNode) spec1).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) spec1).right).toString()));
                 return min(computeDistance(left, spec2), computeDistance(right, spec2));
             }
             DisjunctionNode orNode = (DisjunctionNode) spec1;
@@ -247,8 +257,8 @@ public class DistanceMetric {
 
         } else if (spec2.op.equals(Operation.OR)) {
             if (spec2 instanceof ModuleNode) {
-                TreeNode left = spec2Modules.get((((ModuleNode) spec2).left).toString());
-                TreeNode right = spec2Modules.get((((ModuleNode) spec2).right).toString());
+                TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).left).toString()));
+                TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) spec2).right).toString()));
                 return min(computeDistance(spec1, left), computeDistance(spec1, right));
             }
             DisjunctionNode orNode = (DisjunctionNode) spec2;
@@ -309,10 +319,10 @@ public class DistanceMetric {
         
         //One of them is a ModuleLeaf
         else if (spec1 instanceof ModuleLeaf) {
-            TreeNode spec1leaf = spec1Modules.get(((ModuleLeaf) spec1).name);
+            TreeNode spec1leaf = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) spec1).name));
             return computeDistance(spec1leaf, spec2);
         } else if (spec2 instanceof ModuleLeaf) {
-            TreeNode spec2leaf = spec2Modules.get(((ModuleLeaf) spec2).name);
+            TreeNode spec2leaf = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) spec2).name));
             return computeDistance(spec1, spec2leaf);
         }
         

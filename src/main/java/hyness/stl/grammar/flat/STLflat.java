@@ -13,6 +13,7 @@ import hyness.stl.ConjunctionNode;
 import hyness.stl.DisjunctionNode;
 import hyness.stl.ImplicationNode;
 import hyness.stl.LinearPredicateLeaf;
+import hyness.stl.Module;
 import hyness.stl.ModuleLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.Pair;
@@ -31,12 +32,12 @@ import lombok.Getter;
  * @author Cristian-Ioan Vasile
  *
  */
-public class STLflat {
+public class STLflat implements Module {
     public static final String IOMAP = "io";
     
     public TreeNode module;
     
-    public HashMap<String, TreeNode> modules;
+    public HashMap<String, Module> modules;
     
     public HashMap<String, HashMap<Pair<String, Boolean>, String>> maps;
     public HashMap<String, HashMap<String,Double>> limitsMap;
@@ -60,7 +61,7 @@ public class STLflat {
      */
     public STLflat(TreeNode module) {
         this.module = module;
-        this.modules = new HashMap<String, TreeNode>();
+        this.modules = new HashMap<String, Module>();
         this.maps = new HashMap<String, HashMap<Pair<String, Boolean>,String>>();
         limitsMap = new HashMap<String,HashMap<String,Double>>();
     }
@@ -134,7 +135,13 @@ public class STLflat {
      */
     public TreeNode toSTL(TreeNode node) {
         if (node instanceof ModuleLeaf) {
-            return this.modules.get(((ModuleLeaf)node).name);
+            Module mod = this.modules.get(((ModuleLeaf)node).name);
+            if (mod instanceof TreeNode) {
+                return (TreeNode) mod;
+            }
+            else {
+                return ((STLflat) mod).toSTL();
+            }
         } else if (node instanceof ModuleNode) {
             TreeNode ret;
             ModuleNode mnode = (ModuleNode)node;

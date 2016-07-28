@@ -9,7 +9,7 @@ package hyness.stl;
  * @author Cristian-Ioan Vasile
  *
  */
-public abstract class TreeNode {
+public abstract class TreeNode implements Module {
     
     public static double maximumRobustness = 1e12;
     

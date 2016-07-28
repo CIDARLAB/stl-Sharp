@@ -13,6 +13,7 @@ import hyness.stl.DisjunctionNode;
 import hyness.stl.EventNode;
 import hyness.stl.ImplicationNode;
 import hyness.stl.LinearPredicateLeaf;
+import hyness.stl.Module;
 import hyness.stl.ModuleNode;
 import hyness.stl.NotNode;
 import hyness.stl.Pair;
@@ -30,7 +31,7 @@ import lombok.Setter;
 public class TimeMetric {
     
     @Setter
-    private HashMap<String, TreeNode> specModules;
+    private HashMap<String, Module> specModules;
     
     @Setter
     private HashMap<String, HashMap<Pair<String, Boolean>, String>> specMaps;
