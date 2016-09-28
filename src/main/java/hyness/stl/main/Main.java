@@ -6,9 +6,13 @@
 package hyness.stl.main;
 
 import hyness.stl.composition.Compose;
+import hyness.stl.grammar.flat.STLflat;
 import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
 import hyness.stl.metrics.DistanceMetric;
 import hyness.stl.metrics.Utilities;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 
 /**
@@ -17,7 +21,7 @@ import java.math.BigDecimal;
  */
 public class Main {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
         if (args.length < 3 || args.length == 1 && args[0].equals("-help")) {
             System.out.println("Usage:  java -jar STLb.jar [OPTION]... [FILE]...");
             System.out.println("Options:");
@@ -31,22 +35,30 @@ public class Main {
             STLflatAbstractSyntaxTreeExtractor stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
             STLflatAbstractSyntaxTreeExtractor stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
             String operator = args[0].split("=")[1];
+            STLflat result = null;
             switch (operator) {
                 case "AND":
-                    Compose.composeWithAnd(stlspec1.spec, stlspec2.spec);
+                    result = Compose.composeWithAnd(stlspec1.spec, stlspec2.spec);
                     break;
                 case "OR":
-                    Compose.composeWithOr(stlspec1.spec, stlspec2.spec);
+                    result = Compose.composeWithOr(stlspec1.spec, stlspec2.spec);
                     break;
                 case "PARALLEL":
-                    Compose.composeWithParallel(stlspec1.spec, stlspec2.spec);
+                    result = Compose.composeWithParallel(stlspec1.spec, stlspec2.spec);
                     break;
                 case "CONCAT":
                     //TODO:  Figure out how to input mapping
-                    //Compose.composeWithConcatenate(stlspec1.spec, stlspec2.spec);
+                    //result = Compose.composeWithConcatenate(stlspec1.spec, stlspec2.spec);
                     break;
                 default:
+                    System.out.println("Invalid OPERATOR.  OPERATOR can be AND, OR, PARALLEL, or CONCAT");
                     break;
+            }
+            if (result != null) {
+                try (PrintWriter writer = new PrintWriter(args[3], "UTF-8")) {
+                    writer.println(result.toString());
+                    writer.close();
+                }
             }
         }
         else if (args[0].startsWith("-distance")) {

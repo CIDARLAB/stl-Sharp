@@ -76,18 +76,22 @@ public class Compose {
             return stl;
         }
         
-        public static STLflat composeWithConcatenate(STLflat left, STLflat right, List<Pair<String, String>> internalMapping) {
+        public static STLflat composeWithConcatenate(STLflat left, STLflat right, HashMap<String, List<String>> internalMapping) {
             int i = 1;
             HashMap<Pair<String, Boolean>,String> m1Map = new HashMap<Pair<String, Boolean>,String>();
             HashMap<Pair<String, Boolean>,String> ioMap = new HashMap<Pair<String, Boolean>,String>();
             HashMap<String,HashMap<String,Double>> limitsMap = new HashMap<String,HashMap<String,Double>>();
             List<String> usedLeftPorts = new ArrayList<String>();
             List<String> usedRightPorts = new ArrayList<String>();
-            for (int j = 0; j < internalMapping.size(); j++) {
-                m1Map.put(new Pair<String, Boolean>(internalMapping.get(j).left, true), "a" + (j + 1));
-                m1Map.put(new Pair<String, Boolean>(internalMapping.get(j).right, false), "a" + (j + 1));
-                usedLeftPorts.add(internalMapping.get(j).left);
-                usedRightPorts.add(internalMapping.get(j).right);
+            int j = 1;
+            for (String leftOutput : internalMapping.keySet()) {
+                for (String rightInput : internalMapping.get(leftOutput)) {
+                    m1Map.put(new Pair<String, Boolean>(leftOutput, true), "a" + (j + 1));
+                    m1Map.put(new Pair<String, Boolean>(rightInput, false), "a" + (j + 1));
+                    usedLeftPorts.add(leftOutput);
+                    usedRightPorts.add(rightInput);
+                    j++;
+                }
             }
             Vector<String> leftPorts = new Vector<String>();
             leftPorts.add("phi1");
