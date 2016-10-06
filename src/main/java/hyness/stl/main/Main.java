@@ -10,10 +10,17 @@ import hyness.stl.grammar.flat.STLflat;
 import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
 import hyness.stl.metrics.DistanceMetric;
 import hyness.stl.metrics.Utilities;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -21,13 +28,14 @@ import java.math.BigDecimal;
  */
 public class Main {
     
-    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, IOException {
         if (args.length < 3 || args.length == 1 && args[0].equals("-help")) {
             System.out.println("Usage:  java -jar STLb.jar [OPTION]... [FILE]...");
             System.out.println("Options:");
             System.out.println("    -compose=OPERATOR   Composes two STLb formulae contained within the first two files and outputs");
             System.out.println("                        the composed formula into the third file");
             System.out.println("                        OPERATOR can be AND, OR, PARALLEL, or CONCAT");
+            System.out.println("                        If OPERATOR is CONCAT, then a mapping file is required as a fourth file");
             System.out.println("    -distance           Computes the distance between two STLb formulae contained within two files");
             System.out.println("    -help               Prints usage information");
         }
@@ -48,7 +56,20 @@ public class Main {
                     break;
                 case "CONCAT":
                     //TODO:  Figure out how to input mapping
-                    //result = Compose.composeWithConcatenate(stlspec1.spec, stlspec2.spec);
+                    Map<String, List<String>> mapping = new HashMap<String, List<String>>();
+                    BufferedReader br = null;
+                    String line = "";
+                    br = new BufferedReader(new FileReader(args[4]));
+                    while ((line = br.readLine()) != null) {
+                        String[] splitLine = line.split("=");
+                        List<String> map = mapping.get(splitLine[0]);
+                        if (map == null) {
+                            map = new ArrayList<String>();
+                        }
+                        map.add(splitLine[1]);
+                        mapping.put(splitLine[0], map);
+                    }                    
+                    result = Compose.composeWithConcatenate(stlspec1.spec, stlspec2.spec, mapping);
                     break;
                 default:
                     System.out.println("Invalid OPERATOR.  OPERATOR can be AND, OR, PARALLEL, or CONCAT");

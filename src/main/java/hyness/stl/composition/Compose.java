@@ -76,7 +76,7 @@ public class Compose {
             return stl;
         }
         
-        public static STLflat composeWithConcatenate(STLflat left, STLflat right, HashMap<String, List<String>> internalMapping) {
+        public static STLflat composeWithConcatenate(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
             int i = 1;
             HashMap<Pair<String, Boolean>,String> m1Map = new HashMap<Pair<String, Boolean>,String>();
             HashMap<Pair<String, Boolean>,String> ioMap = new HashMap<Pair<String, Boolean>,String>();
@@ -131,6 +131,6 @@ public class Compose {
             stl.maps.put("io", ioMap);
             stl.limitsMap = limitsMap;
             return stl;
-	}
-    
+	}    
 }
+
