@@ -44,62 +44,62 @@ public class ComposeTest {
     /**
      * Test of composeWithAnd method, of class Compose.
      */
-    @Test
-    public void testComposeWithAnd() {
-        System.out.println("composeWithAnd");
-        STLflat left = null;
-        STLflat right = null;
-        STLflat expResult = null;
-        STLflat result = Compose.composeWithAnd(left, right);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testComposeWithAnd() {
+//        System.out.println("composeWithAnd");
+//        STLflat left = null;
+//        STLflat right = null;
+//        STLflat expResult = null;
+//        STLflat result = Compose.composeWithAnd(left, right);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of composeWithOr method, of class Compose.
      */
-    @Test
-    public void testComposeWithOr() {
-        System.out.println("composeWithOr");
-        STLflat left = null;
-        STLflat right = null;
-        STLflat expResult = null;
-        STLflat result = Compose.composeWithOr(left, right);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testComposeWithOr() {
+//        System.out.println("composeWithOr");
+//        STLflat left = null;
+//        STLflat right = null;
+//        STLflat expResult = null;
+//        STLflat result = Compose.composeWithOr(left, right);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of composeWithParallel method, of class Compose.
      */
-    @Test
-    public void testComposeWithParallel() {
-        System.out.println("composeWithParallel");
-        STLflat left = null;
-        STLflat right = null;
-        STLflat expResult = null;
-        STLflat result = Compose.composeWithParallel(left, right);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testComposeWithParallel() {
+//        System.out.println("composeWithParallel");
+//        STLflat left = null;
+//        STLflat right = null;
+//        STLflat expResult = null;
+//        STLflat result = Compose.composeWithParallel(left, right);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of composeWithConcatenate method, of class Compose.
      */
-    @Test
-    public void testComposeWithConcatenate() {
-        System.out.println("composeWithConcatenate");
-        STLflat left = null;
-        STLflat right = null;
-        HashMap<String, List<String>> internalMapping = null;
-        STLflat expResult = null;
-        STLflat result = Compose.composeWithConcatenate(left, right, internalMapping);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testComposeWithConcatenate() {
+//        System.out.println("composeWithConcatenate");
+//        STLflat left = null;
+//        STLflat right = null;
+//        HashMap<String, List<String>> internalMapping = null;
+//        STLflat expResult = null;
+//        STLflat result = Compose.composeWithConcatenate(left, right, internalMapping);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
     
 }
