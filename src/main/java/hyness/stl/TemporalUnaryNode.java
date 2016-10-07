@@ -17,13 +17,13 @@ public abstract class TemporalUnaryNode extends TreeNode {
     /**
      * The lower bound of the temporal operator's interval.
      */
-    public int low;
+    public double low;
     /**
      * The upper bound of the temporal operator's interval.
      */
-    public int high;
+    public double high;
     
-    public TemporalUnaryNode(Operation op, TreeNode child, int l, int h) {
+    public TemporalUnaryNode(Operation op, TreeNode child, double l, double h) {
         super(op);
         this.child = child;
         this.low = l;

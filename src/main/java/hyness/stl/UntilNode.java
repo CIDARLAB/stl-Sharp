@@ -11,7 +11,7 @@ package hyness.stl;
  */
 public class UntilNode extends TemporalBinaryNode {
     
-    public UntilNode(TreeNode left, TreeNode right, int l, int h) {
+    public UntilNode(TreeNode left, TreeNode right, double l, double h) {
         super(Operation.UNTIL, left, right, l, h);
     }
     

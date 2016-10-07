@@ -11,7 +11,7 @@ package hyness.stl;
  */
 public class EventNode extends TemporalUnaryNode {
     
-    public EventNode(TreeNode child, int l, int h) {
+    public EventNode(TreeNode child, double l, double h) {
         super(Operation.EVENT, child, l, h);
     }
     

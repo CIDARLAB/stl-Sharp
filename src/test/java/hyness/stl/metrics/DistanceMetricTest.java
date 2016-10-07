@@ -41,8 +41,18 @@ public class DistanceMetricTest {
                 + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
                 ;
          
+        spec2 = "phi1(u1,u2,y1,y2) >>_m1 phi2(u1,u2,y1,y2)\n"
+                + "\n"
+                + "phi1 = (!(u1 >= 10) && (u2 < 2)) => (G[0, 2] y1 > 2 || G[1, 3] y2 >= 12)\n"
+                + "phi2 = ((u1 < 100) && (u2 > 5)) => (G[1, 4] y1 < 7 && F[0, 7] y2 < 3)\n"
+                + "\n"
+                + "m1 { u1@left: u1, u2@left: u2, y1@left: a1, y2@left: a2, u1@right: a1, u2@right: a2, y1@right: y1, y2@right: y2 }\n"
+                + "io {u1: u1, u2: u2, y1: y}\n"
+                + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
+                ;
         
-        spec2 = "phi1(u1) >>_m1 phi2(u1)\n"
+        
+        /*spec2 = "phi1(u1) >>_m1 phi2(u1)\n"
                 + "\n"
                 + "phi1 = (u1 < 6)\n"
                 + "phi2 = (u1 >= 2)\n"
@@ -51,7 +61,7 @@ public class DistanceMetricTest {
                 + "io {u1: u1, u2: u2, y1: y}\n"
                 + "limits [{u1 : {max:10,min:0}},{u2:{max:10,min:0}},{y1:{min:0,max:10}},{y2:{min:0,max:10}}]\n"
                 ;
-        
+        */
         spec3 = "phi1(u1)\n"
                 + "\n"
                 + "phi1 = (u1 < 7) \n"
@@ -121,7 +131,10 @@ public class DistanceMetricTest {
         //System.out.println("Spec 1 mumax :: " + stlspec1.spec.getMumax());
         //System.out.println("Spec 2 mumax :: " + stlspec2.spec.getMumax());
         
-        BigDecimal val = dist.computeDistance(stlspec5.spec, stlspec5.spec);
+        System.out.println("STL Example ::  " + stlspec1.spec.toString()+"\n\n");
+        System.out.println("STL Example ::  " + stlspec2.spec.toString()+"\n\n");
+        
+        BigDecimal val = dist.computeDistance(stlspec1.spec, stlspec2.spec);
         
         System.out.println("Distance :: \n" + val);
         
