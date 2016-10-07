@@ -11,7 +11,7 @@ package hyness.stl;
  */
 public class AlwaysNode extends TemporalUnaryNode {
     
-    public AlwaysNode(TreeNode child, int l, int h) {
+    public AlwaysNode(TreeNode child, double l, double h) {
         super(Operation.ALWAYS, child, l, h);
     }
     
