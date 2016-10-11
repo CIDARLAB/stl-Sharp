@@ -30,7 +30,7 @@ public class Main {
     
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, IOException {
         if (args.length < 3 || args.length == 1 && args[0].equals("-help")) {
-            System.out.println("Usage:  java -jar STLb.jar [OPTION]... [FILE]...");
+            System.out.println("Usage:  java -jar <STL-flat-jar-name>.jar [OPTION]... [FILE]...");
             System.out.println("Options:");
             System.out.println("    -compose=OPERATOR   Composes two STLb formulae contained within the first two files and outputs");
             System.out.println("                        the composed formula into the third file");
