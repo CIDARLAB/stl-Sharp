@@ -37,5 +37,5 @@ booleanExpr:
     ;
 BOOLEAN : ('true'|'false');
 VARIABLE : ([a-z]|[A-Z])([a-z]|[A-Z]|[0-9]|'_')*;
-RATIONAL : ('-')?[0-9]*('.')?[0-9]+ ;
+RATIONAL : ('-')?[0-9]*('.')?[0-9]+('E')?[0-9]* ;
 WS : ( ' ' | '\t' | '\r' | '\n' )+ { skip(); };

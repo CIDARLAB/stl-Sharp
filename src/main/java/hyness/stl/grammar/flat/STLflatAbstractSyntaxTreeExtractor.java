@@ -116,7 +116,7 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
     public TreeNode visitFormula(STLflatParser.FormulaContext ctx) {
         Operation op = Operation.getCode(ctx.op.getText());
         TreeNode ret = null;
-        int low = -1, high = -1;
+        double low = -1, high = -1;
         switch(op) {
             case OR:
                 ret = new DisjunctionNode(visit(ctx.left), visit(ctx.right));
@@ -131,18 +131,18 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
                 ret = new NotNode(visit(ctx.child));
                 break;
             case UNTIL:
-                low = Integer.valueOf(ctx.low.getText());
-                high = Integer.valueOf(ctx.high.getText());
+                low = Double.valueOf(ctx.low.getText());
+                high = Double.valueOf(ctx.high.getText());
                 ret = new UntilNode(visit(ctx.left), visit(ctx.right), low, high);
                 break;
             case EVENT:
-                low = Integer.valueOf(ctx.low.getText());
-                high = Integer.valueOf(ctx.high.getText());
+                low = Double.valueOf(ctx.low.getText());
+                high = Double.valueOf(ctx.high.getText());
                 ret = new EventNode(visit(ctx.child), low, high);
                 break;
             case ALWAYS:
-                low = Integer.valueOf(ctx.low.getText());
-                high = Integer.valueOf(ctx.high.getText());
+                low = Double.valueOf(ctx.low.getText());
+                high = Double.valueOf(ctx.high.getText());
                 ret = new AlwaysNode(visit(ctx.child), low, high);
                 break;
             case CONCAT:
