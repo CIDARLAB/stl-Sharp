@@ -1,4 +1,4 @@
-// Generated from STLflat.g4 by ANTLR 4.5.3
+// Generated from STLflat.g4 by ANTLR 4.5.1
 
 /**
  * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class STLflatParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -333,7 +333,6 @@ public class STLflatParser extends Parser {
 					_prevctx = _localctx;
 					{
 					setState(79);
-					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 					case 1:
 						{
@@ -590,29 +589,38 @@ public class STLflatParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(110);
-			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
 				{
-				_localctx = new ParpropContext(_localctx);
+				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
 				setState(89);
-				match(T__6);
+				((FormulaContext)_localctx).op = match(T__10);
 				setState(90);
-				((ParpropContext)_localctx).child = property(0);
-				setState(91);
-				match(T__8);
+				((FormulaContext)_localctx).child = property(9);
 				}
 				break;
 			case 2:
 				{
-				_localctx = new BooleanPredContext(_localctx);
+				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
+				setState(91);
+				((FormulaContext)_localctx).op = match(T__11);
+				setState(92);
+				match(T__12);
 				setState(93);
-				booleanExpr();
+				((FormulaContext)_localctx).low = match(RATIONAL);
+				setState(94);
+				match(T__7);
+				setState(95);
+				((FormulaContext)_localctx).high = match(RATIONAL);
+				setState(96);
+				match(T__13);
+				setState(97);
+				((FormulaContext)_localctx).child = property(8);
 				}
 				break;
 			case 3:
@@ -620,52 +628,42 @@ public class STLflatParser extends Parser {
 				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(94);
-				((FormulaContext)_localctx).op = match(T__10);
-				setState(95);
-				((FormulaContext)_localctx).child = property(9);
+				setState(98);
+				((FormulaContext)_localctx).op = match(T__14);
+				setState(99);
+				match(T__12);
+				setState(100);
+				((FormulaContext)_localctx).low = match(RATIONAL);
+				setState(101);
+				match(T__7);
+				setState(102);
+				((FormulaContext)_localctx).high = match(RATIONAL);
+				setState(103);
+				match(T__13);
+				setState(104);
+				((FormulaContext)_localctx).child = property(7);
 				}
 				break;
 			case 4:
 				{
-				_localctx = new FormulaContext(_localctx);
+				_localctx = new ParpropContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(96);
-				((FormulaContext)_localctx).op = match(T__11);
-				setState(97);
-				match(T__12);
-				setState(98);
-				((FormulaContext)_localctx).low = match(RATIONAL);
-				setState(99);
-				match(T__7);
-				setState(100);
-				((FormulaContext)_localctx).high = match(RATIONAL);
-				setState(101);
-				match(T__13);
-				setState(102);
-				((FormulaContext)_localctx).child = property(8);
+				setState(105);
+				match(T__6);
+				setState(106);
+				((ParpropContext)_localctx).child = property(0);
+				setState(107);
+				match(T__8);
 				}
 				break;
 			case 5:
 				{
-				_localctx = new FormulaContext(_localctx);
+				_localctx = new BooleanPredContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(103);
-				((FormulaContext)_localctx).op = match(T__14);
-				setState(104);
-				match(T__12);
-				setState(105);
-				((FormulaContext)_localctx).low = match(RATIONAL);
-				setState(106);
-				match(T__7);
-				setState(107);
-				((FormulaContext)_localctx).high = match(RATIONAL);
-				setState(108);
-				match(T__13);
 				setState(109);
-				((FormulaContext)_localctx).child = property(7);
+				booleanExpr();
 				}
 				break;
 			}
@@ -679,7 +677,6 @@ public class STLflatParser extends Parser {
 					_prevctx = _localctx;
 					{
 					setState(135);
-					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 					case 1:
 						{
@@ -896,7 +893,6 @@ public class STLflatParser extends Parser {
 					_prevctx = _localctx;
 					{
 					setState(162);
-					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 					case 1:
 						{
@@ -1290,7 +1286,6 @@ public class STLflatParser extends Parser {
 		enterRule(_localctx, 18, RULE_limitPair);
 		try {
 			setState(232);
-			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
@@ -1455,10 +1450,10 @@ public class STLflatParser extends Parser {
 		"\3\6LM\f\4\2\2MN\7\b\2\2NO\7\4\2\2OP\7*\2\2PR\5\4\3\5Q8\3\2\2\2Q=\3\2"+
 		"\2\2QB\3\2\2\2QG\3\2\2\2QL\3\2\2\2RU\3\2\2\2SQ\3\2\2\2ST\3\2\2\2T\5\3"+
 		"\2\2\2US\3\2\2\2VW\7*\2\2WX\7\f\2\2XY\5\b\5\2Y\7\3\2\2\2Z[\b\5\1\2[\\"+
-		"\7\t\2\2\\]\5\b\5\2]^\7\13\2\2^q\3\2\2\2_q\5\f\7\2`a\7\r\2\2aq\5\b\5\13"+
-		"bc\7\16\2\2cd\7\17\2\2de\7+\2\2ef\7\n\2\2fg\7+\2\2gh\7\20\2\2hq\5\b\5"+
-		"\nij\7\21\2\2jk\7\17\2\2kl\7+\2\2lm\7\n\2\2mn\7+\2\2no\7\20\2\2oq\5\b"+
-		"\5\tpZ\3\2\2\2p_\3\2\2\2p`\3\2\2\2pb\3\2\2\2pi\3\2\2\2q\u008b\3\2\2\2"+
+		"\7\r\2\2\\q\5\b\5\13]^\7\16\2\2^_\7\17\2\2_`\7+\2\2`a\7\n\2\2ab\7+\2\2"+
+		"bc\7\20\2\2cq\5\b\5\nde\7\21\2\2ef\7\17\2\2fg\7+\2\2gh\7\n\2\2hi\7+\2"+
+		"\2ij\7\20\2\2jq\5\b\5\tkl\7\t\2\2lm\5\b\5\2mn\7\13\2\2nq\3\2\2\2oq\5\f"+
+		"\7\2pZ\3\2\2\2p]\3\2\2\2pd\3\2\2\2pk\3\2\2\2po\3\2\2\2q\u008b\3\2\2\2"+
 		"rs\f\b\2\2st\7\3\2\2t\u008a\5\b\5\tuv\f\7\2\2vw\7\5\2\2w\u008a\5\b\5\b"+
 		"xy\f\6\2\2yz\7\6\2\2z\u008a\5\b\5\7{|\f\5\2\2|}\7\7\2\2}\u008a\5\b\5\6"+
 		"~\177\f\4\2\2\177\u0080\7\b\2\2\u0080\u008a\5\b\5\5\u0081\u0082\f\3\2"+
