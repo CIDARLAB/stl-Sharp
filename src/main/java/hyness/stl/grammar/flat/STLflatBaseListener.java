@@ -83,18 +83,6 @@ public class STLflatBaseListener implements STLflatListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFormula(STLflatParser.FormulaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFormula(STLflatParser.FormulaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterParprop(STLflatParser.ParpropContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -102,6 +90,18 @@ public class STLflatBaseListener implements STLflatListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParprop(STLflatParser.ParpropContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFormula(STLflatParser.FormulaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFormula(STLflatParser.FormulaContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

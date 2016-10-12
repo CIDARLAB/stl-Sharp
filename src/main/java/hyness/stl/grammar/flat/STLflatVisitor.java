@@ -51,19 +51,19 @@ public interface STLflatVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBooleanPred(STLflatParser.BooleanPredContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code formula}
-	 * labeled alternative in {@link STLflatParser#property}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFormula(STLflatParser.FormulaContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code parprop}
 	 * labeled alternative in {@link STLflatParser#property}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParprop(STLflatParser.ParpropContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code formula}
+	 * labeled alternative in {@link STLflatParser#property}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormula(STLflatParser.FormulaContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link STLflatParser#expr}.
 	 * @param ctx the parse tree

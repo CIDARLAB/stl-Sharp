@@ -59,14 +59,14 @@ public class STLflatBaseVisitor<T> extends AbstractParseTreeVisitor<T> implement
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFormula(STLflatParser.FormulaContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParprop(STLflatParser.ParpropContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitParprop(STLflatParser.ParpropContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFormula(STLflatParser.FormulaContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

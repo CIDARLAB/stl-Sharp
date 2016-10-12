@@ -520,6 +520,26 @@ public class STLflatParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class ParpropContext extends PropertyContext {
+		public PropertyContext child;
+		public PropertyContext property() {
+			return getRuleContext(PropertyContext.class,0);
+		}
+		public ParpropContext(PropertyContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof STLflatListener ) ((STLflatListener)listener).enterParprop(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof STLflatListener ) ((STLflatListener)listener).exitParprop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof STLflatVisitor ) return ((STLflatVisitor<? extends T>)visitor).visitParprop(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class FormulaContext extends PropertyContext {
 		public PropertyContext left;
 		public Token op;
@@ -549,26 +569,6 @@ public class STLflatParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof STLflatVisitor ) return ((STLflatVisitor<? extends T>)visitor).visitFormula(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class ParpropContext extends PropertyContext {
-		public PropertyContext child;
-		public PropertyContext property() {
-			return getRuleContext(PropertyContext.class,0);
-		}
-		public ParpropContext(PropertyContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof STLflatListener ) ((STLflatListener)listener).enterParprop(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof STLflatListener ) ((STLflatListener)listener).exitParprop(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof STLflatVisitor ) return ((STLflatVisitor<? extends T>)visitor).visitParprop(this);
 			else return visitor.visitChildren(this);
 		}
 	}

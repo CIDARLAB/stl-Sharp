@@ -71,18 +71,6 @@ public interface STLflatListener extends ParseTreeListener {
 	 */
 	void exitBooleanPred(STLflatParser.BooleanPredContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code formula}
-	 * labeled alternative in {@link STLflatParser#property}.
-	 * @param ctx the parse tree
-	 */
-	void enterFormula(STLflatParser.FormulaContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code formula}
-	 * labeled alternative in {@link STLflatParser#property}.
-	 * @param ctx the parse tree
-	 */
-	void exitFormula(STLflatParser.FormulaContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code parprop}
 	 * labeled alternative in {@link STLflatParser#property}.
 	 * @param ctx the parse tree
@@ -94,6 +82,18 @@ public interface STLflatListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParprop(STLflatParser.ParpropContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code formula}
+	 * labeled alternative in {@link STLflatParser#property}.
+	 * @param ctx the parse tree
+	 */
+	void enterFormula(STLflatParser.FormulaContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code formula}
+	 * labeled alternative in {@link STLflatParser#property}.
+	 * @param ctx the parse tree
+	 */
+	void exitFormula(STLflatParser.FormulaContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link STLflatParser#expr}.
 	 * @param ctx the parse tree
