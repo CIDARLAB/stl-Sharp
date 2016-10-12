@@ -42,8 +42,10 @@ public class ConcatenationNode extends TreeNode {
         return Math.min(left.robustness(s, t), right.robustness(s, t));
     }
     
+    @Override
     public String toString() {
-        return "(" + Operation.CONCAT + " " + left + " " + right + ")";
+        return "(" + left + " " + Operation.getString(Operation.CONCAT) + " " + right +")";
+        //return "(" + Operation.CONCAT + " " + left + " " + right + ")";
     }
 
     @Override

@@ -33,5 +33,9 @@ public class EventNode extends TemporalUnaryNode {
         return new EventNode(this.child.negate(),this.low,this.high);
     }
     
+    @Override
+    public String toString(){
+        return "(F[" + low + "," + high + "]" + child + ")";
+    }
     
 }

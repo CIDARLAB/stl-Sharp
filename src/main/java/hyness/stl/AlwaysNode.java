@@ -33,4 +33,9 @@ public class AlwaysNode extends TemporalUnaryNode {
         return new AlwaysNode(this.child.negate(),this.low,this.high);
     }
     
+    @Override
+    public String toString(){
+        return "(G[" + low + "," + high + "]" + child + ")"; 
+    }
+    
 }

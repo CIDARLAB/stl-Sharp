@@ -57,7 +57,7 @@ public class LinearPredicateLeaf extends TreeNode {
     }
     
     public String toString() {
-        return "(" + variable + " " + rop + " " + threshold + ")";
+        return "(" + variable + " " + RelOperation.getString(rop) + " " + threshold + ")";
     } 
 
     @Override

@@ -45,4 +45,8 @@ public class UntilNode extends TemporalBinaryNode {
         return new UntilNode(this.left.negate(),this.right.negate(),this.low,this.high);
     }
     
+    public String toString(){
+        return "(U["  + low + "," + high + "]" + left + " " + right +  ")";
+    }
+    
 }

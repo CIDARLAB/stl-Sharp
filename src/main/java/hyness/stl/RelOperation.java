@@ -27,5 +27,23 @@ public enum RelOperation {
         if(text.equals("=")) return EQ;
         return NOP;
     }
+    
+    public static String getString(RelOperation rop){
+        switch(rop){
+            case LT:
+                return "<";
+            case LE:
+                return "<=";
+            case GT:
+                return ">";
+            case GE:
+                return ">=";
+            case EQ:
+                return "=";
+            default:
+                return "NOP";
+        }
+    }
+    
 }
 

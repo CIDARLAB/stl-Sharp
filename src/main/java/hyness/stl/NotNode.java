@@ -25,4 +25,8 @@ public class NotNode extends BooleanUnaryNode {
         return this.child;
     }
     
+    public String toString(){
+        return "(" + Operation.getString(Operation.NOT) + child + ")" ;
+    }
+    
 }

@@ -28,7 +28,7 @@ public class BooleanLeaf extends TreeNode {
     }
     
     public String toString() {
-        return "(Bool " + value + ")"; 
+        return "(" + value + ")"; 
     }
 
     @Override

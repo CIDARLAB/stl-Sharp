@@ -25,4 +25,9 @@ public class ImplicationNode extends BooleanBinaryNode {
         return new DisjunctionNode(this.left,this.right.negate());
     }
     
+    @Override
+    public String toString(){
+        return "(" + left + Operation.getString(Operation.IMPLIES) + right + ")";
+    }
+    
 }

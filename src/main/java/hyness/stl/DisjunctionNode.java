@@ -25,4 +25,9 @@ public class DisjunctionNode extends BooleanBinaryNode {
         return new ConjunctionNode(left.negate(),right.negate());
     }
     
+    @Override
+    public String toString(){
+        return "(" + left + " " + Operation.getString(Operation.OR) + " " + right +")";
+    }
+    
 }

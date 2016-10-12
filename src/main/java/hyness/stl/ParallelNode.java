@@ -34,7 +34,7 @@ public class ParallelNode extends TreeNode {
     
     @Override
     public String toString() {
-        return "(" + Operation.PARALLEL + " " + left + " " + right + ")";
+        return "(" + left + " " + Operation.getString(Operation.PARALLEL) + " " + right + ")";
     }
 
     @Override
