@@ -7,16 +7,16 @@ package hyness.stl.metrics;
 
 import hyness.stl.TreeNode;
 import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
-import static hyness.stl.metrics.DistanceMetricTest.spec1;
-import static hyness.stl.metrics.DistanceMetricTest.spec2;
-import static hyness.stl.metrics.DistanceMetricTest.spec3;
-import static hyness.stl.metrics.DistanceMetricTest.spec4;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static hyness.stl.metrics.DistanceMetricTest.module1;
+import static hyness.stl.metrics.DistanceMetricTest.module2;
+import static hyness.stl.metrics.DistanceMetricTest.module3;
+import static hyness.stl.metrics.DistanceMetricTest.cascade1;
 
 /**
  *
