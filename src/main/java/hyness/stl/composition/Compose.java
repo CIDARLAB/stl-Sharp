@@ -41,7 +41,6 @@ public class Compose {
             HashMap<Pair<String, Boolean>,String> ioMap = new HashMap<Pair<String, Boolean>,String>();
             HashMap<String,HashMap<String,Double>> limitsMap = new HashMap<String,HashMap<String,Double>>();
             Vector<String> leftPorts = new Vector<String>();
-            leftPorts.add("phi1");
             for (Pair<String, Boolean> pair : left.maps.get("io").keySet()) {
                 leftPorts.add(left.maps.get("io").get(pair));
 		m1Map.put(new Pair<String, Boolean>(left.maps.get("io").get(pair), true), "io" + i);
@@ -53,7 +52,6 @@ public class Compose {
 		i++;
             }
             Vector<String> rightPorts = new Vector<String>();
-            rightPorts.add("phi2");
             for (Pair<String, Boolean> pair : right.maps.get("io").keySet()) {
                 rightPorts.add(right.maps.get("io").get(pair));
 		m1Map.put(new Pair<String, Boolean>(right.maps.get("io").get(pair), false), "io" + i);
@@ -94,10 +92,9 @@ public class Compose {
                 }
             }
             Vector<String> leftPorts = new Vector<String>();
-            leftPorts.add("phi1");
             for (Pair<String, Boolean> pair : left.maps.get("io").keySet()) {
+                leftPorts.add(left.maps.get("io").get(pair));
                 if (!usedLeftPorts.contains(left.maps.get("io").get(pair))) {
-                    leftPorts.add(left.maps.get("io").get(pair));
                     m1Map.put(new Pair<String, Boolean>(left.maps.get("io").get(pair), true), "io" + i);
                     ioMap.put(new Pair<String, Boolean>("io" + i, null), "io" + i);
                     HashMap<String,Double> limits = new HashMap<String,Double>();
@@ -108,10 +105,9 @@ public class Compose {
                 }
             }
             Vector<String> rightPorts = new Vector<String>();
-            rightPorts.add("phi2");
             for (Pair<String, Boolean> pair : right.maps.get("io").keySet()) {
+                rightPorts.add(right.maps.get("io").get(pair));
                 if (!usedRightPorts.contains(right.maps.get("io").get(pair))) {
-                    rightPorts.add(right.maps.get("io").get(pair));
                     m1Map.put(new Pair<String, Boolean>(right.maps.get("io").get(pair), false), "io" + i);
                     ioMap.put(new Pair<String, Boolean>("io" + i, null), "io" + i);
                     HashMap<String,Double> limits = new HashMap<String,Double>();
