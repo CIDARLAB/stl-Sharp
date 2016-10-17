@@ -284,24 +284,24 @@ public class DistanceMetricTest {
         cascades.add(cascade5);
         cascades.add(cascade6);
         
-        List<String> results = new ArrayList<String>();
-        
-        System.out.println("Distance Results:");
-        for (int i = 0; i < modules.size(); i ++) {
-            for (int j = 0; j < modules.size(); j ++) {
-                for (int k = 0; k < cascades.size(); k ++) {
-                    if (i != j) {
-                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modules.get(j), cascades.get(k)));
-                    }
-                }
-            }
-        }
-        System.out.println("Distance Results:");
-        for (String result : results) {
-            System.out.println(result);
-        }
-        
-        System.out.println(getDistanceBetweenModulesAndCascade(spec2, spec3, spec1));
+//        List<String> results = new ArrayList<String>();
+//        
+//        System.out.println("Distance Results:");
+//        for (int i = 0; i < modules.size(); i ++) {
+//            for (int j = 0; j < modules.size(); j ++) {
+//                for (int k = 0; k < cascades.size(); k ++) {
+//                    if (i != j) {
+//                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modules.get(j), cascades.get(k)));
+//                    }
+//                }
+//            }
+//        }
+//        System.out.println("Distance Results:");
+//        for (String result : results) {
+//            System.out.println(result);
+//        }
+//        
+//        System.out.println(getDistanceBetweenModulesAndCascade(spec2, spec3, spec1));
         
         //System.out.println(spec1);
         
