@@ -119,12 +119,81 @@ public class STLflat implements Module {
     @Override
     public String toString(){
         String stlb = "";
-        stlb += "Module :: \n";
-        stlb += this.module.toString();
-        stlb += "\nModule Map :: \n";
-        stlb += this.modules;
-        stlb += "\nMaps :: \n";
-        stlb += this.maps;
+//        stlb += "Module :: \n";
+        String moduleString = module.toString();
+        while (moduleString.startsWith("(") && moduleString.endsWith(")")) {
+            moduleString = moduleString.substring(1, moduleString.length() - 1);
+        }
+        String mapName = "";
+        for (String key : maps.keySet()) {
+            if (!key.equals("io")) {
+                mapName = key;
+            }
+        }
+        String[] split = moduleString.split(" ");
+        moduleString = "";
+        for (String string : split) {
+            if (string.equals("=>") || string.equals("&&") || string.equals("||") || string.equals(">>") || string.equals("#")) {
+                moduleString += string + "_" + mapName + " ";
+            }
+            else {
+                moduleString += string + " ";
+            }
+        }
+        moduleString = moduleString.substring(0, moduleString.length() - 1);
+        stlb += moduleString + "\n\n";
+//        stlb += "\nModule Map :: \n";
+        for (String m : modules.keySet()) {
+            Module mod = modules.get(m);
+            stlb += m + " = ";
+            if (mod instanceof STLflat) {
+                stlb += ((STLflat) mod).toSTL().toString();
+            }
+            else {
+                stlb += mod.toString();
+            }
+            stlb += "\n";
+        }
+        stlb += "\n";
+//        stlb += this.modules;
+        for (String key : maps.keySet()) {
+            if (!key.equals("io")) {
+                stlb += key + " { ";
+                for (Pair<String, Boolean> varPair : maps.get(key).keySet()) {
+                    if (varPair.right) {
+                        stlb += varPair.left + "@left: " + maps.get(key).get(varPair) + ", ";
+                    }
+                    else {
+                        stlb += varPair.left + "@right: " + maps.get(key).get(varPair) + ", ";
+                    }
+                }
+                if (maps.get(key).keySet().size() > 0) {
+                    stlb = stlb.substring(0, stlb.length() - 2);
+                }
+                stlb += "  }\n";
+            }
+        }
+        stlb += "io { ";
+        for (Pair<String, Boolean> varPair : maps.get("io").keySet()) {
+            stlb += varPair.left + ": " + maps.get("io").get(varPair) + ", ";
+        }
+        if (maps.get("io").keySet().size() > 0) {
+            stlb = stlb.substring(0, stlb.length() - 2);
+        }
+        stlb += "  }\n";
+        stlb += "limits [";
+        for (String key : limitsMap.keySet()) {
+            stlb += "{" + key + " : {";
+            stlb += "max:" + limitsMap.get(key).get("max") + ",";
+            stlb += "min:" + limitsMap.get(key).get("min");
+            stlb += "}},";
+        }
+        if (limitsMap.keySet().size() > 0) {
+            stlb = stlb.substring(0, stlb.length() - 1);
+        }
+        stlb += "]\n";
+//        stlb += "\nMaps :: \n";
+//        stlb += this.maps;
         return stlb;
     }
     
