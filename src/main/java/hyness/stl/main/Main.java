@@ -8,7 +8,7 @@ package hyness.stl.main;
 import hyness.stl.composition.Compose;
 import hyness.stl.grammar.flat.STLflat;
 import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
-import hyness.stl.metrics.DistanceMetric;
+import hyness.stl.metrics.HausdorffDistanceMetric;
 import hyness.stl.metrics.Utilities;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -85,7 +85,7 @@ public class Main {
         else if (args[0].startsWith("-distance")) {
             STLflatAbstractSyntaxTreeExtractor stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
             STLflatAbstractSyntaxTreeExtractor stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
-            DistanceMetric dist = new DistanceMetric();
+            HausdorffDistanceMetric dist = new HausdorffDistanceMetric();
             BigDecimal val = dist.computeDistance(stlspec1.spec, stlspec2.spec);
             System.out.println("This distance between these STLb formulae is:");
             System.out.println(val);

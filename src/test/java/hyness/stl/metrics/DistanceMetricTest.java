@@ -361,7 +361,7 @@ public class DistanceMetricTest {
         STLflat mod1mod2 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule2.spec, mapping);
         
         
-        DistanceMetric dist = new DistanceMetric();
+        HausdorffDistanceMetric dist = new HausdorffDistanceMetric();
         
         return dist.computeDistance(mod1mod2, stlcascade1.spec);
     }

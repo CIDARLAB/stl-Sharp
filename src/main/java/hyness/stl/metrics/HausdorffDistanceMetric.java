@@ -37,7 +37,7 @@ import lombok.Setter;
  *
  * @author prash
  */
-public class DistanceMetric {
+public class HausdorffDistanceMetric {
 
     @Getter
     private BigDecimal muMax;
@@ -51,7 +51,7 @@ public class DistanceMetric {
     private HashMap<String, HashMap<String, Double>> limitsMap;
     private AtomicInteger counter;
 
-    public DistanceMetric() {
+    public HausdorffDistanceMetric() {
         spec1Modules = new HashMap();
         spec2Modules = new HashMap();
         spec1Maps = new HashMap();

@@ -21,7 +21,7 @@ import hyness.stl.ParallelNode;
 import hyness.stl.RelOperation;
 import hyness.stl.TreeNode;
 import hyness.stl.UntilNode;
-import hyness.stl.metrics.DistanceMetric;
+import hyness.stl.metrics.HausdorffDistanceMetric;
 import java.util.HashMap;
 import java.util.Vector;
 
