@@ -8,6 +8,7 @@ package hyness.stl.main;
 import hyness.stl.composition.Compose;
 import hyness.stl.grammar.flat.STLflat;
 import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
+import hyness.stl.metrics.CostFunction;
 import hyness.stl.metrics.HausdorffDistanceMetric;
 import hyness.stl.metrics.Utilities;
 import java.io.BufferedReader;
@@ -36,7 +37,8 @@ public class Main {
             System.out.println("                        the composed formula into the third file");
             System.out.println("                        OPERATOR can be AND, OR, PARALLEL, or CONCAT");
             System.out.println("                        If OPERATOR is CONCAT, then a mapping file is required as a fourth file");
-            System.out.println("    -distance           Computes the distance between two STLb formulae contained within two files");
+            System.out.println("    -distance=METHOD    Computes the distance between two STLb formulae contained within two files");
+            System.out.println("                        METHOD can be either HAUSDORFF or COSTFUNCTION");
             System.out.println("    -help               Prints usage information");
         }
         else if (args[0].startsWith("-compose")) {
@@ -85,8 +87,25 @@ public class Main {
         else if (args[0].startsWith("-distance")) {
             STLflatAbstractSyntaxTreeExtractor stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
             STLflatAbstractSyntaxTreeExtractor stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
-            HausdorffDistanceMetric dist = new HausdorffDistanceMetric();
-            BigDecimal val = dist.computeDistance(stlspec1.spec, stlspec2.spec);
+            String method = args[0].split("=")[1];
+            BigDecimal val = new BigDecimal(Double.MAX_VALUE);
+            switch (method) {
+                case "HAUSDORFF":
+                    HausdorffDistanceMetric dist = new HausdorffDistanceMetric();
+                    val = dist.computeDistance(stlspec1.spec, stlspec2.spec);
+                    break;
+                case "COSTFUNCTION":
+                    CostFunction cost = new CostFunction();
+                    cost.setAlphaF(1);
+                    cost.setAlphaFprime(1);
+                    cost.setAlphaG(1);
+                    cost.setAlphaGprime(1);
+                    val = cost.computeDistance(stlspec1.spec, stlspec2.spec);
+                    break;
+                default:
+                    System.out.println("Invalid METHOD.  METHOD can be either HAUSDORFF or COSTFUNCTION");
+                    break;
+            }
             System.out.println("This distance between these STLb formulae is:");
             System.out.println(val);
         }

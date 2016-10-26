@@ -284,22 +284,22 @@ public class DistanceMetricTest {
         cascades.add(cascade5);
         cascades.add(cascade6);
         
-//        List<String> results = new ArrayList<String>();
-//        
+        List<String> results = new ArrayList<String>();
+        
 //        System.out.println("Distance Results:");
-//        for (int i = 0; i < modules.size(); i ++) {
-//            for (int j = 0; j < modules.size(); j ++) {
-//                for (int k = 0; k < cascades.size(); k ++) {
-//                    if (i != j) {
-//                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modules.get(j), cascades.get(k)));
-//                    }
-//                }
-//            }
-//        }
-//        System.out.println("Distance Results:");
-//        for (String result : results) {
-//            System.out.println(result);
-//        }
+        for (int i = 0; i < modules.size(); i ++) {
+            for (int j = 0; j < modules.size(); j ++) {
+                for (int k = 0; k < cascades.size(); k ++) {
+                    if (i != j) {
+                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modules.get(j), cascades.get(k)));
+                    }
+                }
+            }
+        }
+        System.out.println("Distance Results:");
+        for (String result : results) {
+            System.out.println(result);
+        }
 //        
 //        System.out.println(getDistanceBetweenModulesAndCascade(spec2, spec3, spec1));
         
@@ -361,9 +361,9 @@ public class DistanceMetricTest {
         STLflat mod1mod2 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule2.spec, mapping);
         
         
-        HausdorffDistanceMetric dist = new HausdorffDistanceMetric();
+        CostFunction cost = new CostFunction();
         
-        return dist.computeDistance(mod1mod2, stlcascade1.spec);
+        return cost.computeDistance(mod1mod2, stlcascade1.spec);
     }
     
 }

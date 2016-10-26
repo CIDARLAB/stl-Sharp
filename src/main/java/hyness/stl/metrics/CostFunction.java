@@ -65,6 +65,10 @@ public class CostFunction {
     @Getter
     @Setter
     private double alphaFprime;
+    
+    public CostFunction() {
+        limitsMap = new HashMap<String, HashMap<String, Double>>();
+    }
 
     public BigDecimal computeDistance(STLflat spec1, STLflat spec2) {
         setLimitsMap(spec1, spec2);
