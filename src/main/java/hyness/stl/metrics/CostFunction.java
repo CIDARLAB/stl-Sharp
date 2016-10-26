@@ -134,22 +134,22 @@ public class CostFunction {
                 }
                 //t1 < t2 < t3 <t4 
                 else if( (alwaysModule1.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule2.high)){
-                    return BigDecimal.valueOf(((this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime *((alwaysModule1.high - alwaysModule1.low) - (alwaysModule2.high - alwaysModule2.low))) + (3* getRecursiveMax(alwaysModule1) * (alwaysModule1.high - alwaysModule1.low))));
+                    return BigDecimal.valueOf(((this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime *(timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2))) + (3* getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1))));
                 } //t1 < t3 < t4 <t2  
                 else if( (alwaysModule1.low <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.high)){
-                    double val = (this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime * 3 * (getRecursiveMax(alwaysModule1)) * ( (alwaysModule1.high - alwaysModule1.low) - (alwaysModule2.high - alwaysModule2.low)) );
-                    return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(alwaysModule2.high - alwaysModule2.low),computeDistance(alwaysModule1.child,alwaysModule2.child)));
+                    double val = (this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime * 3 * (getRecursiveMax(alwaysModule1)) * ( timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2)) );
+                    return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(timeHorizon(alwaysModule2)),computeDistance(alwaysModule1.child,alwaysModule2.child)));
                 } //t1 < t3 < t2 < t4  
                 else if( (alwaysModule1.low <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.high)){
                     double val = (this.alphaG * 3 * getRecursiveMax(alwaysModule1) * (alwaysModule2.low - alwaysModule1.low));
-                    return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(alwaysModule1.high - alwaysModule1.low),computeDistance(alwaysModule1.child,alwaysModule2.child)));
+                    return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(timeHorizon(alwaysModule1)),computeDistance(alwaysModule1.child,alwaysModule2.child)));
                 } //t3 < t1 < t4 <t2  
                 else if( (alwaysModule2.low <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.high)){
                     double val = ((this.alphaG * (alwaysModule1.low - alwaysModule2.low)) + (3 * getRecursiveMax(alwaysModule1) * (alwaysModule1.high - alwaysModule2.high)));
                     return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(alwaysModule2.high - alwaysModule1.low),computeDistance(alwaysModule1,alwaysModule2)));
                 } //t3 < t4 < t1 <t2  
                 else if( (alwaysModule2.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule1.high)){
-                    return BigDecimal.valueOf(((this.alphaG* (alwaysModule1.low - alwaysModule2.low)) + (3 * getRecursiveMax(alwaysModule1) * (alwaysModule1.high - alwaysModule1.low)) + (this.alphaGprime * ((alwaysModule1.high - alwaysModule1.low) - (alwaysModule2.high - alwaysModule2.low)))));
+                    return BigDecimal.valueOf(((this.alphaG* (alwaysModule1.low - alwaysModule2.low)) + (3 * getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1)) + (this.alphaGprime * (timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2)))));
                 } else {
                     return null;
                 }
@@ -174,7 +174,7 @@ public class CostFunction {
             }
             if(module2 instanceof EventNode){
                 EventNode eventModule2 = (EventNode)module2;
-                double val = (3* getRecursiveMax(alwaysModule1) * (alwaysModule1.high - alwaysModule1.low)) + (this.alphaG * abs(alwaysModule1.low - eventModule2.low)) + (this.alphaGprime * ((eventModule2.high - eventModule2.low) - (alwaysModule1.high - alwaysModule1.low)));
+                double val = (3* getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1)) + (this.alphaG * abs(alwaysModule1.low - eventModule2.low)) + (this.alphaGprime * ((eventModule2.high - eventModule2.low) - (alwaysModule1.high - alwaysModule1.low)));
                 return specialSum(BigDecimal.valueOf(val),computeDistance(alwaysModule1.child,eventModule2.child));
             }
             if(module2 instanceof LinearPredicateLeaf){
