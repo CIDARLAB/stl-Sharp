@@ -41,5 +41,10 @@ public class ParallelNode extends TreeNode {
     public TreeNode negate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return new ParallelNode(this.left.shifted(shift),this.right.shifted(shift));
+    }
     
 }

@@ -35,4 +35,9 @@ public class BooleanLeaf extends TreeNode {
     public TreeNode negate() {
         return new BooleanLeaf(!this.value);
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return this;
+    }
 }

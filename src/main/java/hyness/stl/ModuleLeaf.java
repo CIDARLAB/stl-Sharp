@@ -55,5 +55,10 @@ public class ModuleLeaf extends TreeNode {
     public TreeNode negate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

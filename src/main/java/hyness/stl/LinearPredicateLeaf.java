@@ -83,4 +83,9 @@ public class LinearPredicateLeaf extends TreeNode {
         }
         return new LinearPredicateLeaf(newRop,this.variable,this.threshold);
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return this;
+    }
 }

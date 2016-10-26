@@ -28,6 +28,8 @@ public abstract class TreeNode implements Module {
     
     abstract public TreeNode negate();
     
+    abstract public TreeNode shifted(double shift);
+    
     abstract public double robustness(Trace s, double t);
 }
 

@@ -37,5 +37,10 @@ public class AlwaysNode extends TemporalUnaryNode {
     public String toString(){
         return "(G[" + low + "," + high + "]" + child + ")"; 
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return new AlwaysNode(this.child,low+shift,high+shift);
+    }
     
 }

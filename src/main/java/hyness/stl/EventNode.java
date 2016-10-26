@@ -37,5 +37,10 @@ public class EventNode extends TemporalUnaryNode {
     public String toString(){
         return "(F[" + low + "," + high + "]" + child + ")";
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return new EventNode(this.child,this.low+shift,this.high+shift);
+    }
     
 }

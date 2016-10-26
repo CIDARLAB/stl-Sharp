@@ -29,5 +29,10 @@ public class ImplicationNode extends BooleanBinaryNode {
     public String toString(){
         return "(" + left + Operation.getString(Operation.IMPLIES) + right + ")";
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

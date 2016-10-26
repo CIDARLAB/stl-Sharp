@@ -48,5 +48,10 @@ public class UntilNode extends TemporalBinaryNode {
     public String toString(){
         return "(U["  + low + "," + high + "]" + left + " " + right +  ")";
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

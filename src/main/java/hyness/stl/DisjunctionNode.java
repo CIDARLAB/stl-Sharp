@@ -29,5 +29,10 @@ public class DisjunctionNode extends BooleanBinaryNode {
     public String toString(){
         return "(" + left + " " + Operation.getString(Operation.OR) + " " + right +")";
     }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return new DisjunctionNode(this.left.shifted(shift),this.right.shifted(shift));
+    }
     
 }
