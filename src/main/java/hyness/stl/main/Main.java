@@ -88,7 +88,7 @@ public class Main {
             STLflatAbstractSyntaxTreeExtractor stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
             STLflatAbstractSyntaxTreeExtractor stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
             String method = args[0].split("=")[1];
-            BigDecimal val = new BigDecimal(Double.NaN);
+            BigDecimal val = new BigDecimal(Double.MAX_VALUE);
             switch (method) {
                 case "HAUSDORFF":
                     HausdorffDistanceMetric dist = new HausdorffDistanceMetric();
