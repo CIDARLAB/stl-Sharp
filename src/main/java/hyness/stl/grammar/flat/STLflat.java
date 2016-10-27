@@ -204,7 +204,7 @@ public class STLflat implements Module {
      */
     public TreeNode toSTL(TreeNode node) {
         if (node instanceof ModuleLeaf) {
-            Module mod = this.modules.get(((ModuleLeaf)node).name);
+            Module mod = this.modules.get(((ModuleLeaf)node).getName());
             if (mod instanceof TreeNode) {
                 return (TreeNode) mod;
             }

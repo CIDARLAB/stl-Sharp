@@ -319,10 +319,10 @@ public class HausdorffDistanceMetric {
         
         //One of them is a ModuleLeaf
         else if (spec1 instanceof ModuleLeaf) {
-            TreeNode spec1leaf = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) spec1).name));
+            TreeNode spec1leaf = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) spec1).getName()));
             return computeDistance(spec1leaf, spec2);
         } else if (spec2 instanceof ModuleLeaf) {
-            TreeNode spec2leaf = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) spec2).name));
+            TreeNode spec2leaf = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) spec2).getName()));
             return computeDistance(spec1, spec2leaf);
         }
         

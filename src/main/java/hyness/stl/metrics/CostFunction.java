@@ -13,6 +13,7 @@ import hyness.stl.DisjunctionNode;
 import hyness.stl.EventNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.Module;
+import hyness.stl.ModuleLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.NotNode;
 import hyness.stl.Operation;
@@ -82,8 +83,8 @@ public class CostFunction {
         //<editor-fold desc="Module 1 is of Type Concatenation">
         if (module1.op.equals(Operation.CONCAT)) {
             if (module1 instanceof ModuleNode) {
-                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) module1).left).toString()));
-                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) module1).right).toString()));
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
                 ConcatenationNode concatenatedModule1 = new ConcatenationNode(left, right);
                 return computeDistance(concatenatedModule1.costFunctionEquivalent(),module2);
             }
@@ -101,8 +102,8 @@ public class CostFunction {
         //<editor-fold desc="Module 1 is of type Conjunction">
         if (module1.op.equals(Operation.AND)) {
             if (module1 instanceof ModuleNode) {
-                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) module1).left).toString()));
-                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) module1).right).toString()));
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
                 return max(computeDistance(left,module2),computeDistance(right,module2));
             }
             ConjunctionNode conjunctionModule1 = (ConjunctionNode) module1;
@@ -113,8 +114,8 @@ public class CostFunction {
         //<editor-fold desc="Module 1 is of type Disjunction">
         if (module1.op.equals(Operation.OR)) {
             if (module1 instanceof ModuleNode) {
-                TreeNode left = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) module1).left).toString()));
-                TreeNode right = getTreeNodeFromModule(spec1Modules.get((((ModuleNode) module1).right).toString()));
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
                 return min(computeDistance(left,module2),computeDistance(right,module2));
             }
             DisjunctionNode disjunctionModule1 = (DisjunctionNode) module1;
@@ -160,8 +161,8 @@ public class CostFunction {
             }
             if(module2.op.equals(Operation.AND)){
                 if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     return max(computeDistance(alwaysModule1,left),computeDistance(alwaysModule1,right));
                 }
                 ConjunctionNode conjunctionNode2 = (ConjunctionNode) module2;
@@ -169,8 +170,8 @@ public class CostFunction {
             }
             if(module2.op.equals(Operation.OR)){
                 if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     return min(computeDistance(alwaysModule1,left),computeDistance(alwaysModule1,right));
                 }
                 DisjunctionNode disjunctionNode2 = (DisjunctionNode) module2;
@@ -188,8 +189,8 @@ public class CostFunction {
             }
             if(module2.op.equals(Operation.CONCAT)){
                 if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     ConcatenationNode concatenatedModule2 = new ConcatenationNode(left,right);
                     return computeDistance(alwaysModule1,concatenatedModule2.costFunctionEquivalent());
                 }
@@ -206,8 +207,8 @@ public class CostFunction {
             EventNode eventModule1 = (EventNode) module1;
             if(module2.op.equals(Operation.AND)){
                 if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     return max(computeDistance(eventModule1,left),computeDistance(eventModule1,right));
                 }
                 ConjunctionNode conjunctionModule2 = (ConjunctionNode)module2;
@@ -215,8 +216,8 @@ public class CostFunction {
             }
             if(module2.op.equals(Operation.OR)){
                 if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     return min(computeDistance(eventModule1,left),computeDistance(eventModule1,right));
                 }
                 DisjunctionNode disjunctionModule2 = (DisjunctionNode)module2;
@@ -254,8 +255,8 @@ public class CostFunction {
             }
             if(module2 instanceof ConcatenationNode){
                 if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     ConcatenationNode concatenatedModule2 = new ConcatenationNode(left,right);
                     return computeDistance(eventModule1,concatenatedModule2.costFunctionEquivalent());
                 }
@@ -299,8 +300,8 @@ public class CostFunction {
 
             if (module2.op.equals(Operation.AND)) {
                 if (module2 instanceof ModuleNode) {
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     return max(computeDistance(linearPredicate1, left), computeDistance(linearPredicate1, right));
                 }
                 ConjunctionNode conjunctionModule2 = (ConjunctionNode) module2;
@@ -309,8 +310,8 @@ public class CostFunction {
 
             if (module2.op.equals(Operation.OR)) {
                 if (module2 instanceof ModuleNode) {
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).left).toString()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get((((ModuleNode) module2).right).toString()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
                     return min(computeDistance(linearPredicate1, left), computeDistance(linearPredicate1, right));
                 }
                 DisjunctionNode disjunctionModule2 = (DisjunctionNode) module2;

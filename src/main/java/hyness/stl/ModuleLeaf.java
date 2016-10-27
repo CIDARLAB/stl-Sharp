@@ -6,6 +6,7 @@
 package hyness.stl;
 
 import java.util.Vector;
+import lombok.Getter;
 
 /**
  * @author Cristian-Ioan Vasile
@@ -13,7 +14,9 @@ import java.util.Vector;
  */
 public class ModuleLeaf extends TreeNode {
     
-    public String name;
+    @Getter
+    private String name;
+    
     Vector<String> signals;
     
     /**
