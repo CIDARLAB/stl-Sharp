@@ -300,6 +300,21 @@ public class DistanceMetricTest {
         for (String result : results) {
             System.out.println(result);
         }
+        
+        STLflatAbstractSyntaxTreeExtractor stlSpec1 = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor stlSpec2 = new STLflatAbstractSyntaxTreeExtractor();
+        
+        stlSpec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
+        stlSpec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
+        
+        CostFunction cost = new CostFunction();
+        
+        cost.setAlphaF(1);
+        cost.setAlphaFprime(1);
+        cost.setAlphaG(1);
+        cost.setAlphaGprime(1);
+        
+        System.out.println("Distance of different specs: " + cost.computeDistance(stlSpec1.spec, stlSpec2.spec));
 //        
 //        System.out.println(getDistanceBetweenModulesAndCascade(spec2, spec3, spec1));
         
