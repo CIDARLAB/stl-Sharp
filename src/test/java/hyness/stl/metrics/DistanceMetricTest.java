@@ -102,59 +102,59 @@ public class DistanceMetricTest {
                 + "limits [{u : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
                 ;
         
-        cascade1 = "phi1(x1,x2,x3)\n"
+        cascade1 = "phi1(io1,a1,io2)\n"
                 + "\n"
-                + "phi1 = (((G[7.13,46] x3 > 4.13E06) && (G[3.57,4.02] x1 < 3.14E07) ) || ((F[7.13,46] x3 < 4.13E06) && ((G[1.23,15.1] x1 < 2.97E07) && (((G[42.1,44.6] x2 < 8.9E06) && (F[41.3,43.2] x3 > 3.61E06) ) || ((F[42.1,44.6] x2 > 8.9E06) && (G[1,46] x1 < 1.48E07) )))))\n"
+                + "phi1 = (((G[7.13,46] io2 > 4.13E06) && (G[3.57,4.02] io1 < 3.14E07) ) || ((F[7.13,46] io2 < 4.13E06) && ((G[1.23,15.1] io1 < 2.97E07) && (((G[42.1,44.6] a1 < 8.9E06) && (F[41.3,43.2] io2 > 3.61E06) ) || ((F[42.1,44.6] a1 > 8.9E06) && (G[1,46] io1 < 1.48E07) )))))\n"
                 + "\n"
-                + "m1 { x1@left: u, x2@left: a, x3@left: y }\n"
-                + "io {x1: u, x3: y}\n"
-                + "limits [{u : {max:1E09,min:0}},{a : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
+                + "m1 { io1@left: io1, a1@left: a1, io2@left: io2 }\n"
+                + "io {io1: io1, io2: io2}\n"
+                + "limits [{io1 : {max:1E09,min:0}},{a1 : {max:1E09,min:0}},{io2 : {max:1E09,min:0}}]\n"
                 ;
         
         
-        cascade2 = "phi1(x1,x2,x3)\n"
+        cascade2 = "phi1(io1,a1,io2)\n"
                 + "\n"
-                + "phi1 = (((G[9.21,46] x3 > 4.1E06) && (G[1,46] x2 < 5.98E06) ) || ((F[9.21,46] x3 < 4.1E06) && ((G[21.4,42.3] x1 < 3.71E07) && (((G[40.9,43.1] x2 < 5.98E06) && (F[40.5,45] x3 > 3.7E06) ) || (F[40.9,43.1] x2 > 5.98E06) ))))\n"
+                + "phi1 = (((G[9.21,46] io2 > 4.1E06) && (G[1,46] a1 < 5.98E06) ) || ((F[9.21,46] io2 < 4.1E06) && ((G[21.4,42.3] io1 < 3.71E07) && (((G[40.9,43.1] a1 < 5.98E06) && (F[40.5,45] io2 > 3.7E06) ) || (F[40.9,43.1] a1 > 5.98E06) ))))\n"
                 + "\n"
-                + "m1 { x1@left: u, x2@left: a, x3@left: y }\n"
-                + "io {x1: u, x3: y}\n"
-                + "limits [{u : {max:1E09,min:0}},{a : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
+                + "m1 { io1@left: io1, a1@left: a1, io2@left: io2 }\n"
+                + "io {io1: io1, io2: io2}\n"
+                + "limits [{io1 : {max:1E09,min:0}},{a1 : {max:1E09,min:0}},{io2 : {max:1E09,min:0}}]\n"
                 ;
         
-        cascade3 = "phi1(x1,x2,x3)\n"
+        cascade3 = "phi1(io1,a1,io2)\n"
                 + "\n"
-                + "phi1 = (((G[9.47,45.4] x3 > 2.72E06) && ((G[1,46] x2 < 9.46E06) && (G[18.6,30.2] x1 > 1.67E07) )) || ((F[9.47,45.4] x3 < 2.72E06) && ((G[26.3,44.8] x1 < 1.6E07) && (((G[43.3,45.1] x2 < 9.46E06) && (F[40.9,44.7] x3 > 2.37E06) ) || (F[43.3,45.1] x2 > 9.46E06) ))))\n"
+                + "phi1 = (((G[9.47,45.4] io2 > 2.72E06) && ((G[1,46] a1 < 9.46E06) && (G[18.6,30.2] io1 > 1.67E07) )) || ((F[9.47,45.4] io2 < 2.72E06) && ((G[26.3,44.8] io1 < 1.6E07) && (((G[43.3,45.1] a1 < 9.46E06) && (F[40.9,44.7] io2 > 2.37E06) ) || (F[43.3,45.1] a1 > 9.46E06) ))))\n"
                 + "\n"
-                + "m1 { x1@left: u, x2@left: a, x3@left: y }\n"
-                + "io {x1: u, x3: y}\n"
-                + "limits [{u : {max:1E09,min:0}},{a : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
+                + "m1 { io1@left: io1, a1@left: a1, io2@left: io2 }\n"
+                + "io {io1: io1, io2: io2}\n"
+                + "limits [{io1 : {max:1E09,min:0}},{a1 : {max:1E09,min:0}},{io2 : {max:1E09,min:0}}]\n"
                 ;
         
-        cascade4 = "phi1(x1,x2,x3)\n"
+        cascade4 = "phi1(io1,a1,io2)\n"
                 + "\n"
-                + "phi1 = (((G[10.2,46] x3 > 3.11E06) && (G[3.57,3.82] x1 < 3.95E07) ) || ((F[10.2,46] x3 < 3.11E06) && ((G[3.6,28.1] x1 < 3.83E07) && (((G[45.4,46] x2 < 4.82E06) && (F[40.2,44.8] x3 > 2.58E06) ) || (F[45.4,46] x2 > 4.82E06) ))))\n"
+                + "phi1 = (((G[10.2,46] io2 > 3.11E06) && (G[3.57,3.82] io1 < 3.95E07) ) || ((F[10.2,46] io2 < 3.11E06) && ((G[3.6,28.1] io1 < 3.83E07) && (((G[45.4,46] a1 < 4.82E06) && (F[40.2,44.8] io2 > 2.58E06) ) || (F[45.4,46] a1 > 4.82E06) ))))\n"
                 + "\n"
-                + "m1 { x1@left: u, x2@left: a, x3@left: y }\n"
-                + "io {x1: u, x3: y}\n"
-                + "limits [{u : {max:1E09,min:0}},{a : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
+                + "m1 { io1@left: io1, a1@left: a1, io2@left: io2 }\n"
+                + "io {io1: io1, io2: io2}\n"
+                + "limits [{io1 : {max:1E09,min:0}},{a1 : {max:1E09,min:0}},{io2 : {max:1E09,min:0}}]\n"
                 ;
         
-        cascade5 = "phi1(x1,x2,x3)\n"
+        cascade5 = "phi1(io1,a1,io2)\n"
                 + "\n"
-                + "phi1 = (((G[9.07,45.3] x3 > 4.42E06) && (G[6.49,44.7] x2 < 1.3E07) ) || ((F[9.07,45.3] x3 < 4.42E06) && (((G[43.5,43.7] x2 < 1.3E07) && (G[18.3,39.7] x3 > 4.42E06) ) || (F[43.5,43.7] x2 > 1.3E07) )))\n"
+                + "phi1 = (((G[9.07,45.3] io2 > 4.42E06) && (G[6.49,44.7] a1 < 1.3E07) ) || ((F[9.07,45.3] io2 < 4.42E06) && (((G[43.5,43.7] a1 < 1.3E07) && (G[18.3,39.7] io2 > 4.42E06) ) || (F[43.5,43.7] a1 > 1.3E07) )))\n"
                 + "\n"
-                + "m1 { x1@left: u, x2@left: a, x3@left: y }\n"
-                + "io {x1: u, x3: y}\n"
-                + "limits [{u : {max:1E09,min:0}},{a : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
+                + "m1 { io1@left: io1, a1@left: a1, io2@left: io2 }\n"
+                + "io {io1: io1, io2: io2}\n"
+                + "limits [{io1 : {max:1E09,min:0}},{a1 : {max:1E09,min:0}},{io2 : {max:1E09,min:0}}]\n"
                 ;
         
-        cascade6 = "phi1(x1,x2,x3)\n"
+        cascade6 = "phi1(io1,a1,io2)\n"
                 + "\n"
-                + "phi1 = (((G[10.3,46] x3 > 9.01E06) && (G[1,5.03] x1 < 4.78E07) ) || ((F[10.3,46] x3 < 9.01E06) && ((G[1.59,13] x1 < 4.51E07) && (((G[45.1,46] x2 < 1.24E07) && (F[45.3,45.9] x3 > 7.44E06) ) || (F[45.1,46] x2 > 1.24E07) ))))\n"
+                + "phi1 = (((G[10.3,46] io2 > 9.01E06) && (G[1,5.03] io1 < 4.78E07) ) || ((F[10.3,46] io2 < 9.01E06) && ((G[1.59,13] io1 < 4.51E07) && (((G[45.1,46] a1 < 1.24E07) && (F[45.3,45.9] io2 > 7.44E06) ) || (F[45.1,46] a1 > 1.24E07) ))))\n"
                 + "\n"
-                + "m1 { x1@left: u, x2@left: a, x3@left: y }\n"
-                + "io {x1: u, x3: y}\n"
-                + "limits [{u : {max:1E09,min:0}},{a : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
+                + "m1 { io1@left: io1, a1@left: a1, io2@left: io2 }\n"
+                + "io {io1: io1, io2: io2}\n"
+                + "limits [{io1 : {max:1E09,min:0}},{a1 : {max:1E09,min:0}},{io2 : {max:1E09,min:0}}]\n"
                 ;
          
     }
@@ -359,7 +359,6 @@ public class DistanceMetricTest {
         mapping.put("y", signal);
         
         STLflat mod1mod2 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule2.spec, mapping);
-        
         
         CostFunction cost = new CostFunction();
         

@@ -75,7 +75,7 @@ public class CostFunction {
         setLimitsMap(spec1, spec2);
         spec1Modules = spec1.modules;
         spec2Modules = spec2.modules;
-        return computeDistance(spec1.module, spec2.module);
+        return computeDistance(spec1.toSTL(), spec2.toSTL());
     }
 
     private BigDecimal computeDistance(TreeNode module1, TreeNode module2) {

@@ -84,8 +84,12 @@ public class Compose {
             int j = 1;
             for (String leftOutput : internalMapping.keySet()) {
                 for (String rightInput : internalMapping.get(leftOutput)) {
-                    m1Map.put(new Pair<String, Boolean>(leftOutput, true), "a" + (j + 1));
-                    m1Map.put(new Pair<String, Boolean>(rightInput, false), "a" + (j + 1));
+                    m1Map.put(new Pair<String, Boolean>(leftOutput, true), "a" + j);
+                    m1Map.put(new Pair<String, Boolean>(rightInput, false), "a" + j);
+                    HashMap<String,Double> limits = new HashMap<String,Double>();
+                    limits.put("min", left.limitsMap.get(leftOutput).get("min"));
+                    limits.put("max", left.limitsMap.get(leftOutput).get("max"));
+                    limitsMap.put("a" + j, limits);
                     usedLeftPorts.add(leftOutput);
                     usedRightPorts.add(rightInput);
                     j++;
