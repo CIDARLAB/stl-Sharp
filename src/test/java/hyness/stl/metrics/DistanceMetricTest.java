@@ -362,6 +362,11 @@ public class DistanceMetricTest {
         
         CostFunction cost = new CostFunction();
         
+        cost.setAlphaF(1);
+        cost.setAlphaFprime(1);
+        cost.setAlphaG(1);
+        cost.setAlphaGprime(1);
+        
         return cost.computeDistance(mod1mod2, stlcascade1.spec);
     }
     
