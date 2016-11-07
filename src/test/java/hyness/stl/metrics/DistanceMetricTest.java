@@ -59,13 +59,13 @@ public class DistanceMetricTest {
                 + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
         
-        spec2 = "phi1(io1)\n"
+        spec2 = "phi1(u1)\n"
                 + "\n"
-                + "phi1 = (io1 < 6) && (io1 >= 2)\n"
+                + "phi1 = (u1 < 6) && (u1 >= 2)\n"
                 + "\n"
-                + "m1 { io1@left: io1 }\n"
-                + "io {io1: io1}\n"
-                + "limits [{io1 : {max:10,min:0}}]\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
         
         spec3 = "phi1(u1)\n"
