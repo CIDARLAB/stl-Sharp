@@ -41,12 +41,51 @@ public class DistanceMetricTest {
     
     public static String spec3;
     
+    public static String spec4;
+    
     
     public DistanceMetricTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        spec1 = "phi1(u1) >>_m1 phi2(u1)\n"
+                + "\n"
+                + "phi1 = (u1 < 6)\n"
+                + "phi2 = (u1 >= 2)\n"
+                + "\n"
+                + "m1 { u1@left: u1, u1@right: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        
+        spec2 = "phi1(io1)\n"
+                + "\n"
+                + "phi1 = (io1 < 6) && (io1 >= 2)\n"
+                + "\n"
+                + "m1 { io1@left: io1 }\n"
+                + "io {io1: io1}\n"
+                + "limits [{io1 : {max:10,min:0}}]\n"
+                ;
+        
+        spec3 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (u1 < 6)\n"
+                + "\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        
+        spec4 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (u1 >= 2)\n"
+                + "\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        
         module1 = "phi1(x1,x2)\n"
                 + "\n"
                 + "phi1 = ((F[6.06,45.1] x2 < 1.12E05) && (((G[44.2,44.8] x1 < 9.95E04) && (G[8.74,41.6] x2 > 1.12E05) ) || (F[44.2,44.8] x1 > 9.95E04) ))\n"
@@ -63,34 +102,6 @@ public class DistanceMetricTest {
                 + "m1 { x1@left: u, x2@left: y }\n"
                 + "io {x1: u, x2: y}\n"
                 + "limits [{u : {max:1E09,min:0}},{y : {max:1E09,min:0}}]\n"
-                ;
-        
-        spec1 = "phi1(u1) >>_m1 phi2(u1)\n"
-                + "\n"
-                + "phi1 = (u1 < 6)\n"
-                + "phi2 = (u1 >= 2)\n"
-                + "\n"
-                + "m1 { u1@left: u1, u1@right: u1 }\n"
-                + "io {u1: u1}\n"
-                + "limits [{u1 : {max:10,min:0}}]\n"
-                ;
-        
-        spec2 = "phi1(u1)\n"
-                + "\n"
-                + "phi1 = (u1 < 7)\n"
-                + "\n"
-                + "m1 { u1@left: u1 }\n"
-                + "io {u1: u1}\n"
-                + "limits [{u1 : {max:10,min:0}}]\n"
-                ;
-        
-        spec3 = "phi1(u1)\n"
-                + "\n"
-                + "phi1 = (u1 >= 2)\n"
-                + "\n"
-                + "m1 { u1@left: u1 }\n"
-                + "io {u1: u1}\n"
-                + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
         
         module3 = "phi1(x1,x2)\n"
@@ -291,7 +302,7 @@ public class DistanceMetricTest {
             for (int j = 0; j < modules.size(); j ++) {
                 for (int k = 0; k < cascades.size(); k ++) {
                     if (i != j) {
-                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modules.get(j), cascades.get(k)));
+                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modules.get(j), cascades.get(k), "u", "y"));
                     }
                 }
             }
@@ -304,8 +315,8 @@ public class DistanceMetricTest {
         STLflatAbstractSyntaxTreeExtractor stlSpec1 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlSpec2 = new STLflatAbstractSyntaxTreeExtractor();
         
-        stlSpec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
-        stlSpec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
+        stlSpec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
+        stlSpec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec4);
         
         CostFunction cost = new CostFunction();
         
@@ -315,6 +326,25 @@ public class DistanceMetricTest {
         cost.setAlphaGprime(1);
         
         System.out.println("Distance of different specs: " + cost.computeDistance(stlSpec1.spec, stlSpec2.spec));
+        
+        STLflatAbstractSyntaxTreeExtractor stlSpec3 = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor stlSpec4 = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor stlSpec5 = new STLflatAbstractSyntaxTreeExtractor();
+        
+        stlSpec3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
+        stlSpec4 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
+        stlSpec5 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec4);
+        
+        STLflat conjunction = Compose.composeWithAnd(stlSpec4.spec, stlSpec5.spec);
+        
+        cost = new CostFunction();
+        
+        cost.setAlphaF(1);
+        cost.setAlphaFprime(1);
+        cost.setAlphaG(1);
+        cost.setAlphaGprime(1);
+        
+        System.out.println("Distance of same specs using composition: " + cost.computeDistance(conjunction, stlSpec3.spec));
 //        
 //        System.out.println(getDistanceBetweenModulesAndCascade(spec2, spec3, spec1));
         
@@ -356,7 +386,7 @@ public class DistanceMetricTest {
         
     }
     
-    public BigDecimal getDistanceBetweenModulesAndCascade(String module1, String module2, String cascade) {
+    public BigDecimal getDistanceBetweenModulesAndCascade(String module1, String module2, String cascade, String inMapping, String outMapping) {
         STLflatAbstractSyntaxTreeExtractor stlmodule1 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlmodule2 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlcascade1 = new STLflatAbstractSyntaxTreeExtractor();
@@ -369,9 +399,9 @@ public class DistanceMetricTest {
         
         List<String> signal = new ArrayList<String>();
         
-        signal.add("u");
+        signal.add(inMapping);
         
-        mapping.put("y", signal);
+        mapping.put(outMapping, signal);
         
         STLflat mod1mod2 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule2.spec, mapping);
         
