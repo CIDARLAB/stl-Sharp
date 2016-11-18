@@ -101,13 +101,18 @@ public class CostFunction {
         
         //<editor-fold desc="Module 1 is of type Conjunction">
         if (module1.op.equals(Operation.AND)) {
-            if (module1 instanceof ModuleNode) {
-                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
-                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
-                return max(computeDistance(left,module2),computeDistance(right,module2));
+            if (module2.op.equals(Operation.AND)) {
+                return conjunctionGraphMatching(module1, module2);
             }
-            ConjunctionNode conjunctionModule1 = (ConjunctionNode) module1;
-            return max(computeDistance(conjunctionModule1.left,module2),computeDistance(conjunctionModule1.right,module2));
+            else {
+                if (module1 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
+                    return max(computeDistance(left,module2),computeDistance(right,module2));
+                }
+                ConjunctionNode conjunctionModule1 = (ConjunctionNode) module1;
+                return max(computeDistance(conjunctionModule1.left,module2),computeDistance(conjunctionModule1.right,module2));
+            }
         }
         //</editor-fold>
 
@@ -359,6 +364,181 @@ public class CostFunction {
         
         
         return BigDecimal.ZERO;
+    }
+    
+    private TreeNode collapseConjunction(TreeNode module) {
+        if (module instanceof ModuleNode) {
+            TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module).left)).getName()));
+            if (left.op.equals(Operation.AND)) {
+                left = collapseConjunction(left);
+            }
+            TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module).right)).getName()));
+            if (right.op.equals(Operation.AND)) {
+                right = collapseConjunction(right);
+            }
+            if (left instanceof LinearPredicateLeaf) {
+                LinearPredicateLeaf linearPredicate1 = (LinearPredicateLeaf) left;
+                if (right instanceof LinearPredicateLeaf) {
+                    LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) right;
+                    if (!linearPredicate1.variable.equals(linearPredicate2.variable)) {
+                        return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                    }
+                    else if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
+                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                            if (linearPredicate1.threshold > linearPredicate2.threshold) {
+                                return linearPredicate1;
+                            }
+                            else {
+                                return linearPredicate2;
+                            }
+                        }
+                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                            return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                        }
+                    }
+                    else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
+                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                            return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                        }
+                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                            if (linearPredicate1.threshold < linearPredicate2.threshold) {
+                                return linearPredicate1;
+                            }
+                            else {
+                                return linearPredicate2;
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                TreeNode leftLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) left).left)).getName()));
+                TreeNode leftRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) left).left)).getName()));
+                LinearPredicateLeaf linearPredicateLeft1 = null;
+                LinearPredicateLeaf linearPredicateLeft2 = null;
+                if (leftLeft instanceof LinearPredicateLeaf) {
+                    linearPredicateLeft1 = (LinearPredicateLeaf) leftLeft;
+                }
+                if (leftRight instanceof LinearPredicateLeaf) {
+                    linearPredicateLeft2 = (LinearPredicateLeaf) leftRight;
+                }
+                if (right instanceof LinearPredicateLeaf) {
+                    LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) right;
+                    if (linearPredicateLeft1 != null) {
+                        if (!linearPredicateLeft1.variable.equals(linearPredicate2.variable)) {
+                        }
+                        else if (linearPredicateLeft1.rop.equals(RelOperation.EQ) || linearPredicateLeft1.rop.equals(RelOperation.LE) || linearPredicateLeft1.rop.equals(RelOperation.LT)) {
+                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                                if (linearPredicateLeft1.threshold > linearPredicate2.threshold) {
+                                    return left;
+                                }
+                                else {
+                                    return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
+                                }
+                            }
+                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                                return new ConjunctionNode(left, linearPredicate2);
+                            }
+                        }
+                        else if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
+                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                                return new ConjunctionNode(left, linearPredicate2);
+                            }
+                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                                if (linearPredicateLeft1.threshold < linearPredicate2.threshold) {
+                                    return left;
+                                }
+                                else {
+                                    return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
+                                }
+                            }
+                        }
+                    }
+                    else if (linearPredicateLeft2 != null) {
+                        if (!linearPredicateLeft2.variable.equals(linearPredicate2.variable)) {
+                        }
+                        else if (linearPredicateLeft2.rop.equals(RelOperation.EQ) || linearPredicateLeft2.rop.equals(RelOperation.LE) || linearPredicateLeft2.rop.equals(RelOperation.LT)) {
+                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                                if (linearPredicateLeft2.threshold > linearPredicate2.threshold) {
+                                    return left;
+                                }
+                                else {
+                                    return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
+                                }
+                            }
+                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                                return new ConjunctionNode(left, linearPredicate2);
+                            }
+                        }
+                        else if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
+                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                                return new ConjunctionNode(left, linearPredicate2);
+                            }
+                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                                if (linearPredicateLeft2.threshold < linearPredicate2.threshold) {
+                                    return left;
+                                }
+                                else {
+                                    return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
+                                }
+                            }
+                        }
+                    }
+                }
+//            TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module).right)).getName()));
+//            return max(computeDistance(left,module2),computeDistance(right,module2));
+            }
+//        ConjunctionNode conjunctionModule = (ConjunctionNode) module;
+//        return max(computeDistance(conjunctionModule1.left,module2),computeDistance(conjunctionModule1.right,module2));
+        }
+        return null;
+    }
+    
+    private BigDecimal conjunctionGraphMatching(TreeNode module1, TreeNode module2) {
+        List<TreeNode> left = getConjunctionPredicates(module1);
+        List<TreeNode> right = getConjunctionPredicates(module2);
+        BigDecimal result = null;
+        while (right.size() > 0) {
+            for (int i = 0; i < left.size(); i++) {
+                TreeNode leftPred = left.get(i);
+                int indexMatch = -1;
+                BigDecimal value = null;
+                for (int j = 0; j < right.size(); j++) {
+                    TreeNode rightPred = right.get(j);
+                    BigDecimal distance = computeDistance(leftPred, rightPred);
+                    if (distance != null && (value == null || distance.compareTo(value) < 0)) {
+                        value = distance;
+                        indexMatch = j;
+                    }
+                }
+                if (indexMatch == -1) {
+                    return null;
+                }
+                right.remove(indexMatch);
+                if (result == null || result.compareTo(value) < 0) {
+                    result = value;
+                }
+            }
+        }
+        return result;
+    }
+    
+    private List<TreeNode> getConjunctionPredicates(TreeNode module) {
+        List<TreeNode> modules = new ArrayList<TreeNode>();
+        if (module.op.equals(Operation.AND)) {
+            if (module instanceof ModuleNode) {
+                modules.addAll(getConjunctionPredicates(((ModuleNode) module).left));
+                modules.addAll(getConjunctionPredicates(((ModuleNode) module).right));
+            }
+            else {
+                modules.addAll(getConjunctionPredicates(((ConjunctionNode) module).left));
+                modules.addAll(getConjunctionPredicates(((ConjunctionNode) module).right));
+            }
+        }
+        else {
+            modules.add(module);
+        }
+        return modules;
     }
 
     private double timeHorizon(TreeNode node){
