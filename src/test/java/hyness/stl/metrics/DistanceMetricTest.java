@@ -43,6 +43,10 @@ public class DistanceMetricTest {
     
     public static String spec4;
     
+    public static String spec5;
+    
+    public static String spec6;
+    
     
     public DistanceMetricTest() {
     }
@@ -84,6 +88,24 @@ public class DistanceMetricTest {
                 + "m1 { u1@left: u1 }\n"
                 + "io {u1: u1}\n"
                 + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        
+        spec5 = "phi1(u1, u2)\n"
+                + "\n"
+                + "phi1 = (u1 < 6) && (u2 > 8)\n"
+                + "\n"
+                + "m1 { u1@left: u1, u2@left: u2 }\n"
+                + "io {u1: u1, u2: u2}\n"
+                + "limits [{u1 : {max:10,min:0}}, {u2 : {max:10,min:0}}]\n"
+                ;
+        
+        spec6 = "phi1(u1, u2)\n"
+                + "\n"
+                + "phi1 = ((u1 < 6) && (u2 > 8)) || (u1 < 3)\n"
+                + "\n"
+                + "m1 { u1@left: u1, u2@left: u2 }\n"
+                + "io {u1: u1, u2: u2}\n"
+                + "limits [{u1 : {max:10,min:0}}, {u2 : {max:10,min:0}}]\n"
                 ;
         
         module1 = "phi1(x1,x2)\n"
@@ -345,6 +367,21 @@ public class DistanceMetricTest {
         cost.setAlphaGprime(1);
         
         System.out.println("Distance of same specs using composition: " + cost.computeDistance(conjunction, stlSpec3.spec));
+        
+        STLflatAbstractSyntaxTreeExtractor stlSpec6 = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor stlSpec7 = new STLflatAbstractSyntaxTreeExtractor();
+        
+        stlSpec6 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec5);
+        stlSpec7 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec6);
+        
+        cost = new CostFunction();
+        
+        cost.setAlphaF(1);
+        cost.setAlphaFprime(1);
+        cost.setAlphaG(1);
+        cost.setAlphaGprime(1);
+        
+        System.out.println("Distance between two similar specs: " + cost.computeDistance(stlSpec6.spec, stlSpec7.spec));
 //        
 //        System.out.println(getDistanceBetweenModulesAndCascade(spec2, spec3, spec1));
         
