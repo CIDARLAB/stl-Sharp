@@ -367,136 +367,345 @@ public class CostFunction {
     }
     
     private TreeNode collapseConjunction(TreeNode module) {
+        TreeNode left = null;
+        TreeNode right = null;
         if (module instanceof ModuleNode) {
-            TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module).left)).getName()));
-            if (left.op.equals(Operation.AND)) {
-                left = collapseConjunction(left);
-            }
-            TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module).right)).getName()));
-            if (right.op.equals(Operation.AND)) {
-                right = collapseConjunction(right);
-            }
-            if (left instanceof LinearPredicateLeaf) {
-                LinearPredicateLeaf linearPredicate1 = (LinearPredicateLeaf) left;
-                if (right instanceof LinearPredicateLeaf) {
-                    LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) right;
-                    if (!linearPredicate1.variable.equals(linearPredicate2.variable)) {
+            left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module).left)).getName()));
+            right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module).right)).getName()));
+        }
+        else {
+            left = ((ConjunctionNode) module).left;
+            right = ((ConjunctionNode) module).right;
+        }
+        if (left.op.equals(Operation.AND)) {
+            left = collapseConjunction(left);
+        }
+        if (right.op.equals(Operation.AND)) {
+            right = collapseConjunction(right);
+        }
+        if (left instanceof LinearPredicateLeaf) {
+            LinearPredicateLeaf linearPredicate1 = (LinearPredicateLeaf) left;
+            if (right instanceof LinearPredicateLeaf) {
+                LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) right;
+                if (!linearPredicate1.variable.equals(linearPredicate2.variable)) {
+                    return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                }
+                else if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
+                    if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                        if (linearPredicate1.threshold > linearPredicate2.threshold) {
+                            return linearPredicate1;
+                        }
+                        else {
+                            return linearPredicate2;
+                        }
+                    }
+                    else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
                         return new ConjunctionNode(linearPredicate1, linearPredicate2);
                     }
-                    else if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
-                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                            if (linearPredicate1.threshold > linearPredicate2.threshold) {
-                                return linearPredicate1;
-                            }
-                            else {
-                                return linearPredicate2;
-                            }
+                }
+                else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
+                    if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                        return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                    }
+                    else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                        if (linearPredicate1.threshold < linearPredicate2.threshold) {
+                            return linearPredicate1;
                         }
-                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                            return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                        else {
+                            return linearPredicate2;
                         }
                     }
-                    else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
-                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                            return new ConjunctionNode(linearPredicate1, linearPredicate2);
-                        }
-                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                            if (linearPredicate1.threshold < linearPredicate2.threshold) {
-                                return linearPredicate1;
+                }
+            }
+            else if (right.op.equals(Operation.AND)) {
+                TreeNode rightLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
+                TreeNode rightRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
+                LinearPredicateLeaf linearPredicateRight1 = null;
+                LinearPredicateLeaf linearPredicateRight2 = null;
+                if (rightLeft instanceof LinearPredicateLeaf) {
+                    linearPredicateRight1 = (LinearPredicateLeaf) rightLeft;
+                }
+                if (rightRight instanceof LinearPredicateLeaf) {
+                    linearPredicateRight2 = (LinearPredicateLeaf) rightRight;
+                }
+                if (linearPredicateRight1 != null) {
+                    if (!linearPredicateRight1.variable.equals(linearPredicate1.variable)) {
+                    }
+                    else if (linearPredicateRight1.rop.equals(RelOperation.EQ) || linearPredicateRight1.rop.equals(RelOperation.LE) || linearPredicateRight1.rop.equals(RelOperation.LT)) {
+                        if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateRight1.threshold > linearPredicate1.threshold) {
+                                return right;
                             }
                             else {
-                                return linearPredicate2;
+                                return new ConjunctionNode(linearPredicate1, linearPredicateRight2);
+                            }
+                        }
+                        else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
+                            return new ConjunctionNode(right, linearPredicate1);
+                        }
+                    }
+                    else if (linearPredicateRight1.rop.equals(RelOperation.GE) || linearPredicateRight1.rop.equals(RelOperation.GT)) {
+                        if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
+                            return new ConjunctionNode(right, linearPredicate1);
+                        }
+                        else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateRight1.threshold < linearPredicateRight1.threshold) {
+                                return right;
+                            }
+                            else {
+                                return new ConjunctionNode(linearPredicate1, linearPredicateRight2);
+                            }
+                        }
+                    }
+                }
+                if (linearPredicateRight2 != null) {
+                    if (!linearPredicateRight2.variable.equals(linearPredicate1.variable)) {
+                    }
+                    else if (linearPredicateRight2.rop.equals(RelOperation.EQ) || linearPredicateRight2.rop.equals(RelOperation.LE) || linearPredicateRight2.rop.equals(RelOperation.LT)) {
+                        if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateRight2.threshold > linearPredicate1.threshold) {
+                                return right;
+                            }
+                            else {
+                                return new ConjunctionNode(linearPredicateRight1, linearPredicate1);
+                            }
+                        }
+                        else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
+                            return new ConjunctionNode(right, linearPredicate1);
+                        }
+                    }
+                    else if (linearPredicateRight2.rop.equals(RelOperation.GE) || linearPredicateRight2.rop.equals(RelOperation.GT)) {
+                        if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
+                            return new ConjunctionNode(right, linearPredicate1);
+                        }
+                        else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateRight2.threshold < linearPredicate1.threshold) {
+                                return right;
+                            }
+                            else {
+                                return new ConjunctionNode(linearPredicateRight1, linearPredicate1);
                             }
                         }
                     }
                 }
             }
-            else {
-                TreeNode leftLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) left).left)).getName()));
-                TreeNode leftRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) left).left)).getName()));
-                LinearPredicateLeaf linearPredicateLeft1 = null;
-                LinearPredicateLeaf linearPredicateLeft2 = null;
-                if (leftLeft instanceof LinearPredicateLeaf) {
-                    linearPredicateLeft1 = (LinearPredicateLeaf) leftLeft;
-                }
-                if (leftRight instanceof LinearPredicateLeaf) {
-                    linearPredicateLeft2 = (LinearPredicateLeaf) leftRight;
-                }
-                if (right instanceof LinearPredicateLeaf) {
-                    LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) right;
-                    if (linearPredicateLeft1 != null) {
-                        if (!linearPredicateLeft1.variable.equals(linearPredicate2.variable)) {
-                        }
-                        else if (linearPredicateLeft1.rop.equals(RelOperation.EQ) || linearPredicateLeft1.rop.equals(RelOperation.LE) || linearPredicateLeft1.rop.equals(RelOperation.LT)) {
-                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                                if (linearPredicateLeft1.threshold > linearPredicate2.threshold) {
-                                    return left;
-                                }
-                                else {
-                                    return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
-                                }
-                            }
-                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                                return new ConjunctionNode(left, linearPredicate2);
-                            }
-                        }
-                        else if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
-                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                                return new ConjunctionNode(left, linearPredicate2);
-                            }
-                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                                if (linearPredicateLeft1.threshold < linearPredicate2.threshold) {
-                                    return left;
-                                }
-                                else {
-                                    return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
-                                }
-                            }
-                        }
-                    }
-                    else if (linearPredicateLeft2 != null) {
-                        if (!linearPredicateLeft2.variable.equals(linearPredicate2.variable)) {
-                        }
-                        else if (linearPredicateLeft2.rop.equals(RelOperation.EQ) || linearPredicateLeft2.rop.equals(RelOperation.LE) || linearPredicateLeft2.rop.equals(RelOperation.LT)) {
-                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                                if (linearPredicateLeft2.threshold > linearPredicate2.threshold) {
-                                    return left;
-                                }
-                                else {
-                                    return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
-                                }
-                            }
-                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                                return new ConjunctionNode(left, linearPredicate2);
-                            }
-                        }
-                        else if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
-                            if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                                return new ConjunctionNode(left, linearPredicate2);
-                            }
-                            else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                                if (linearPredicateLeft2.threshold < linearPredicate2.threshold) {
-                                    return left;
-                                }
-                                else {
-                                    return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
-                                }
-                            }
-                        }
-                    }
-                }
-//            TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module).right)).getName()));
-//            return max(computeDistance(left,module2),computeDistance(right,module2));
-            }
-//        ConjunctionNode conjunctionModule = (ConjunctionNode) module;
-//        return max(computeDistance(conjunctionModule1.left,module2),computeDistance(conjunctionModule1.right,module2));
         }
-        return null;
+        else if (left.op.equals(Operation.AND)) {
+            TreeNode leftLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).left)).getName()));
+            TreeNode leftRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).left)).getName()));
+            LinearPredicateLeaf linearPredicateLeft1 = null;
+            LinearPredicateLeaf linearPredicateLeft2 = null;
+            if (leftLeft instanceof LinearPredicateLeaf) {
+                linearPredicateLeft1 = (LinearPredicateLeaf) leftLeft;
+            }
+            if (leftRight instanceof LinearPredicateLeaf) {
+                linearPredicateLeft2 = (LinearPredicateLeaf) leftRight;
+            }
+            if (right instanceof LinearPredicateLeaf) {
+                LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) right;
+                if (linearPredicateLeft1 != null) {
+                    if (!linearPredicateLeft1.variable.equals(linearPredicate2.variable)) {
+                    }
+                    else if (linearPredicateLeft1.rop.equals(RelOperation.EQ) || linearPredicateLeft1.rop.equals(RelOperation.LE) || linearPredicateLeft1.rop.equals(RelOperation.LT)) {
+                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateLeft1.threshold > linearPredicate2.threshold) {
+                                return left;
+                            }
+                            else {
+                                return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
+                            }
+                        }
+                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                            return new ConjunctionNode(left, linearPredicate2);
+                        }
+                    }
+                    else if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
+                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                            return new ConjunctionNode(left, linearPredicate2);
+                        }
+                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateLeft1.threshold < linearPredicate2.threshold) {
+                                return left;
+                            }
+                            else {
+                                return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
+                            }
+                        }
+                    }
+                }
+                if (linearPredicateLeft2 != null) {
+                    if (!linearPredicateLeft2.variable.equals(linearPredicate2.variable)) {
+                    }
+                    else if (linearPredicateLeft2.rop.equals(RelOperation.EQ) || linearPredicateLeft2.rop.equals(RelOperation.LE) || linearPredicateLeft2.rop.equals(RelOperation.LT)) {
+                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateLeft2.threshold > linearPredicate2.threshold) {
+                                return left;
+                            }
+                            else {
+                                return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
+                            }
+                        }
+                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                            return new ConjunctionNode(left, linearPredicate2);
+                        }
+                    }
+                    else if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
+                        if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
+                            return new ConjunctionNode(left, linearPredicate2);
+                        }
+                        else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateLeft2.threshold < linearPredicate2.threshold) {
+                                return left;
+                            }
+                            else {
+                                return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
+                            }
+                        }
+                    }
+                }
+            }
+            else if (right.op.equals(Operation.AND)) {
+                TreeNode rightLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
+                TreeNode rightRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
+                LinearPredicateLeaf linearPredicateRight1 = null;
+                LinearPredicateLeaf linearPredicateRight2 = null;
+                if (rightLeft instanceof LinearPredicateLeaf) {
+                    linearPredicateRight1 = (LinearPredicateLeaf) rightLeft;
+                }
+                if (rightRight instanceof LinearPredicateLeaf) {
+                    linearPredicateRight2 = (LinearPredicateLeaf) rightRight;
+                }
+                if (linearPredicateRight1 != null) {
+                    if (linearPredicateLeft1 != null) {
+                        if (!linearPredicateRight1.variable.equals(linearPredicateLeft1.variable)) {
+                        }
+                        else if (linearPredicateRight1.rop.equals(RelOperation.EQ) || linearPredicateRight1.rop.equals(RelOperation.LE) || linearPredicateRight1.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateLeft1.rop.equals(RelOperation.EQ) || linearPredicateLeft1.rop.equals(RelOperation.LE) || linearPredicateLeft1.rop.equals(RelOperation.LT)) {
+                                if (linearPredicateRight1.threshold > linearPredicateLeft1.threshold) {
+                                    linearPredicateLeft1 = linearPredicateRight1;
+                                }
+                                else {
+                                    linearPredicateRight1 = linearPredicateLeft1;
+                                }
+                            }
+                        }
+                        else if (linearPredicateRight1.rop.equals(RelOperation.GE) || linearPredicateRight1.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
+                                if (linearPredicateRight1.threshold < linearPredicateLeft1.threshold) {
+                                    linearPredicateLeft1 = linearPredicateRight1;
+                                }
+                                else {
+                                    linearPredicateRight1 = linearPredicateLeft1;
+                                }
+                            }
+                        }
+                    }
+                    if (linearPredicateLeft2 != null) {
+                        if (!linearPredicateRight1.variable.equals(linearPredicateLeft2.variable)) {
+                        }
+                        else if (linearPredicateRight1.rop.equals(RelOperation.EQ) || linearPredicateRight1.rop.equals(RelOperation.LE) || linearPredicateRight1.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateLeft2.rop.equals(RelOperation.EQ) || linearPredicateLeft2.rop.equals(RelOperation.LE) || linearPredicateLeft2.rop.equals(RelOperation.LT)) {
+                                if (linearPredicateRight1.threshold > linearPredicateLeft2.threshold) {
+                                    linearPredicateLeft2 = linearPredicateRight1;
+                                }
+                                else {
+                                    linearPredicateRight1 = linearPredicateLeft2;
+                                }
+                            }
+                        }
+                        else if (linearPredicateRight1.rop.equals(RelOperation.GE) || linearPredicateRight1.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
+                                if (linearPredicateRight1.threshold < linearPredicateLeft2.threshold) {
+                                    linearPredicateLeft2 = linearPredicateRight1;
+                                }
+                                else {
+                                    linearPredicateRight1 = linearPredicateLeft2;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (linearPredicateRight2 != null) {
+                    if (linearPredicateLeft1 != null) {
+                        if (!linearPredicateRight2.variable.equals(linearPredicateLeft1.variable)) {
+                        }
+                        else if (linearPredicateRight2.rop.equals(RelOperation.EQ) || linearPredicateRight2.rop.equals(RelOperation.LE) || linearPredicateRight2.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateLeft1.rop.equals(RelOperation.EQ) || linearPredicateLeft1.rop.equals(RelOperation.LE) || linearPredicateLeft1.rop.equals(RelOperation.LT)) {
+                                if (linearPredicateRight2.threshold > linearPredicateLeft1.threshold) {
+                                    linearPredicateLeft1 = linearPredicateRight2;
+                                }
+                                else {
+                                    linearPredicateRight2 = linearPredicateLeft1;
+                                }
+                            }
+                        }
+                        else if (linearPredicateRight2.rop.equals(RelOperation.GE) || linearPredicateRight2.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
+                                if (linearPredicateRight2.threshold < linearPredicateLeft1.threshold) {
+                                    linearPredicateLeft1 = linearPredicateRight2;
+                                }
+                                else {
+                                    linearPredicateRight2 = linearPredicateLeft1;
+                                }
+                            }
+                        }
+                    }
+                    if (linearPredicateLeft2 != null) {
+                        if (!linearPredicateRight2.variable.equals(linearPredicateLeft2.variable)) {
+                        }
+                        else if (linearPredicateRight2.rop.equals(RelOperation.EQ) || linearPredicateRight2.rop.equals(RelOperation.LE) || linearPredicateRight2.rop.equals(RelOperation.LT)) {
+                            if (linearPredicateLeft2.rop.equals(RelOperation.EQ) || linearPredicateLeft2.rop.equals(RelOperation.LE) || linearPredicateLeft2.rop.equals(RelOperation.LT)) {
+                                if (linearPredicateRight2.threshold > linearPredicateLeft2.threshold) {
+                                    linearPredicateLeft2 = linearPredicateRight2;
+                                }
+                                else {
+                                    linearPredicateRight2 = linearPredicateLeft2;
+                                }
+                            }
+                        }
+                        else if (linearPredicateRight2.rop.equals(RelOperation.GE) || linearPredicateRight2.rop.equals(RelOperation.GT)) {
+                            if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
+                                if (linearPredicateRight2.threshold < linearPredicateLeft2.threshold) {
+                                    linearPredicateLeft2 = linearPredicateRight2;
+                                }
+                                else {
+                                    linearPredicateRight2 = linearPredicateLeft2;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (linearPredicateLeft1 == linearPredicateRight1) {
+                    if (linearPredicateLeft1 == linearPredicateRight2) {
+                        return new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2);
+                    }
+                    else {
+                        return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight2);
+                    }
+                }
+                else if (linearPredicateLeft1 == linearPredicateRight2) {
+                    return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight1);
+                }
+                else if (linearPredicateLeft2 == linearPredicateRight1) {
+                    if (linearPredicateLeft2 == linearPredicateRight2) {
+                        return new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2);
+                    }
+                    else {
+                        return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight2);
+                    }
+                }
+                else if (linearPredicateLeft2 == linearPredicateRight2) {
+                    return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight1);
+                }
+                return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), new ConjunctionNode(linearPredicateRight1, linearPredicateRight2));
+            }
+        }
+        return new ConjunctionNode(left, right);
     }
     
     private BigDecimal conjunctionGraphMatching(TreeNode module1, TreeNode module2) {
-        List<TreeNode> left = getConjunctionPredicates(module1);
-        List<TreeNode> right = getConjunctionPredicates(module2);
+        List<TreeNode> left = getConjunctionPredicates(collapseConjunction(module1));
+        List<TreeNode> right = getConjunctionPredicates(collapseConjunction(module2));
         BigDecimal result = null;
         while (right.size() > 0) {
             for (int i = 0; i < left.size(); i++) {
