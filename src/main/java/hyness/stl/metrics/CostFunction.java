@@ -370,8 +370,8 @@ public class CostFunction {
     }
     
     private TreeNode collapseConjunction(TreeNode module) {
-        TreeNode left = null;
-        TreeNode right = null;
+        TreeNode left;
+        TreeNode right;
         if (module instanceof ModuleNode) {
             left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module).left)).getName()));
             right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module).right)).getName()));
@@ -396,33 +396,41 @@ public class CostFunction {
                 else if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
                     if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
                         if (linearPredicate1.threshold > linearPredicate2.threshold) {
-                            return linearPredicate1;
+                            return left;
                         }
                         else {
-                            return linearPredicate2;
+                            return right;
                         }
                     }
                     else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                        return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                        return new ConjunctionNode(left, right);
                     }
                 }
                 else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
                     if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                        return new ConjunctionNode(linearPredicate1, linearPredicate2);
+                        return new ConjunctionNode(left, right);
                     }
                     else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
                         if (linearPredicate1.threshold < linearPredicate2.threshold) {
-                            return linearPredicate1;
+                            return left;
                         }
                         else {
-                            return linearPredicate2;
+                            return right;
                         }
                     }
                 }
             }
             else if (right.op.equals(Operation.AND)) {
-                TreeNode rightLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
-                TreeNode rightRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
+                TreeNode rightLeft;
+                TreeNode rightRight;
+                if (right instanceof ModuleNode) {
+                    rightLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) right).left)).getName()));
+                    rightRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) right).right)).getName()));
+                }
+                else {
+                    rightLeft = ((ConjunctionNode) right).left;
+                    rightRight = ((ConjunctionNode) right).right;
+                }
                 LinearPredicateLeaf linearPredicateRight1 = null;
                 LinearPredicateLeaf linearPredicateRight2 = null;
                 if (rightLeft instanceof LinearPredicateLeaf) {
@@ -440,23 +448,23 @@ public class CostFunction {
                                 return right;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicate1, linearPredicateRight2);
+                                return new ConjunctionNode(left, rightRight);
                             }
                         }
                         else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
-                            return new ConjunctionNode(right, linearPredicate1);
+                            return new ConjunctionNode(right, left);
                         }
                     }
                     else if (linearPredicateRight1.rop.equals(RelOperation.GE) || linearPredicateRight1.rop.equals(RelOperation.GT)) {
                         if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
-                            return new ConjunctionNode(right, linearPredicate1);
+                            return new ConjunctionNode(right, left);
                         }
                         else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
                             if (linearPredicateRight1.threshold < linearPredicateRight1.threshold) {
                                 return right;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicate1, linearPredicateRight2);
+                                return new ConjunctionNode(left, rightRight);
                             }
                         }
                     }
@@ -470,23 +478,23 @@ public class CostFunction {
                                 return right;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicateRight1, linearPredicate1);
+                                return new ConjunctionNode(rightLeft, left);
                             }
                         }
                         else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
-                            return new ConjunctionNode(right, linearPredicate1);
+                            return new ConjunctionNode(right, left);
                         }
                     }
                     else if (linearPredicateRight2.rop.equals(RelOperation.GE) || linearPredicateRight2.rop.equals(RelOperation.GT)) {
                         if (linearPredicate1.rop.equals(RelOperation.EQ) || linearPredicate1.rop.equals(RelOperation.LE) || linearPredicate1.rop.equals(RelOperation.LT)) {
-                            return new ConjunctionNode(right, linearPredicate1);
+                            return new ConjunctionNode(right, left);
                         }
                         else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
                             if (linearPredicateRight2.threshold < linearPredicate1.threshold) {
                                 return right;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicateRight1, linearPredicate1);
+                                return new ConjunctionNode(rightLeft, left);
                             }
                         }
                     }
@@ -494,8 +502,16 @@ public class CostFunction {
             }
         }
         else if (left.op.equals(Operation.AND)) {
-            TreeNode leftLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).left)).getName()));
-            TreeNode leftRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).left)).getName()));
+            TreeNode leftLeft;
+            TreeNode leftRight;
+            if (right instanceof ModuleNode) {
+                leftLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).left)).getName()));
+                leftRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
+            }
+            else {
+                leftLeft = ((ConjunctionNode) left).left;
+                leftRight = ((ConjunctionNode) left).right;
+            }
             LinearPredicateLeaf linearPredicateLeft1 = null;
             LinearPredicateLeaf linearPredicateLeft2 = null;
             if (leftLeft instanceof LinearPredicateLeaf) {
@@ -515,23 +531,23 @@ public class CostFunction {
                                 return left;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
+                                return new ConjunctionNode(right, leftRight);
                             }
                         }
                         else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                            return new ConjunctionNode(left, linearPredicate2);
+                            return new ConjunctionNode(left, right);
                         }
                     }
                     else if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
                         if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                            return new ConjunctionNode(left, linearPredicate2);
+                            return new ConjunctionNode(left, right);
                         }
                         else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
                             if (linearPredicateLeft1.threshold < linearPredicate2.threshold) {
                                 return left;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicate2, linearPredicateLeft2);
+                                return new ConjunctionNode(right, leftRight);
                             }
                         }
                     }
@@ -545,31 +561,39 @@ public class CostFunction {
                                 return left;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
+                                return new ConjunctionNode(leftLeft, right);
                             }
                         }
                         else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
-                            return new ConjunctionNode(left, linearPredicate2);
+                            return new ConjunctionNode(left, right);
                         }
                     }
                     else if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
                         if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
-                            return new ConjunctionNode(left, linearPredicate2);
+                            return new ConjunctionNode(left, right);
                         }
                         else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
                             if (linearPredicateLeft2.threshold < linearPredicate2.threshold) {
                                 return left;
                             }
                             else {
-                                return new ConjunctionNode(linearPredicateLeft1, linearPredicate2);
+                                return new ConjunctionNode(leftLeft, right);
                             }
                         }
                     }
                 }
             }
             else if (right.op.equals(Operation.AND)) {
-                TreeNode rightLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
-                TreeNode rightRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) left).right)).getName()));
+                TreeNode rightLeft;
+                TreeNode rightRight;
+                if (right instanceof ModuleNode) {
+                    rightLeft = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) right).left)).getName()));
+                    rightRight = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) right).right)).getName()));
+                }
+                else {
+                    rightLeft = ((ConjunctionNode) right).left;
+                    rightRight = ((ConjunctionNode) right).right;
+                }
                 LinearPredicateLeaf linearPredicateRight1 = null;
                 LinearPredicateLeaf linearPredicateRight2 = null;
                 if (rightLeft instanceof LinearPredicateLeaf) {
@@ -585,20 +609,20 @@ public class CostFunction {
                         else if (linearPredicateRight1.rop.equals(RelOperation.EQ) || linearPredicateRight1.rop.equals(RelOperation.LE) || linearPredicateRight1.rop.equals(RelOperation.LT)) {
                             if (linearPredicateLeft1.rop.equals(RelOperation.EQ) || linearPredicateLeft1.rop.equals(RelOperation.LE) || linearPredicateLeft1.rop.equals(RelOperation.LT)) {
                                 if (linearPredicateRight1.threshold > linearPredicateLeft1.threshold) {
-                                    linearPredicateLeft1 = linearPredicateRight1;
+                                    leftLeft = rightLeft;
                                 }
                                 else {
-                                    linearPredicateRight1 = linearPredicateLeft1;
+                                    rightLeft = leftLeft;
                                 }
                             }
                         }
                         else if (linearPredicateRight1.rop.equals(RelOperation.GE) || linearPredicateRight1.rop.equals(RelOperation.GT)) {
                             if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
                                 if (linearPredicateRight1.threshold < linearPredicateLeft1.threshold) {
-                                    linearPredicateLeft1 = linearPredicateRight1;
+                                    leftLeft = rightLeft;
                                 }
                                 else {
-                                    linearPredicateRight1 = linearPredicateLeft1;
+                                    rightLeft = leftLeft;
                                 }
                             }
                         }
@@ -609,20 +633,20 @@ public class CostFunction {
                         else if (linearPredicateRight1.rop.equals(RelOperation.EQ) || linearPredicateRight1.rop.equals(RelOperation.LE) || linearPredicateRight1.rop.equals(RelOperation.LT)) {
                             if (linearPredicateLeft2.rop.equals(RelOperation.EQ) || linearPredicateLeft2.rop.equals(RelOperation.LE) || linearPredicateLeft2.rop.equals(RelOperation.LT)) {
                                 if (linearPredicateRight1.threshold > linearPredicateLeft2.threshold) {
-                                    linearPredicateLeft2 = linearPredicateRight1;
+                                    leftRight = rightLeft;
                                 }
                                 else {
-                                    linearPredicateRight1 = linearPredicateLeft2;
+                                    rightLeft = leftRight;
                                 }
                             }
                         }
                         else if (linearPredicateRight1.rop.equals(RelOperation.GE) || linearPredicateRight1.rop.equals(RelOperation.GT)) {
                             if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
                                 if (linearPredicateRight1.threshold < linearPredicateLeft2.threshold) {
-                                    linearPredicateLeft2 = linearPredicateRight1;
+                                    leftRight = rightLeft;
                                 }
                                 else {
-                                    linearPredicateRight1 = linearPredicateLeft2;
+                                    rightLeft = leftRight;
                                 }
                             }
                         }
@@ -635,20 +659,20 @@ public class CostFunction {
                         else if (linearPredicateRight2.rop.equals(RelOperation.EQ) || linearPredicateRight2.rop.equals(RelOperation.LE) || linearPredicateRight2.rop.equals(RelOperation.LT)) {
                             if (linearPredicateLeft1.rop.equals(RelOperation.EQ) || linearPredicateLeft1.rop.equals(RelOperation.LE) || linearPredicateLeft1.rop.equals(RelOperation.LT)) {
                                 if (linearPredicateRight2.threshold > linearPredicateLeft1.threshold) {
-                                    linearPredicateLeft1 = linearPredicateRight2;
+                                    leftLeft = rightRight;
                                 }
                                 else {
-                                    linearPredicateRight2 = linearPredicateLeft1;
+                                    rightRight = leftLeft;
                                 }
                             }
                         }
                         else if (linearPredicateRight2.rop.equals(RelOperation.GE) || linearPredicateRight2.rop.equals(RelOperation.GT)) {
                             if (linearPredicateLeft1.rop.equals(RelOperation.GE) || linearPredicateLeft1.rop.equals(RelOperation.GT)) {
                                 if (linearPredicateRight2.threshold < linearPredicateLeft1.threshold) {
-                                    linearPredicateLeft1 = linearPredicateRight2;
+                                    leftLeft = rightRight;
                                 }
                                 else {
-                                    linearPredicateRight2 = linearPredicateLeft1;
+                                    rightRight = leftLeft;
                                 }
                             }
                         }
@@ -659,20 +683,20 @@ public class CostFunction {
                         else if (linearPredicateRight2.rop.equals(RelOperation.EQ) || linearPredicateRight2.rop.equals(RelOperation.LE) || linearPredicateRight2.rop.equals(RelOperation.LT)) {
                             if (linearPredicateLeft2.rop.equals(RelOperation.EQ) || linearPredicateLeft2.rop.equals(RelOperation.LE) || linearPredicateLeft2.rop.equals(RelOperation.LT)) {
                                 if (linearPredicateRight2.threshold > linearPredicateLeft2.threshold) {
-                                    linearPredicateLeft2 = linearPredicateRight2;
+                                    leftRight = rightRight;
                                 }
                                 else {
-                                    linearPredicateRight2 = linearPredicateLeft2;
+                                    rightRight = leftRight;
                                 }
                             }
                         }
                         else if (linearPredicateRight2.rop.equals(RelOperation.GE) || linearPredicateRight2.rop.equals(RelOperation.GT)) {
                             if (linearPredicateLeft2.rop.equals(RelOperation.GE) || linearPredicateLeft2.rop.equals(RelOperation.GT)) {
                                 if (linearPredicateRight2.threshold < linearPredicateLeft2.threshold) {
-                                    linearPredicateLeft2 = linearPredicateRight2;
+                                    leftRight = rightRight;
                                 }
                                 else {
-                                    linearPredicateRight2 = linearPredicateLeft2;
+                                    rightRight = leftRight;
                                 }
                             }
                         }
@@ -680,27 +704,27 @@ public class CostFunction {
                 }
                 if (linearPredicateLeft1 == linearPredicateRight1) {
                     if (linearPredicateLeft1 == linearPredicateRight2) {
-                        return new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2);
+                        return new ConjunctionNode(leftLeft, leftRight);
                     }
                     else {
-                        return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight2);
+                        return new ConjunctionNode(new ConjunctionNode(leftLeft, leftRight), rightRight);
                     }
                 }
                 else if (linearPredicateLeft1 == linearPredicateRight2) {
-                    return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight1);
+                    return new ConjunctionNode(new ConjunctionNode(leftLeft, leftRight), rightLeft);
                 }
                 else if (linearPredicateLeft2 == linearPredicateRight1) {
                     if (linearPredicateLeft2 == linearPredicateRight2) {
-                        return new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2);
+                        return new ConjunctionNode(leftLeft, leftRight);
                     }
                     else {
-                        return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight2);
+                        return new ConjunctionNode(new ConjunctionNode(leftLeft, leftRight), rightRight);
                     }
                 }
                 else if (linearPredicateLeft2 == linearPredicateRight2) {
-                    return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), linearPredicateRight1);
+                    return new ConjunctionNode(new ConjunctionNode(leftLeft, leftRight), rightLeft);
                 }
-                return new ConjunctionNode(new ConjunctionNode(linearPredicateLeft1, linearPredicateLeft2), new ConjunctionNode(linearPredicateRight1, linearPredicateRight2));
+                return new ConjunctionNode(new ConjunctionNode(leftLeft, leftRight), new ConjunctionNode(rightLeft, rightRight));
             }
         }
         return new ConjunctionNode(left, right);
