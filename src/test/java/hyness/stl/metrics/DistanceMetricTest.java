@@ -76,12 +76,57 @@ public class DistanceMetricTest {
     
     public static String spec8;
     
+    public static String notSpec;
+    
+    public static String norSpec;
+    
+    public static String orSpec;
+    
+    public static String andSpec;
+    
     
     public DistanceMetricTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        notSpec = "phi1(x,y)\n"
+                + "\n"
+                + "phi1 = ((x > 5.4) => (G[0, 10] x > 5.4 && F[0, 8](G[0, 2] y <= 0.02))) && ((x <= 0.5) => (G[0, 10] x <= 0.5 && F[0, 8](G[0, 2] y > 6.8)))\n"
+                + "\n"
+                + "m1 { x@left: x, y@left: y }\n"
+                + "io {x: x, y: y}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}}]\n"
+                ;
+        
+        norSpec = "phi1(x,y,z)\n"
+                + "\n"
+                + "phi1 = (((x > 2.5) && (y > 2.8)) => (G[0, 10]((x > 2.5) && (y > 2.8)) && F[0, 8](G[0, 2] z <= 0.2))) && (((x > 2.5) && (y <= 0.0034)) => (G[0, 10]((x > 2.5) && (y <= 0.0034)) && F[0, 8](G[0, 2] z <= 0.2))) && (((x <= 0.008) && (y > 2.8)) => (G[0, 10]((x <= 0.008) && (y > 2.8)) && F[0, 8](G[0, 2] z <= 0.2))) && (((x <= 0.008) && (y <= 0.0034)) => (G[0, 10]((x <= 0.008) && (y <= 0.0034)) && F[0, 8](G[0, 2] z > 5.9)))\n"
+                + "\n"
+                + "m1 { x@left: x, y@left: y }\n"
+                + "io {x: x, y: y}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}}]\n"
+                ;
+        
+        orSpec = "phi1(x,y,z)\n"
+                + "\n"
+                + "phi1 = (((x > 8) && (y > 8)) => (G[0, 1]((x > 8) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x > 8) && (y <= 2)) => (G[0, 1]((x > 8) && (y <= 2)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y > 8)) => (G[0, 1]((x <= 2) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y <= 2)) => (G[0, 1]((x <= 2) && (y <= 2)) && F[0, 2](G[0, 2] z <= 2)))\n"
+                + "\n"
+                + "m1 { x@left: x, y@left: y }\n"
+                + "io {x: x, y: y}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}}]\n"
+                ;
+        
+        andSpec = "phi1(x,y,z)\n"
+                + "\n"
+                + "phi1 = (((x > 8) && (y > 8)) => (G[0, 1]((x > 8) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x > 8) && (y <= 2)) => (G[0, 1]((x > 8) && (y <= 2)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y > 8)) => (G[0, 1]((x <= 2) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y <= 2)) => (G[0, 1]((x <= 2) && (y <= 2)) && F[0, 2](G[0, 2] z <= 2)))\n"
+                + "\n"
+                + "m1 { x@left: x, y@left: y }\n"
+                + "io {x: x, y: y}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}}]\n"
+                ;
+        
+        
         spec1 = "phi1(u1) >>_m1 phi2(u1)\n"
                 + "\n"
                 + "phi1 = (u1 < 6)\n"
@@ -894,10 +939,10 @@ public class DistanceMetricTest {
         
         CostFunction cost = new CostFunction();
         
-        cost.setAlphaF(1);
-        cost.setAlphaFprime(1);
-        cost.setAlphaG(1);
-        cost.setAlphaGprime(1);
+        cost.setAlphaF(1000);
+        cost.setAlphaFprime(1000);
+        cost.setAlphaG(1000);
+        cost.setAlphaGprime(1000);
         
         BigDecimal inputDistance = cost.computeDistance(stlmodule1Input.spec, stlcascade1Input.spec);
         BigDecimal internalDistance = cost.computeDistance(mod1mod2Internal, stlcascade1Internal.spec);
