@@ -80,7 +80,11 @@ public class DistanceMetricTest {
     
     public static String norSpec;
     
-    public static String orSpec;
+    public static String orSpec1;
+    
+    public static String orSpec2;
+    
+    public static String orSpec3;
     
     public static String andSpec;
     
@@ -103,27 +107,45 @@ public class DistanceMetricTest {
                 + "\n"
                 + "phi1 = (((x > 2.5) && (y > 2.8)) => (G[0, 10]((x > 2.5) && (y > 2.8)) && F[0, 8](G[0, 2] z <= 0.2))) && (((x > 2.5) && (y <= 0.0034)) => (G[0, 10]((x > 2.5) && (y <= 0.0034)) && F[0, 8](G[0, 2] z <= 0.2))) && (((x <= 0.008) && (y > 2.8)) => (G[0, 10]((x <= 0.008) && (y > 2.8)) && F[0, 8](G[0, 2] z <= 0.2))) && (((x <= 0.008) && (y <= 0.0034)) => (G[0, 10]((x <= 0.008) && (y <= 0.0034)) && F[0, 8](G[0, 2] z > 5.9)))\n"
                 + "\n"
-                + "m1 { x@left: x, y@left: y }\n"
-                + "io {x: x, y: y}\n"
-                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}}]\n"
+                + "m1 { x@left: x, y@left: y, z@left: z }\n"
+                + "io {x: x, y: y, z: z}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}},{z:{max:10,min:0}}]\n"
                 ;
         
-        orSpec = "phi1(x,y,z)\n"
+        orSpec1 = "phi1(io2,io1,io3)\n"
                 + "\n"
-                + "phi1 = (((x > 8) && (y > 8)) => (G[0, 1]((x > 8) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x > 8) && (y <= 2)) => (G[0, 1]((x > 8) && (y <= 2)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y > 8)) => (G[0, 1]((x <= 2) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y <= 2)) => (G[0, 1]((x <= 2) && (y <= 2)) && F[0, 2](G[0, 2] z <= 2)))\n"
+                + "phi1 = (((io2 > 2.5) && (io1 > 2.8)) => (G[0, 18]((io2 > 2.5) && (io1 > 2.8)) && F[0, 16](G[0, 2] io3 > 6.5))) && (((io2 > 2.5) && (io1 <= 0.0034)) => (G[0, 18]((io2 > 2.5) && (io1 <= 0.0034)) && F[0, 16](G[0, 2] io3 > 6.5))) && (((io2 <= 0.008) && (io1 > 2.8)) => (G[0, 18]((io2 <= 0.008) && (io1 > 2.8)) && F[0, 16](G[0, 2] io3 > 6.5))) && (((io2 <= 0.008) && (io1 <= 0.0034)) => (G[0, 18]((io2 <= 0.008) && (io1 <= 0.0034)) && F[0, 16](G[0, 2] io3 <= 0.03)))\n"
                 + "\n"
-                + "m1 { x@left: x, y@left: y }\n"
-                + "io {x: x, y: y}\n"
-                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}}]\n"
+                + "m1 { io2@left: io2, io1@left: io1 }\n"
+                + "io {io2: io2, io1: io1}\n"
+                + "limits [{io2 : {max:10,min:0}},{io1:{max:10,min:0}},{io3:{max:10,min:0}}]\n"
+                ;
+        
+        orSpec2 = "phi1(x,y,z)\n"
+                + "\n"
+                + "phi1 = (((x > 2.5) && (y > 2.8)) => (G[0, 18]((x > 2.5) && (y > 2.8)) && F[0, 16](G[0, 2] z > 6.5))) && (((x > 2.5) && (y <= 0.0034)) => (G[0, 18]((x > 2.5) && (y <= 0.0034)) && F[0, 16](G[0, 2] z > 6.5))) && (((x <= 0.008) && (y > 2.8)) => (G[0, 18]((x <= 0.008) && (y > 2.8)) && F[0, 16](G[0, 2] z > 6.5))) && (((x <= 0.008) && (y <= 0.0034)) => (G[0, 18]((x <= 0.008) && (y <= 0.0034)) && F[0, 16](G[0, 2] z <= 0.03)))\n"
+                + "\n"
+                + "m1 { x@left: x, y@left: y, z@left: z }\n"
+                + "io {x: x, y: y, z: z}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}},{z:{max:10,min:0}}]\n"
+                ;
+        
+        orSpec3 = "phi1(x,y,z)\n"
+                + "\n"
+                + "phi1 = (((x > 2.5) && (y > 2.8)) => (G[0, 18]((x > 2.5) && (y > 2.8)) && F[0, 16](G[0, 2] z > 6.5))) && (((x > 2.5) && (y <= 0.0034)) => (G[0, 18]((x > 2.5) && (y <= 0.0034)) && F[0, 16](G[0, 2] z > 6.5))) && (((x <= 0.008) && (y > 2.8)) => (G[0, 18]((x <= 0.008) && (y > 2.8)) && F[0, 16](G[0, 2] z > 6.5))) && (((x <= 0.008) && (y <= 0.0034)) => (G[0, 18]((x <= 0.008) && (y <= 0.0034)) && F[0, 16](G[0, 2] z <= 0.03)))\n"
+                + "\n"
+                + "m1 { x@left: x, y@left: y, z@left: z }\n"
+                + "io {x: x, y: y, z: z}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}},{z:{max:10,min:0}}]\n"
                 ;
         
         andSpec = "phi1(x,y,z)\n"
                 + "\n"
                 + "phi1 = (((x > 8) && (y > 8)) => (G[0, 1]((x > 8) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x > 8) && (y <= 2)) => (G[0, 1]((x > 8) && (y <= 2)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y > 8)) => (G[0, 1]((x <= 2) && (y > 8)) && F[0, 2](G[0, 2] z > 8))) && (((x <= 2) && (y <= 2)) => (G[0, 1]((x <= 2) && (y <= 2)) && F[0, 2](G[0, 2] z <= 2)))\n"
                 + "\n"
-                + "m1 { x@left: x, y@left: y }\n"
-                + "io {x: x, y: y}\n"
-                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}}]\n"
+                + "m1 { x@left: x, y@left: y, z@left: z }\n"
+                + "io {x: x, y: y, z: z}\n"
+                + "limits [{x : {max:10,min:0}},{y:{max:10,min:0}},{z:{max:10,min:0}}]\n"
                 ;
         
         
@@ -869,6 +891,46 @@ public class DistanceMetricTest {
         cost.setAlphaGprime(1);
         
         System.out.println("Distance between globally and eventually specs: " + cost.computeDistance(stlSpec8.spec, stlSpec9.spec));
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        STLflatAbstractSyntaxTreeExtractor norSpecExtract = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor notSpecExtract = new STLflatAbstractSyntaxTreeExtractor();
+        STLflatAbstractSyntaxTreeExtractor orSpecExtract = new STLflatAbstractSyntaxTreeExtractor();
+        
+        norSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(norSpec);
+        notSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(notSpec);
+        orSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(orSpec1);
+        
+        Map<String, List<String>> mapping = new HashMap<String, List<String>>();
+        
+        List<String> signal = new ArrayList<String>();
+        
+        signal.add("x");
+        
+        mapping.put("z", signal);
+        
+        STLflat composedOr = Compose.composeWithConcatenate(norSpecExtract.spec, notSpecExtract.spec, mapping);
+        
+        cost = new CostFunction();
+        
+        cost.setAlphaF(10);
+        cost.setAlphaFprime(10);
+        cost.setAlphaG(10);
+        cost.setAlphaGprime(10);
+        
+        System.out.println("Distance between composed OR and flat OR specs: " + cost.computeDistance(composedOr, orSpecExtract.spec));
 //        
 //        System.out.println(getDistanceBetweenModulesAndCascade(spec2, spec3, spec1));
         
