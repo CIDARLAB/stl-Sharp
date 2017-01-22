@@ -733,24 +733,39 @@ public class CostFunction {
     private BigDecimal conjunctionGraphMatching(TreeNode module1, TreeNode module2) {
         List<TreeNode> left = getConjunctionPredicates(collapseConjunction(module1));
         List<TreeNode> right = getConjunctionPredicates(collapseConjunction(module2));
+        int[] rightCount = new int[right.size()];
         BigDecimal result = null;
-        while (right.size() > 0) {
-            for (int i = 0; i < left.size(); i++) {
-                TreeNode leftPred = left.get(i);
-                int indexMatch = -1;
+        for (int i = 0; i < left.size(); i++) {
+            TreeNode leftPred = left.get(i);
+            int indexMatch = -1;
+            BigDecimal value = null;
+            for (int j = 0; j < right.size(); j++) {
+                TreeNode rightPred = right.get(j);
+                BigDecimal distance = computeDistance(leftPred, rightPred);
+                if (distance != null && (value == null || distance.compareTo(value) < 0)) {
+                    value = distance;
+                    indexMatch = j;
+                }
+            }
+            if (indexMatch == -1) {
+                return null;
+            }
+            rightCount[indexMatch]++;
+            if (result == null || result.compareTo(value) < 0) {
+                result = value;
+            }
+        }
+        for (int i = 0; i < rightCount.length; i++) {
+            if (rightCount[i] == 0) {
                 BigDecimal value = null;
-                for (int j = 0; j < right.size(); j++) {
-                    TreeNode rightPred = right.get(j);
+                for (int j = 0; j < left.size(); j++) {
+                    TreeNode leftPred = left.get(j);
+                    TreeNode rightPred = right.get(i);
                     BigDecimal distance = computeDistance(leftPred, rightPred);
                     if (distance != null && (value == null || distance.compareTo(value) < 0)) {
                         value = distance;
-                        indexMatch = j;
                     }
                 }
-                if (indexMatch == -1) {
-                    return null;
-                }
-                right.remove(indexMatch);
                 if (result == null || result.compareTo(value) < 0) {
                     result = value;
                 }
@@ -920,8 +935,14 @@ public class CostFunction {
     //Used for conjunction
     public static BigDecimal max(BigDecimal num1, BigDecimal num2) {
 
-        if (num1 == null || num2 == null) {
-            return null;
+//        if (num1 == null || num2 == null) {
+//            return null;
+//        }
+        if (num1 == null) {
+            return num2;
+        }
+        if (num2 == null) {
+            return num1;
         }
         if (num1.compareTo(num2) == -1) {
             return num2;
