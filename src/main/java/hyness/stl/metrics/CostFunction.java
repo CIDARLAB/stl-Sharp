@@ -40,8 +40,7 @@ public class CostFunction {
 
     @Getter
     private BigDecimal muMax;
-    
-   
+
     private TimeMetric timeMetric1;
     private TimeMetric timeMetric2;
     private HashMap<String, Module> spec1Modules;
@@ -66,7 +65,7 @@ public class CostFunction {
     @Getter
     @Setter
     private double alphaFprime;
-    
+
     public CostFunction() {
         limitsMap = new HashMap<String, HashMap<String, Double>>();
     }
@@ -83,22 +82,21 @@ public class CostFunction {
         //<editor-fold desc="Module 1 is of Type Concatenation">
         if (module1.op.equals(Operation.CONCAT)) {
             if (module1 instanceof ModuleNode) {
-                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
-                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).left)).getName()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).right)).getName()));
                 ConcatenationNode concatenatedModule1 = new ConcatenationNode(left, right);
-                return computeDistance(concatenatedModule1.costFunctionEquivalent(),module2);
+                return computeDistance(concatenatedModule1.costFunctionEquivalent(), module2);
             }
-            ConcatenationNode concatenationModule1 = (ConcatenationNode)module1;
-            return computeDistance(concatenationModule1.costFunctionEquivalent(),module2);
+            ConcatenationNode concatenationModule1 = (ConcatenationNode) module1;
+            return computeDistance(concatenationModule1.costFunctionEquivalent(), module2);
         }
         //</editor-fold>
 
         //Module 1 is of type Parallel
         if (module1.op.equals(Operation.PARALLEL)) {
-            
+
         }
 
-        
         //<editor-fold desc="Module 1 is of type Conjunction">
         if (module1.op.equals(Operation.AND)) {
             if (module2.op.equals(Operation.AND)) {
@@ -106,12 +104,12 @@ public class CostFunction {
             }
             else if (module2 instanceof AlwaysNode || module2 instanceof EventNode || module2 instanceof LinearPredicateLeaf) {
                 if (module1 instanceof ModuleNode) {
-                    TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
-                    return max(computeDistance(left,module2),computeDistance(right,module2));
+                    TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).right)).getName()));
+                    return max(computeDistance(left, module2), computeDistance(right, module2));
                 }
                 ConjunctionNode conjunctionModule1 = (ConjunctionNode) module1;
-                return max(computeDistance(conjunctionModule1.left,module2),computeDistance(conjunctionModule1.right,module2));
+                return max(computeDistance(conjunctionModule1.left, module2), computeDistance(conjunctionModule1.right, module2));
             }
             else {
                 return computeDistance(module2, module1);
@@ -122,154 +120,158 @@ public class CostFunction {
         //<editor-fold desc="Module 1 is of type Disjunction">
         if (module1.op.equals(Operation.OR)) {
             if (module1 instanceof ModuleNode) {
-                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).left)).getName()));
-                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf)(((ModuleNode) module1).right)).getName()));
-                return min(computeDistance(left,module2),computeDistance(right,module2));
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).left)).getName()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).right)).getName()));
+                return min(computeDistance(left, module2), computeDistance(right, module2));
             }
             DisjunctionNode disjunctionModule1 = (DisjunctionNode) module1;
-            return min(computeDistance(disjunctionModule1.left,module2),computeDistance(disjunctionModule1.right,module2));
+            return min(computeDistance(disjunctionModule1.left, module2), computeDistance(disjunctionModule1.right, module2));
         }
         //</editor-fold>
 
         //Module 1 is of type Implies
         if (module1.op.equals(Operation.IMPLIES)) {
-            
+
         }
 
         //<editor-fold desc="Module 1 is of type Global">
         if (module1 instanceof AlwaysNode) {
-            AlwaysNode alwaysModule1 = (AlwaysNode)module1;
-            if(module2 instanceof AlwaysNode){ //Done
-                AlwaysNode alwaysModule2 = (AlwaysNode)module2;
+            AlwaysNode alwaysModule1 = (AlwaysNode) module1;
+            if (module2 instanceof AlwaysNode) { //Done
+                AlwaysNode alwaysModule2 = (AlwaysNode) module2;
                 //t3 < t1 < t2 <t4
-                if( (alwaysModule2.low <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.high)){
-                    return computeDistance(alwaysModule1.child,alwaysModule2.child);
+                if ((alwaysModule2.low <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.high)) {
+                    return computeDistance(alwaysModule1.child, alwaysModule2.child);
                 }
                 //t1 < t2 < t3 <t4 
-                else if( (alwaysModule1.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule2.high)){
-                    return BigDecimal.valueOf(((this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime *(timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2))) + (3* getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1))));
+                else if ((alwaysModule1.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule2.high)) {
+                    return BigDecimal.valueOf(((this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime * (timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2))) + (3 * getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1))));
                 } //t1 < t3 < t4 <t2  
-                else if( (alwaysModule1.low <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.high)){
-                    double val = (this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime * 3 * (getRecursiveMax(alwaysModule1)) * ( timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2)) );
-                    return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(timeHorizon(alwaysModule2)),computeDistance(alwaysModule1.child,alwaysModule2.child)));
+                else if ((alwaysModule1.low <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.high)) {
+                    double val = (this.alphaG * (alwaysModule2.low - alwaysModule1.low)) + (this.alphaGprime * 3 * (getRecursiveMax(alwaysModule1)) * (1 + timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2)));
+                    return specialSum(BigDecimal.valueOf(val), specialProduct(BigDecimal.valueOf(timeHorizon(alwaysModule2)), computeDistance(alwaysModule1.child, alwaysModule2.child)));
                 } //t1 < t3 < t2 < t4  
-                else if( (alwaysModule1.low <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.high)){
-                    double val = (this.alphaG * 3 * getRecursiveMax(alwaysModule1) * (alwaysModule2.low - alwaysModule1.low));
-                    return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(timeHorizon(alwaysModule1)),computeDistance(alwaysModule1.child,alwaysModule2.child)));
+                else if ((alwaysModule1.low <= alwaysModule2.low) && (alwaysModule2.low <= alwaysModule1.high) && (alwaysModule1.high <= alwaysModule2.high)) {
+                    double val = (this.alphaG * 3 * getRecursiveMax(alwaysModule1) * (1 + alwaysModule2.low - alwaysModule1.low));
+                    return specialSum(BigDecimal.valueOf(val), specialProduct(BigDecimal.valueOf(timeHorizon(alwaysModule1)), computeDistance(alwaysModule1.child, alwaysModule2.child)));
                 } //t3 < t1 < t4 <t2  
-                else if( (alwaysModule2.low <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.high)){
-                    double val = ((this.alphaG * (alwaysModule1.low - alwaysModule2.low)) + (3 * getRecursiveMax(alwaysModule1) * (alwaysModule1.high - alwaysModule2.high)));
-                    return specialSum(BigDecimal.valueOf(val),specialProduct(BigDecimal.valueOf(alwaysModule2.high - alwaysModule1.low),computeDistance(alwaysModule1.child,alwaysModule2.child)));
+                else if ((alwaysModule2.low <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.high)) {
+                    double val = ((this.alphaG * (alwaysModule1.low - alwaysModule2.low)) + (3 * getRecursiveMax(alwaysModule1) * (1 + alwaysModule1.high - alwaysModule2.high)));
+                    return specialSum(BigDecimal.valueOf(val), specialProduct(BigDecimal.valueOf(alwaysModule2.high - alwaysModule1.low), computeDistance(alwaysModule1.child, alwaysModule2.child)));
                 } //t3 < t4 < t1 <t2  
-                else if( (alwaysModule2.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule1.high)){
-                    return BigDecimal.valueOf(((this.alphaG* (alwaysModule1.low - alwaysModule2.low)) + (3 * getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1)) + (this.alphaGprime * (timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2)))));
-                } else {
+                else if ((alwaysModule2.low <= alwaysModule2.high) && (alwaysModule2.high <= alwaysModule1.low) && (alwaysModule1.low <= alwaysModule1.high)) {
+                    return BigDecimal.valueOf(((this.alphaG * (alwaysModule1.low - alwaysModule2.low)) + (3 * getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1)) + (this.alphaGprime * (timeHorizon(alwaysModule1) - timeHorizon(alwaysModule2)))));
+                }
+                else {
                     return null;
                 }
             }
-            if(module2.op.equals(Operation.AND)){
-                if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
-                    return max(computeDistance(alwaysModule1,left),computeDistance(alwaysModule1,right));
+            if (module2.op.equals(Operation.AND)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(alwaysModule1, left), computeDistance(alwaysModule1, right));
                 }
                 ConjunctionNode conjunctionNode2 = (ConjunctionNode) module2;
-                return max(computeDistance(alwaysModule1,conjunctionNode2.left),computeDistance(alwaysModule1,conjunctionNode2.right));
+                return max(computeDistance(alwaysModule1, conjunctionNode2.left), computeDistance(alwaysModule1, conjunctionNode2.right));
             }
-            if(module2.op.equals(Operation.OR)){
-                if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
-                    return min(computeDistance(alwaysModule1,left),computeDistance(alwaysModule1,right));
+            if (module2.op.equals(Operation.OR)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(alwaysModule1, left), computeDistance(alwaysModule1, right));
                 }
                 DisjunctionNode disjunctionNode2 = (DisjunctionNode) module2;
-                return min(computeDistance(alwaysModule1,disjunctionNode2.left),computeDistance(alwaysModule1,disjunctionNode2.right));
+                return max(computeDistance(alwaysModule1, disjunctionNode2.left), computeDistance(alwaysModule1, disjunctionNode2.right));
             }
-            if(module2 instanceof EventNode){
-                EventNode eventModule2 = (EventNode)module2;
-                double val = (3* getRecursiveMax(alwaysModule1) * timeHorizon(alwaysModule1)) + (this.alphaG * abs(alwaysModule1.low - eventModule2.low)) + (this.alphaGprime * ((eventModule2.high - eventModule2.low) - (alwaysModule1.high - alwaysModule1.low)));
-                return specialSum(BigDecimal.valueOf(val),computeDistance(alwaysModule1.child,eventModule2.child));
+            if (module2 instanceof EventNode) {
+                EventNode eventModule2 = (EventNode) module2;
+                double val = (3 * getRecursiveMax(alwaysModule1) * (1 + timeHorizon(alwaysModule1))) + (this.alphaG * abs(alwaysModule1.low - eventModule2.low)) + (this.alphaGprime * ((eventModule2.high - eventModule2.low) - (alwaysModule1.high - alwaysModule1.low)));
+                return specialSum(BigDecimal.valueOf(val), computeDistance(alwaysModule1.child, eventModule2.child));
             }
-            if(module2 instanceof LinearPredicateLeaf){
-                LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf)module2;
-                double val = (3 * timeHorizon(alwaysModule1) * getRecursiveMax(alwaysModule1)) + (this.alphaG * alwaysModule1.low);
-                return specialSum(BigDecimal.valueOf(val),computeDistance(alwaysModule1.child,linearPredicate2));
+            if (module2 instanceof LinearPredicateLeaf) {
+                LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) module2;
+                double val = (3 * (1 + timeHorizon(alwaysModule1)) * getRecursiveMax(alwaysModule1)) + (this.alphaG * alwaysModule1.low);
+                return specialSum(BigDecimal.valueOf(val), computeDistance(alwaysModule1.child, linearPredicate2));
             }
-            if(module2.op.equals(Operation.CONCAT)){
-                if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
-                    ConcatenationNode concatenatedModule2 = new ConcatenationNode(left,right);
-                    return computeDistance(alwaysModule1,concatenatedModule2.costFunctionEquivalent());
+            if (module2.op.equals(Operation.CONCAT)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    ConcatenationNode concatenatedModule2 = new ConcatenationNode(left, right);
+                    return computeDistance(alwaysModule1, concatenatedModule2.costFunctionEquivalent());
                 }
                 ConcatenationNode concatenationModule2 = (ConcatenationNode) module2;
-                return computeDistance(alwaysModule1,concatenationModule2.costFunctionEquivalent());
+                return computeDistance(alwaysModule1, concatenationModule2.costFunctionEquivalent());
             }
-            
+
         }
         //</editor-fold>
-        
-        
+
         //<editor-fold desc="Module 1 is of type Eventually">
         if (module1 instanceof EventNode) {
             EventNode eventModule1 = (EventNode) module1;
-            if(module2.op.equals(Operation.AND)){
-                if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
-                    return max(computeDistance(eventModule1,left),computeDistance(eventModule1,right));
+            if (module2.op.equals(Operation.AND)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(eventModule1, left), computeDistance(eventModule1, right));
                 }
-                ConjunctionNode conjunctionModule2 = (ConjunctionNode)module2;
-                return max(computeDistance(eventModule1,conjunctionModule2.left),computeDistance(eventModule1,conjunctionModule2.right));
+                ConjunctionNode conjunctionModule2 = (ConjunctionNode) module2;
+                return max(computeDistance(eventModule1, conjunctionModule2.left), computeDistance(eventModule1, conjunctionModule2.right));
             }
-            if(module2.op.equals(Operation.OR)){
-                if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
-                    return min(computeDistance(eventModule1,left),computeDistance(eventModule1,right));
+            if (module2.op.equals(Operation.OR)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(eventModule1, left), computeDistance(eventModule1, right));
                 }
-                DisjunctionNode disjunctionModule2 = (DisjunctionNode)module2;
-                return min(computeDistance(eventModule1,disjunctionModule2.left),computeDistance(eventModule1,disjunctionModule2.right));
+                DisjunctionNode disjunctionModule2 = (DisjunctionNode) module2;
+                return max(computeDistance(eventModule1, disjunctionModule2.left), computeDistance(eventModule1, disjunctionModule2.right));
             }
-            if(module2 instanceof LinearPredicateLeaf){
-                LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf)module2;
-                if(eventModule1.low == 0){
-                    return specialSum(computeDistance(eventModule1.child,linearPredicate2),BigDecimal.valueOf(this.alphaFprime* timeHorizon(eventModule1)));
-                } else {
+            if (module2 instanceof LinearPredicateLeaf) {
+                LinearPredicateLeaf linearPredicate2 = (LinearPredicateLeaf) module2;
+                if (eventModule1.low == 0) {
+                    return specialSum(computeDistance(eventModule1.child, linearPredicate2), BigDecimal.valueOf(this.alphaFprime * timeHorizon(eventModule1)));
+                }
+                else {
                     double val = (3 * getRecursiveMax(eventModule1)) + (this.alphaF * (eventModule1.low)) + (this.alphaFprime * timeHorizon(eventModule1));
-                    return specialSum(computeDistance(eventModule1.child,linearPredicate2),BigDecimal.valueOf(val));
+                    return specialSum(computeDistance(eventModule1.child, linearPredicate2), BigDecimal.valueOf(val));
                 }
             }
-            if(module2 instanceof AlwaysNode){
-                AlwaysNode alwaysModule2 = (AlwaysNode)module2;
-                if(((alwaysModule2.low > eventModule1.high) || (eventModule1.low > alwaysModule2.low))){
+            if (module2 instanceof AlwaysNode) {
+                AlwaysNode alwaysModule2 = (AlwaysNode) module2;
+                if (((alwaysModule2.low > eventModule1.high) || (eventModule1.low > alwaysModule2.low))) {
                     double val = (3 * getRecursiveMax(eventModule1)) + (this.alphaF * abs(eventModule1.low - alwaysModule2.low)) + (this.alphaFprime * (timeHorizon(eventModule1) - timeHorizon(alwaysModule2)));
-                    return specialSum(BigDecimal.valueOf(val),computeDistance(eventModule1.child,alwaysModule2.child));
-                } else {
-                    return computeDistance(eventModule1.child,alwaysModule2.child);
+                    return specialSum(BigDecimal.valueOf(val), computeDistance(eventModule1.child, alwaysModule2.child));
+                }
+                else {
+                    return computeDistance(eventModule1.child, alwaysModule2.child);
                 }
             }
-            if(module2 instanceof EventNode){
-                EventNode eventModule2 = (EventNode)module2;
-                if( (eventModule1.low <= eventModule2.low) && (eventModule2.high <= eventModule1.high) ){
-                  return computeDistance(eventModule1.child,eventModule2.child);  
-                } else if ( ( (eventModule1.low <= eventModule2.low)&&(eventModule2.low <= eventModule1.high)&&(eventModule1.high <= eventModule2.high) ) || ( (eventModule2.low <= eventModule1.low)&&(eventModule1.high <= eventModule2.high) ) || ( (eventModule2.low <= eventModule1.low)&&(eventModule1.low <= eventModule2.high)&&(eventModule2.high <= eventModule1.high) )){
-                    double val = (this.alphaF * abs(eventModule1.low - eventModule2.low)) + (this.alphaFprime * (timeHorizon(eventModule1) - timeHorizon(eventModule2))) ;
-                    return specialSum(computeDistance(eventModule1.child,eventModule2.child),BigDecimal.valueOf(val));
-                } else {
+            if (module2 instanceof EventNode) {
+                EventNode eventModule2 = (EventNode) module2;
+                if ((eventModule1.low <= eventModule2.low) && (eventModule2.high <= eventModule1.high)) {
+                    return computeDistance(eventModule1.child, eventModule2.child);
+                }
+                else if (((eventModule1.low <= eventModule2.low) && (eventModule2.low <= eventModule1.high) && (eventModule1.high <= eventModule2.high)) || ((eventModule2.low <= eventModule1.low) && (eventModule1.high <= eventModule2.high)) || ((eventModule2.low <= eventModule1.low) && (eventModule1.low <= eventModule2.high) && (eventModule2.high <= eventModule1.high))) {
                     double val = (this.alphaF * abs(eventModule1.low - eventModule2.low)) + (this.alphaFprime * (timeHorizon(eventModule1) - timeHorizon(eventModule2))) + (3 * getRecursiveMax(eventModule1));
-                    return specialSum(computeDistance(eventModule1.child,eventModule2.child),BigDecimal.valueOf(val));
+                    return specialSum(computeDistance(eventModule1.child, eventModule2.child), BigDecimal.valueOf(val));
+                }
+                else {
+                    double val = (this.alphaF * abs(eventModule1.low - eventModule2.low)) + (this.alphaFprime * (timeHorizon(eventModule1) - timeHorizon(eventModule2))) + (6 * getRecursiveMax(eventModule1));
+                    return specialSum(computeDistance(eventModule1.child, eventModule2.child), BigDecimal.valueOf(val));
                 }
             }
-            if(module2 instanceof ConcatenationNode){
-                if(module2 instanceof ModuleNode){
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
-                    ConcatenationNode concatenatedModule2 = new ConcatenationNode(left,right);
-                    return computeDistance(eventModule1,concatenatedModule2.costFunctionEquivalent());
+            if (module2 instanceof ConcatenationNode) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    ConcatenationNode concatenatedModule2 = new ConcatenationNode(left, right);
+                    return computeDistance(eventModule1, concatenatedModule2.costFunctionEquivalent());
                 }
                 ConcatenationNode concatenationModule2 = (ConcatenationNode) module2;
-                return computeDistance(eventModule1,concatenationModule2.costFunctionEquivalent());
+                return computeDistance(eventModule1, concatenationModule2.costFunctionEquivalent());
             }
         }
         //</editor-fold>
@@ -277,7 +279,7 @@ public class CostFunction {
         if (module1 instanceof BooleanLeaf) {
 
         }
-        
+
         //<editor-fold desc="Module 1 is of type LinearPredicateLeaf">
         if (module1 instanceof LinearPredicateLeaf) {
             LinearPredicateLeaf linearPredicate1 = (LinearPredicateLeaf) module1;
@@ -291,15 +293,18 @@ public class CostFunction {
                     if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
                         // (pi'-pi)
                         return BigDecimal.valueOf(linearPredicate2.threshold - linearPredicate1.threshold);
-                    } else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                    }
+                    else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
                         // 2*piMax + (pi'-pi)
                         return BigDecimal.valueOf((2 * ((this.limitsMap.get(linearPredicate1.variable)).get("max"))) + (linearPredicate2.threshold - linearPredicate1.threshold));
                     }
-                } else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
+                }
+                else if (linearPredicate1.rop.equals(RelOperation.GE) || linearPredicate1.rop.equals(RelOperation.GT)) {
                     if (linearPredicate2.rop.equals(RelOperation.EQ) || linearPredicate2.rop.equals(RelOperation.LE) || linearPredicate2.rop.equals(RelOperation.LT)) {
                         // 2*piMax + (pi-pi')
                         return BigDecimal.valueOf((2 * ((this.limitsMap.get(linearPredicate1.variable)).get("max"))) + (linearPredicate1.threshold - linearPredicate2.threshold));
-                    } else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
+                    }
+                    else if (linearPredicate2.rop.equals(RelOperation.GE) || linearPredicate2.rop.equals(RelOperation.GT)) {
                         // (pi-pi')
                         return BigDecimal.valueOf(linearPredicate1.threshold - linearPredicate2.threshold);
                     }
@@ -308,8 +313,8 @@ public class CostFunction {
 
             if (module2.op.equals(Operation.AND)) {
                 if (module2 instanceof ModuleNode) {
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
                     return max(computeDistance(linearPredicate1, left), computeDistance(linearPredicate1, right));
                 }
                 ConjunctionNode conjunctionModule2 = (ConjunctionNode) module2;
@@ -318,57 +323,59 @@ public class CostFunction {
 
             if (module2.op.equals(Operation.OR)) {
                 if (module2 instanceof ModuleNode) {
-                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).left)).getName()));
-                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf)(((ModuleNode) module2).right)).getName()));
-                    return min(computeDistance(linearPredicate1, left), computeDistance(linearPredicate1, right));
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(linearPredicate1, left), computeDistance(linearPredicate1, right));
                 }
                 DisjunctionNode disjunctionModule2 = (DisjunctionNode) module2;
-                return min(computeDistance(linearPredicate1, disjunctionModule2.left), computeDistance(linearPredicate1, disjunctionModule2.right));
+                return max(computeDistance(linearPredicate1, disjunctionModule2.left), computeDistance(linearPredicate1, disjunctionModule2.right));
             }
-            
-            if(module2 instanceof ConcatenationNode){
+
+            if (module2 instanceof ConcatenationNode) {
                 System.out.println("ERROR. Linear Predicates cannot be concatenated with.");
                 System.err.println("ERROR. Linear Predicates cannot be concatenated with.");
                 return null;
             }
-            
-            if(module2 instanceof ParallelNode){
-                
+
+            if (module2 instanceof ParallelNode) {
+
             }
 
             if (module2 instanceof AlwaysNode) {
                 AlwaysNode alwaysModule2 = (AlwaysNode) module2;
                 if ((alwaysModule2.low == 0) && containsVariable(alwaysModule2, linearPredicate1.variable)) {
                     return computeDistance(linearPredicate1, alwaysModule2.child);
-                } else if ((alwaysModule2.low > 0) && containsVariable(alwaysModule2, linearPredicate1.variable)) {
+                }
+                else if ((alwaysModule2.low > 0) && containsVariable(alwaysModule2, linearPredicate1.variable)) {
                     return BigDecimal.valueOf((this.alphaG * alwaysModule2.low) + (3 * this.limitsMap.get(linearPredicate1.variable).get("max")));
-                } else {
-                    return specialSum(BigDecimal.valueOf(this.alphaG * alwaysModule2.low), getRecursiveValue(alwaysModule2, linearPredicate1.variable));
+                }
+                else {
+                    return specialSum(specialSum(BigDecimal.valueOf(this.alphaG * alwaysModule2.low), getRecursiveValue(alwaysModule2, linearPredicate1.variable)), BigDecimal.valueOf(3 * this.limitsMap.get(linearPredicate1.variable).get("max")));
                 }
             }
 
             if (module2 instanceof EventNode) {
                 EventNode eventModule2 = (EventNode) module2;
                 if ((eventModule2.low == 0) && containsVariable(eventModule2, linearPredicate1.variable)) {
-                    return specialSum(BigDecimal.valueOf(this.alphaF * (eventModule2.high - eventModule2.low)), computeDistance(linearPredicate1, eventModule2.child));
-                } else if ((eventModule2.low > 0) && containsVariable(eventModule2, linearPredicate1.variable)) {
-                    return BigDecimal.valueOf((this.alphaF * (eventModule2.high - eventModule2.low)) + (this.alphaFprime * eventModule2.low) + (3 * this.limitsMap.get(linearPredicate1.variable).get("max")));
-                } else if ((eventModule2.low == 0) && !(containsVariable(eventModule2, linearPredicate1.variable))) {
-                    return (specialSum(BigDecimal.valueOf((this.alphaF * (eventModule2.high - eventModule2.low))), getRecursiveValue(eventModule2, linearPredicate1.variable)));
+                    return specialSum(specialSum(BigDecimal.valueOf(this.alphaF * (eventModule2.high - eventModule2.low)), computeDistance(linearPredicate1, eventModule2.child)), BigDecimal.valueOf(3 * this.limitsMap.get(linearPredicate1.variable).get("max")));
+                }
+                else if ((eventModule2.low > 0) && containsVariable(eventModule2, linearPredicate1.variable)) {
+                    return specialSum(BigDecimal.valueOf((this.alphaF * (eventModule2.high - eventModule2.low)) + (this.alphaFprime * eventModule2.low) + (3 * this.limitsMap.get(linearPredicate1.variable).get("max"))), BigDecimal.valueOf(6 * this.limitsMap.get(linearPredicate1.variable).get("max")));
+                }
+                else if ((eventModule2.low == 0) && !(containsVariable(eventModule2, linearPredicate1.variable))) {
+                    return specialSum((specialSum(BigDecimal.valueOf((this.alphaF * (eventModule2.high - eventModule2.low))), getRecursiveValue(eventModule2, linearPredicate1.variable))), BigDecimal.valueOf(3 * this.limitsMap.get(linearPredicate1.variable).get("max")));
                 } // eventModule2 doesn't contain variable of linearPredicate1 and eventModule2 time horizon does not contain 0.
                 else {
-                    return (specialSum(BigDecimal.valueOf((this.alphaF * (eventModule2.high - eventModule2.low)) + (this.alphaFprime * eventModule2.low)), getRecursiveValue(eventModule2, linearPredicate1.variable)));
+                    return specialSum((specialSum(BigDecimal.valueOf((this.alphaF * (eventModule2.high - eventModule2.low)) + (this.alphaFprime * eventModule2.low)), getRecursiveValue(eventModule2, linearPredicate1.variable))), BigDecimal.valueOf(3 * this.limitsMap.get(linearPredicate1.variable).get("max")));
                 }
             }
-            
 
         }
         //</editor-fold>
-        
-        
+
         return BigDecimal.ZERO;
     }
-    
+
     private TreeNode collapseConjunction(TreeNode module) {
         TreeNode left;
         TreeNode right;
@@ -729,7 +736,7 @@ public class CostFunction {
         }
         return new ConjunctionNode(left, right);
     }
-    
+
     private BigDecimal conjunctionGraphMatching(TreeNode module1, TreeNode module2) {
         List<TreeNode> left = getConjunctionPredicates(collapseConjunction(module1));
         List<TreeNode> right = getConjunctionPredicates(collapseConjunction(module2));
@@ -773,7 +780,7 @@ public class CostFunction {
         }
         return result;
     }
-    
+
     private List<TreeNode> getConjunctionPredicates(TreeNode module) {
         List<TreeNode> modules = new ArrayList<TreeNode>();
         if (module.op.equals(Operation.AND)) {
@@ -792,37 +799,37 @@ public class CostFunction {
         return modules;
     }
 
-    private double timeHorizon(TreeNode node){
-        if(node instanceof EventNode){
-            EventNode event = (EventNode)node;
+    private double timeHorizon(TreeNode node) {
+        if (node instanceof EventNode) {
+            EventNode event = (EventNode) node;
             return (event.high - event.low);
         }
-        if(node instanceof AlwaysNode){
-            AlwaysNode always = (AlwaysNode)node;
+        if (node instanceof AlwaysNode) {
+            AlwaysNode always = (AlwaysNode) node;
             return (always.high - always.low);
         }
-        
+
         return 0;
     }
-    
-    private double abs(double val){
-        if(val < 0){
-            return (-1*val);
+
+    private double abs(double val) {
+        if (val < 0) {
+            return (-1 * val);
         }
         return val;
     }
-    
+
     private BigDecimal specialSum(BigDecimal num1, BigDecimal num2) {
-        if(num1 == null || num2 == null){
+        if (num1 == null || num2 == null) {
             return null;
         }
-        else{
+        else {
             return num1.add(num2);
         }
     }
-    
-    private BigDecimal specialProduct(BigDecimal num1, BigDecimal num2){
-        if(num1 == null || num2 == null){
+
+    private BigDecimal specialProduct(BigDecimal num1, BigDecimal num2) {
+        if (num1 == null || num2 == null) {
             return null;
         }
         else {
@@ -833,42 +840,42 @@ public class CostFunction {
     private boolean containsVariable(TreeNode module, String variable) {
         return (getAllVariables(module).contains(variable));
     }
-    
-    private Set<String> getAllVariables(TreeNode module){
+
+    private Set<String> getAllVariables(TreeNode module) {
         Set<String> variables = new HashSet<String>();
-        if(module instanceof LinearPredicateLeaf){
-            LinearPredicateLeaf predicate = (LinearPredicateLeaf)module;
+        if (module instanceof LinearPredicateLeaf) {
+            LinearPredicateLeaf predicate = (LinearPredicateLeaf) module;
             variables.add(predicate.variable);
         }
-        if(module instanceof AlwaysNode){
+        if (module instanceof AlwaysNode) {
             AlwaysNode always = (AlwaysNode) module;
             variables.addAll(getAllVariables(always.child));
         }
-        if(module instanceof ConcatenationNode){
-            ConcatenationNode concat = (ConcatenationNode)module;
+        if (module instanceof ConcatenationNode) {
+            ConcatenationNode concat = (ConcatenationNode) module;
             variables.addAll(getAllVariables(concat.left));
             variables.addAll(getAllVariables(concat.right));
         }
-        if(module instanceof ConjunctionNode){
-            ConjunctionNode conjunction = (ConjunctionNode)module;
+        if (module instanceof ConjunctionNode) {
+            ConjunctionNode conjunction = (ConjunctionNode) module;
             variables.addAll(getAllVariables(conjunction.left));
             variables.addAll(getAllVariables(conjunction.right));
         }
-        if(module instanceof DisjunctionNode){
-            DisjunctionNode disjunction = (DisjunctionNode)module;
+        if (module instanceof DisjunctionNode) {
+            DisjunctionNode disjunction = (DisjunctionNode) module;
             variables.addAll(getAllVariables(disjunction.left));
             variables.addAll(getAllVariables(disjunction.right));
         }
-        if(module instanceof EventNode){
-            EventNode event = (EventNode)module;
+        if (module instanceof EventNode) {
+            EventNode event = (EventNode) module;
             variables.addAll(getAllVariables(event.child));
         }
-        if(module instanceof NotNode){
-            NotNode not = (NotNode)module;
+        if (module instanceof NotNode) {
+            NotNode not = (NotNode) module;
             variables.addAll(getAllVariables(not.child));
         }
-        if(module instanceof ParallelNode){
-            ParallelNode parallel = (ParallelNode)module;
+        if (module instanceof ParallelNode) {
+            ParallelNode parallel = (ParallelNode) module;
             variables.addAll(getAllVariables(parallel.left));
             variables.addAll(getAllVariables(parallel.right));
         }
@@ -877,30 +884,31 @@ public class CostFunction {
 
     private BigDecimal getRecursiveValue(TreeNode module, String variable) {
         //3 * this.limitsMap.get(linearPredicate1.variable).get("max")
-        if(getAllVariables(module).contains(variable)){
+        if (getAllVariables(module).contains(variable)) {
             return BigDecimal.valueOf(3 * this.limitsMap.get(variable).get("max"));
         }
         return null;
     }
 
-    private double getRecursiveMax(TreeNode module){
+    private double getRecursiveMax(TreeNode module) {
         List<String> allVariables = new ArrayList<String>(getAllVariables(module));
-        if(allVariables.isEmpty()){
+        if (allVariables.isEmpty()) {
             return 0;
         }
         double max = this.limitsMap.get(allVariables.get(0)).get("max");
-        for(String variable:allVariables){
-            if(this.limitsMap.get(variable).get("max") > max){
+        for (String variable : allVariables) {
+            if (this.limitsMap.get(variable).get("max") > max) {
                 max = this.limitsMap.get(variable).get("max");
             }
         }
         return max;
     }
-    
+
     private TreeNode getTreeNodeFromModule(Module mod) {
         if (mod instanceof TreeNode) {
             return (TreeNode) mod;
-        } else {
+        }
+        else {
             return ((STLflat) mod).toSTL();
         }
     }
@@ -912,7 +920,8 @@ public class CostFunction {
             if (limitsMap.containsKey(signal)) {
                 limitsMap.get(signal).put("max", max(spec1.limitsMap.get(signal).get("max"), spec2.limitsMap.get(signal).get("max")));
                 limitsMap.get(signal).put("min", min(spec1.limitsMap.get(signal).get("min"), spec2.limitsMap.get(signal).get("min")));
-            } else {
+            }
+            else {
                 limitsMap.put(signal, spec2.limitsMap.get(signal));
             }
         }
@@ -946,7 +955,8 @@ public class CostFunction {
         }
         if (num1.compareTo(num2) == -1) {
             return num2;
-        } else {
+        }
+        else {
             return num1;
         }
     }
@@ -965,7 +975,8 @@ public class CostFunction {
         }
         if (num1.compareTo(num2) == 1) {
             return num2;
-        } else {
+        }
+        else {
             return num1;
         }
     }
