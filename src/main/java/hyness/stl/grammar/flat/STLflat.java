@@ -12,6 +12,7 @@ import hyness.stl.ConcatenationNode;
 import hyness.stl.ConjunctionNode;
 import hyness.stl.DisjunctionNode;
 import hyness.stl.ImplicationNode;
+import hyness.stl.JoinNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.Module;
 import hyness.stl.ModuleLeaf;
@@ -95,6 +96,9 @@ public class STLflat implements Module {
             translate(((TemporalBinaryNode)node).right, map, side);
         } else if(node instanceof TemporalUnaryNode) {
             translate(((TemporalUnaryNode)node).child, map, side);
+        } else if(node instanceof JoinNode) {
+            translate(((JoinNode)node).left, map, side);
+            translate(((JoinNode)node).right, map, side);
         } else if(node instanceof ConcatenationNode) {
             translate(((ConcatenationNode)node).left, map, side);
             translate(((ConcatenationNode)node).right, map, side);
@@ -229,6 +233,9 @@ public class STLflat implements Module {
                 case IMPLIES:
                     ret = new ImplicationNode(left, right);
                     break;
+                case JOIN:
+                    ret = new JoinNode(left, right);
+                    break;
                 case CONCAT:
                     ret = new ConcatenationNode(left, right);
                     break;
@@ -238,7 +245,7 @@ public class STLflat implements Module {
                 default:
                     throw new UnsupportedOperationException(
                             "Modules can only be composed using disjunction, "
-                            + "conjunction, implication or concatenation or parallel!");
+                            + "conjunction, implication, join, concatenation, or parallel!");
             }
             return ret;
         } else {

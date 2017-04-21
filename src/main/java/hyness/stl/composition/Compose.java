@@ -37,7 +37,11 @@ public class Compose {
         
         public static STLflat composeWithConcatenate(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
             return composeWithOperator(hyness.stl.Operation.CONCAT, left, right, internalMapping);
-	}    
+	}
+        
+        public static STLflat composeWithJoin(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+            return composeWithOperator(hyness.stl.Operation.JOIN, left, right, internalMapping);
+	}
         
         private static STLflat composeWithOperator(Operation operation, STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
             HashMap<Pair<String, Boolean>,String> m1Map = new HashMap<Pair<String, Boolean>,String>();

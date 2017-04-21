@@ -11,6 +11,7 @@ import hyness.stl.ConjunctionNode;
 import hyness.stl.DisjunctionNode;
 import hyness.stl.EventNode;
 import hyness.stl.ImplicationNode;
+import hyness.stl.JoinNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.ModuleLeaf;
 import hyness.stl.ModuleNode;
@@ -147,6 +148,9 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
                 break;
             case CONCAT:
                 ret = new ConcatenationNode(visit(ctx.left), visit(ctx.right));
+                break;
+            case JOIN:
+                ret = new JoinNode(visit(ctx.left), visit(ctx.right));
                 break;
             case PARALLEL:
                 ret = new ParallelNode(visit(ctx.left),visit(ctx.right));

@@ -16,6 +16,7 @@ module:
          left=module op='=>' '_' tmap=VARIABLE right=module #moduleOp
     |    left=module op='&&' '_' tmap=VARIABLE right=module #moduleOp
     |    left=module op='||' '_' tmap=VARIABLE right=module #moduleOp
+    |    left=module op='<<'  '_' tmap=VARIABLE right=module #moduleOp
     |    left=module op='>>'  '_' tmap=VARIABLE right=module #moduleOp
     |    left=module op='#'  '_' tmap=VARIABLE right=module #moduleOp
     |    moduleName=VARIABLE '(' VARIABLE (',' VARIABLE)* ')' #moduleLeaf
@@ -32,6 +33,7 @@ property:
     |    left=property op='=>' right=property #formula
     |    left=property op='&&' right=property #formula
     |    left=property op='||' right=property #formula
+    |    left=property op='<<' right=property #formula
     |    left=property op='>>' right=property #formula
     |    left=property op='#' right=property #formula
     |    left=property op='U' '[' low=RATIONAL ',' high=RATIONAL ']' right=property #formula

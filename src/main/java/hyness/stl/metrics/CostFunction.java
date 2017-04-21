@@ -11,6 +11,7 @@ import hyness.stl.ConcatenationNode;
 import hyness.stl.ConjunctionNode;
 import hyness.stl.DisjunctionNode;
 import hyness.stl.EventNode;
+import hyness.stl.JoinNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.Module;
 import hyness.stl.ModuleLeaf;
@@ -96,6 +97,18 @@ public class CostFunction {
         if (module1.op.equals(Operation.PARALLEL)) {
 
         }
+        
+        //<editor-fold desc="Module 1 is of type Join">
+        if (module1.op.equals(Operation.JOIN)) {
+            if (module1 instanceof ModuleNode) {
+                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).left)).getName()));
+                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).right)).getName()));
+                return max(computeDistance(left, module2), computeDistance(right, module2));
+            }
+            JoinNode joinModule1 = (JoinNode) module1;
+            return max(computeDistance(joinModule1.left, module2), computeDistance(joinModule1.right, module2));
+        }
+        //</editor-fold>
 
         //<editor-fold desc="Module 1 is of type Conjunction">
         if (module1.op.equals(Operation.AND)) {
@@ -194,6 +207,15 @@ public class CostFunction {
                 double val = (3 * (1 + timeHorizon(alwaysModule1)) * getRecursiveMax(alwaysModule1)) + (this.alphaG * alwaysModule1.low);
                 return specialSum(BigDecimal.valueOf(val), computeDistance(alwaysModule1.child, linearPredicate2));
             }
+            if (module2.op.equals(Operation.JOIN)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(alwaysModule1, left), computeDistance(alwaysModule1, right));
+                }
+                JoinNode joinNode2 = (JoinNode) module2;
+                return max(computeDistance(alwaysModule1, joinNode2.left), computeDistance(alwaysModule1, joinNode2.right));
+            }
             if (module2.op.equals(Operation.CONCAT)) {
                 if (module2 instanceof ModuleNode) {
                     TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
@@ -263,6 +285,15 @@ public class CostFunction {
                     return specialSum(computeDistance(eventModule1.child, eventModule2.child), BigDecimal.valueOf(val));
                 }
             }
+            if (module2.op.equals(Operation.JOIN)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(eventModule1, left), computeDistance(eventModule1, right));
+                }
+                JoinNode joinModule2 = (JoinNode) module2;
+                return max(computeDistance(eventModule1, joinModule2.left), computeDistance(eventModule1, joinModule2.right));
+            }
             if (module2 instanceof ConcatenationNode) {
                 if (module2 instanceof ModuleNode) {
                     TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
@@ -329,6 +360,16 @@ public class CostFunction {
                 }
                 DisjunctionNode disjunctionModule2 = (DisjunctionNode) module2;
                 return max(computeDistance(linearPredicate1, disjunctionModule2.left), computeDistance(linearPredicate1, disjunctionModule2.right));
+            }
+            
+            if (module2.op.equals(Operation.JOIN)) {
+                if (module2 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec2Modules.get(((ModuleLeaf) (((ModuleNode) module2).right)).getName()));
+                    return max(computeDistance(linearPredicate1, left), computeDistance(linearPredicate1, right));
+                }
+                JoinNode joinModule2 = (JoinNode) module2;
+                return max(computeDistance(linearPredicate1, joinModule2.left), computeDistance(linearPredicate1, joinModule2.right));
             }
 
             if (module2 instanceof ConcatenationNode) {
