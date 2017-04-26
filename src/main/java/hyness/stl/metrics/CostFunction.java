@@ -6,6 +6,7 @@
 package hyness.stl.metrics;
 
 import hyness.stl.AlwaysNode;
+import hyness.stl.BooleanBinaryNode;
 import hyness.stl.BooleanLeaf;
 import hyness.stl.ConcatenationNode;
 import hyness.stl.ConjunctionNode;
@@ -113,7 +114,7 @@ public class CostFunction {
         //<editor-fold desc="Module 1 is of type Conjunction">
         if (module1.op.equals(Operation.AND)) {
             if (module2.op.equals(Operation.AND)) {
-                return conjunctionGraphMatching(module1, module2);
+                return graphMatching(collapseConjunction(module1), collapseConjunction(module2), Operation.AND, false);
             }
             else if (module2 instanceof AlwaysNode || module2 instanceof EventNode || module2 instanceof LinearPredicateLeaf) {
                 if (module1 instanceof ModuleNode) {
@@ -132,13 +133,18 @@ public class CostFunction {
 
         //<editor-fold desc="Module 1 is of type Disjunction">
         if (module1.op.equals(Operation.OR)) {
-            if (module1 instanceof ModuleNode) {
-                TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).left)).getName()));
-                TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).right)).getName()));
-                return min(computeDistance(left, module2), computeDistance(right, module2));
+            if (module2.op.equals(Operation.OR)) {
+                return graphMatching(module1, module2, Operation.OR, true);
             }
-            DisjunctionNode disjunctionModule1 = (DisjunctionNode) module1;
-            return min(computeDistance(disjunctionModule1.left, module2), computeDistance(disjunctionModule1.right, module2));
+            else {
+                if (module1 instanceof ModuleNode) {
+                    TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).left)).getName()));
+                    TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).right)).getName()));
+                    return min(computeDistance(left, module2), computeDistance(right, module2));
+                }
+                DisjunctionNode disjunctionModule1 = (DisjunctionNode) module1;
+                return min(computeDistance(disjunctionModule1.left, module2), computeDistance(disjunctionModule1.right, module2));
+            }
         }
         //</editor-fold>
 
@@ -778,9 +784,9 @@ public class CostFunction {
         return new ConjunctionNode(left, right);
     }
 
-    private BigDecimal conjunctionGraphMatching(TreeNode module1, TreeNode module2) {
-        List<TreeNode> left = getConjunctionPredicates(collapseConjunction(module1));
-        List<TreeNode> right = getConjunctionPredicates(collapseConjunction(module2));
+    private BigDecimal graphMatching(TreeNode module1, TreeNode module2, Operation op, boolean min) {
+        List<TreeNode> left = getPredicatesByOperator(module1, op);
+        List<TreeNode> right = getPredicatesByOperator(module2, op);
         int[] rightCount = new int[right.size()];
         BigDecimal result = null;
         for (int i = 0; i < left.size(); i++) {
@@ -799,7 +805,7 @@ public class CostFunction {
                 return null;
             }
             rightCount[indexMatch]++;
-            if (result == null || result.compareTo(value) < 0) {
+            if (value != null && (result == null || (min && value.compareTo(result) < 0) || (!min && value.compareTo(result) > 0))) {
                 result = value;
             }
         }
@@ -814,7 +820,7 @@ public class CostFunction {
                         value = distance;
                     }
                 }
-                if (result == null || result.compareTo(value) < 0) {
+                if (value != null && (result == null || (min && value.compareTo(result) < 0) || (!min && value.compareTo(result) > 0))) {
                     result = value;
                 }
             }
@@ -822,16 +828,16 @@ public class CostFunction {
         return result;
     }
 
-    private List<TreeNode> getConjunctionPredicates(TreeNode module) {
+    private List<TreeNode> getPredicatesByOperator(TreeNode module, Operation op) {
         List<TreeNode> modules = new ArrayList<TreeNode>();
-        if (module.op.equals(Operation.AND)) {
+        if (module.op.equals(op)) {
             if (module instanceof ModuleNode) {
-                modules.addAll(getConjunctionPredicates(((ModuleNode) module).left));
-                modules.addAll(getConjunctionPredicates(((ModuleNode) module).right));
+                modules.addAll(getPredicatesByOperator(((ModuleNode) module).left, op));
+                modules.addAll(getPredicatesByOperator(((ModuleNode) module).right, op));
             }
             else {
-                modules.addAll(getConjunctionPredicates(((ConjunctionNode) module).left));
-                modules.addAll(getConjunctionPredicates(((ConjunctionNode) module).right));
+                modules.addAll(getPredicatesByOperator(((BooleanBinaryNode) module).left, op));
+                modules.addAll(getPredicatesByOperator(((BooleanBinaryNode) module).right, op));
             }
         }
         else {
@@ -1005,9 +1011,9 @@ public class CostFunction {
     //Used for disjunction
     public static BigDecimal min(BigDecimal num1, BigDecimal num2) {
 
-        if (num1 == null && num2 == null) {
-            return null;
-        }
+//        if (num1 == null && num2 == null) {
+//            return null;
+//        }
         if (num1 == null) {
             return num2;
         }
