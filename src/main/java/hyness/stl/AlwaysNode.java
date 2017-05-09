@@ -16,6 +16,17 @@ public class AlwaysNode extends TemporalUnaryNode {
     }
     
     @Override
+    public boolean equals(Object o){
+        if(o instanceof TreeNode){
+            TreeNode ot = (TreeNode)o;
+            if(o.toString().equals(this.toString())){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
     public double robustness(Trace s, double t) {
         double value = maximumRobustness;
         double r;
@@ -42,5 +53,9 @@ public class AlwaysNode extends TemporalUnaryNode {
     public TreeNode shifted(double shift) {
         return new AlwaysNode(this.child,low+shift,high+shift);
     }
+
+    
+
+    
     
 }

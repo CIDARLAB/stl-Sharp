@@ -68,10 +68,16 @@ public class CostFunction {
     @Setter
     private double alphaFprime;
 
+    
+    
     public CostFunction() {
         limitsMap = new HashMap<String, HashMap<String, Double>>();
     }
 
+    public void setLimits(HashMap<String, HashMap<String, Double>> limits){
+        limitsMap.putAll(limits);
+    }
+    
     public BigDecimal computeDistance(STLflat spec1, STLflat spec2) {
         setLimitsMap(spec1, spec2);
         spec1Modules = spec1.modules;
@@ -79,7 +85,7 @@ public class CostFunction {
         return computeDistance(spec1.toSTL(), spec2.toSTL());
     }
 
-    private BigDecimal computeDistance(TreeNode module1, TreeNode module2) {
+    public BigDecimal computeDistance(TreeNode module1, TreeNode module2) {
 
         //<editor-fold desc="Module 1 is of Type Concatenation">
         if (module1.op.equals(Operation.CONCAT)) {

@@ -6,12 +6,15 @@
 package hyness.stl.metrics;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -109,7 +112,18 @@ public class Utilities {
         return _filepath;
     }
     
+    public static char getSeparater(){
+        if(Utilities.isWindows()){
+            return '\\';
+        }
+        return '/';
+    }
     
+    public static String getResourcesFilepath(){
+        String filepath = getFilepath();
+        filepath += getSeparater() + "src" + getSeparater() + "main" + getSeparater() + "resources" + getSeparater();
+        return filepath;
+    }
     
     public static String getFileContentAsString(String filepath){
         String filecontent = "";
@@ -130,5 +144,33 @@ public class Utilities {
         return filecontent;
     }
     
+    public static void writeToFile(String filepath, String content){
+        File file = new File(filepath);
+        try {
+            FileWriter fr = new FileWriter(file);
+            BufferedWriter br = new BufferedWriter(fr);
+            br.write(content);
+            br.flush();
+            br.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
+    public static void writeToFile(String filepath, List<String> content){
+        File file = new File(filepath);
+        try {
+            FileWriter fr = new FileWriter(file);
+            BufferedWriter br = new BufferedWriter(fr);
+            for(String line:content){
+                br.write(line);
+                br.newLine();
+            }
+            
+            br.flush();
+            br.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
