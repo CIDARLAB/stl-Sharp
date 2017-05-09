@@ -1107,12 +1107,22 @@ public class DistanceMetricTest {
         
         STLflat mod1mod2 = Compose.composeWithJoin(stlmodule1.spec, stlmodule2.spec, mapping);
         
+        STLflat mod1mod2_out = Compose.composeWithJoin(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1).spec, STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2).spec, mapping);
+        
+        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1).spec.toSTL().toString());
+        
+        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2).spec.toSTL().toString());
+        
+        System.out.println(mod1mod2_out.toSTL().toString());
+        
+        System.out.println();
+        
         CostFunction cost = new CostFunction();
         
-        cost.setAlphaF(100);
-        cost.setAlphaFprime(100);
-        cost.setAlphaG(100);
-        cost.setAlphaGprime(100);
+        cost.setAlphaF(0);
+        cost.setAlphaFprime(0);
+        cost.setAlphaG(0);
+        cost.setAlphaGprime(0);
         
         return cost.computeDistance(mod1mod2, stlcascade1.spec);
     }
