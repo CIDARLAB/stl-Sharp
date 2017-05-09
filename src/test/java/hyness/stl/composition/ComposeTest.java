@@ -5,10 +5,17 @@
  */
 package hyness.stl.composition;
 
+import hyness.stl.grammar.flat.STLflat;
+import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -33,6 +40,38 @@ public class ComposeTest {
     
     @After
     public void tearDown() {
+    }
+    
+    /**
+     * Test of composeWithAnd method, of class Compose.
+     */
+    @Test
+    public void testCompose() {
+        String spec1 = "phi1(in, out)\n"
+                + "\n"
+                + "phi1 = ((G[0,10] in >= 20) && (G[0,10] out < 10)) && ((G[10,20] in < 20) && (G[10,20] in >= 10) && (G[10,20] out < 20) && (G[10,20] out >= 10)) && ((G[20,30] in < 10) && (G[20,30] out >= 20))\n"
+                + "\n"
+                + "m1 { in@left: in, out@left: out }\n"
+                + "io {in: in, out: out}\n"
+                + "limits [{in : {max:30,min:0}}, {out : {max:30,min:0}}]\n"
+                ;
+        
+        String spec2 = "phi1(in, out)\n"
+                + "\n"
+                + "phi1 = ((G[0,10] in < 10) && (G[0,10] out >= 20)) && ((G[10,20] in < 20) && (G[10,20] in >= 10) && (G[10,20] out < 20) && (G[10,20] out >= 10)) && ((G[20,30] in >= 20) && (G[20,30] out < 10))\n"
+                + "\n"
+                + "m1 { in@left: in, out@left: out }\n"
+                + "io {in: in, out: out}\n"
+                + "limits [{in : {max:30,min:0}}, {out : {max:30,min:0}}]\n"
+                ;
+        STLflatAbstractSyntaxTreeExtractor stlmodule1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1);
+        STLflatAbstractSyntaxTreeExtractor stlmodule2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
+        Map<String, List<String>> mapping = new HashMap<String, List<String>>();
+        List<String> signal = new ArrayList<String>();
+        signal.add("in");
+        mapping.put("out", signal);
+        STLflat composition = Compose.composeWithJoin(stlmodule1.spec, stlmodule2.spec, mapping);
+        System.out.println(composition.toSTL());
     }
 
     /**

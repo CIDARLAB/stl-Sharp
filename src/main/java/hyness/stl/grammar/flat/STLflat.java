@@ -74,7 +74,7 @@ public class STLflat implements Module {
      * @return
      */
     public static TreeNode translate(TreeNode node,
-            HashMap<Pair<String, Boolean>, String> map, Boolean side) {
+            HashMap<Pair<String, Boolean>, String> map, Boolean side, Set<String> duplicatedValues) {
         
         if(node instanceof BooleanLeaf) { // do nothing
         } else if(node instanceof LinearPredicateLeaf) { // translate variable name
@@ -82,29 +82,79 @@ public class STLflat implements Module {
             Pair<String, Boolean> key = new Pair<String, Boolean>(new String(pnode.variable), side);
 //            System.out.println("LP: " + pnode + " key: " + key + " map: " + map);
             if(map.containsKey(key)) {
+                if (duplicatedValues.contains(map.get(key))) {
+                    return null;
+                }
                 pnode.variable = map.get(key);
             } else if(map.containsValue(pnode.variable)) {
                 throw new IllegalArgumentException("Translation is ambiguous!");
             }
         } else if(node instanceof BooleanBinaryNode) {
-            translate(((BooleanBinaryNode)node).left, map, side);
-            translate(((BooleanBinaryNode)node).right, map, side);
+            TreeNode left = translate(((BooleanBinaryNode)node).left, map, side, duplicatedValues);
+            TreeNode right = translate(((BooleanBinaryNode)node).right, map, side, duplicatedValues);
+            if (left == null) {
+                return right;
+            }
+            else if (right == null) {
+                return left;
+            }
+            ((BooleanBinaryNode)node).left = left;
+            ((BooleanBinaryNode)node).right = right;
         } else if(node instanceof BooleanUnaryNode) {
-            translate(((BooleanUnaryNode)node).child, map, side);
+            TreeNode child = translate(((BooleanUnaryNode)node).child, map, side, duplicatedValues);
+            if (child == null) {
+                return null;
+            }
         } else if(node instanceof TemporalBinaryNode) {
-            translate(((TemporalBinaryNode)node).left, map, side);
-            translate(((TemporalBinaryNode)node).right, map, side);
+            TreeNode left = translate(((TemporalBinaryNode)node).left, map, side, duplicatedValues);
+            TreeNode right = translate(((TemporalBinaryNode)node).right, map, side, duplicatedValues);
+            if (left == null && right == null) {
+                return null;
+            }
+            else if (left == null) {
+                ((TemporalBinaryNode)node).right = new BooleanLeaf(true);
+            }
+            else if (right == null) {
+                ((TemporalBinaryNode)node).left = new BooleanLeaf(true);
+            }
         } else if(node instanceof TemporalUnaryNode) {
-            translate(((TemporalUnaryNode)node).child, map, side);
+            TreeNode child = translate(((TemporalUnaryNode)node).child, map, side, duplicatedValues);
+            if (child == null) {
+                return null;
+            }
         } else if(node instanceof JoinNode) {
-            translate(((JoinNode)node).left, map, side);
-            translate(((JoinNode)node).right, map, side);
+            TreeNode left = translate(((JoinNode)node).left, map, side, duplicatedValues);
+            TreeNode right = translate(((JoinNode)node).right, map, side, duplicatedValues);
+            if (left == null) {
+                return right;
+            }
+            else if (right == null) {
+                return left;
+            }
+            ((JoinNode)node).left = left;
+            ((JoinNode)node).right = right;
         } else if(node instanceof ConcatenationNode) {
-            translate(((ConcatenationNode)node).left, map, side);
-            translate(((ConcatenationNode)node).right, map, side);
+            TreeNode left = translate(((ConcatenationNode)node).left, map, side, duplicatedValues);
+            TreeNode right = translate(((ConcatenationNode)node).right, map, side, duplicatedValues);
+            if (left == null) {
+                return right;
+            }
+            else if (right == null) {
+                return left;
+            }
+            ((ConcatenationNode)node).left = left;
+            ((ConcatenationNode)node).right = right;
         } else if(node instanceof ParallelNode) {
-            translate(((ParallelNode)node).left, map, side);
-            translate(((ParallelNode)node).right, map, side);
+            TreeNode left = translate(((ParallelNode)node).left, map, side, duplicatedValues);
+            TreeNode right = translate(((ParallelNode)node).right, map, side, duplicatedValues);
+            if (left == null) {
+                return right;
+            }
+            else if (right == null) {
+                return left;
+            }
+            ((ParallelNode)node).left = left;
+            ((ParallelNode)node).right = right;
         }
         else {
             throw new IllegalArgumentException("Unknown operation in STL formula!");
@@ -117,7 +167,15 @@ public class STLflat implements Module {
      * @return
      */
     public TreeNode toSTL() {
-        return translate(toSTL(this.module), maps.get(IOMAP), null);
+        List<String> values = new ArrayList<String>();
+        Set<String> duplicatedValues = new HashSet<String>();
+        for (String val : maps.get(IOMAP).values()) {
+            if (values.contains(val)) {
+                duplicatedValues.add(val);
+            }
+            values.add(val);
+        }
+        return translate(toSTL(this.module), maps.get(IOMAP), null, duplicatedValues);
     }
     
     @Override
@@ -219,9 +277,17 @@ public class STLflat implements Module {
             TreeNode ret;
             ModuleNode mnode = (ModuleNode)node;
             HashMap<Pair<String, Boolean>, String> map = maps.get(mnode.map);
-            TreeNode left = translate(toSTL(mnode.left), map, true);
+            List<String> values = new ArrayList<String>();
+            Set<String> duplicatedValues = new HashSet<String>();
+            for (String val : map.values()) {
+                if (values.contains(val)) {
+                    duplicatedValues.add(val);
+                }
+                values.add(val);
+            }
+            TreeNode left = translate(toSTL(mnode.left), map, true, duplicatedValues);
 //            System.out.println("----");
-            TreeNode right = translate(toSTL(mnode.right), map, false);
+            TreeNode right = translate(toSTL(mnode.right), map, false, duplicatedValues);
             
             switch(mnode.op) {
                 case OR:
