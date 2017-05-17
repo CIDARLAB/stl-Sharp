@@ -160,12 +160,12 @@ public class RegressionTest {
             line = d1.get(i)+delimiter;
             
             for(int j=0;j<d1.size();j++){
-                BigDecimal cost = cf.computeDistance(d1.get(i), d1.get(j));
+                BigDecimal cost = cf.computeDistance(d1.get(j), d1.get(i));
                 line += (cost.toPlainString() + delimiter);
             }
             lines.add(line);
         }
-        String filepath = Utilities.getResourcesFilepath() + "RegressionTestResult.csv";
+        String filepath = Utilities.getResourcesFilepath() + "RegressionTestResult.tsv";
         Utilities.writeToFile(filepath, lines);
     }
 }
