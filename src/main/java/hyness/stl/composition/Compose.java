@@ -35,6 +35,14 @@ public class Compose {
             return composeWithOperator(hyness.stl.Operation.PARALLEL, left, right, null);
 	}
         
+        public static STLflat composeWithAnd(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+            return composeWithOperator(hyness.stl.Operation.AND, left, right, internalMapping);
+	}
+        
+        public static STLflat composeWithOr(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+            return composeWithOperator(hyness.stl.Operation.OR, left, right, internalMapping);
+	}
+        
         public static STLflat composeWithConcatenate(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
             return composeWithOperator(hyness.stl.Operation.CONCAT, left, right, internalMapping);
 	}

@@ -782,7 +782,7 @@ public class DistanceMetricTest {
             for (int j = 0; j < modulesHighInput.size(); j ++) {
                 for (int k = 0; k < cascades.size(); k ++) {
                     if (i != j) {
-                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modulesHighInput.get(j), cascades.get(k), "i" + (j+1), "o" + (i+1)));
+                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modulesHighInput.get(j), cascades.get(k), "i" + (j+1), "o" + (i+1), false));
                     }
                 }
             }
@@ -910,7 +910,7 @@ public class DistanceMetricTest {
         cost.setAlphaG(1);
         cost.setAlphaGprime(1);
         
-        System.out.println("Distance of different specs: " + cost.computeDistance(stlSpec1.spec, stlSpec2.spec));
+        System.out.println("Distance of different specs: " + cost.computeDistance(stlSpec1.spec, stlSpec2.spec, true));
         
         STLflatAbstractSyntaxTreeExtractor stlSpec3 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlSpec4 = new STLflatAbstractSyntaxTreeExtractor();
@@ -929,7 +929,7 @@ public class DistanceMetricTest {
         cost.setAlphaG(1);
         cost.setAlphaGprime(1);
         
-        System.out.println("Distance of same specs using composition: " + cost.computeDistance(conjunction, stlSpec3.spec));
+        System.out.println("Distance of same specs using composition: " + cost.computeDistance(conjunction, stlSpec3.spec, false));
         
         STLflatAbstractSyntaxTreeExtractor stlSpec6 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlSpec7 = new STLflatAbstractSyntaxTreeExtractor();
@@ -944,7 +944,7 @@ public class DistanceMetricTest {
         cost.setAlphaG(1);
         cost.setAlphaGprime(1);
         
-        System.out.println("Distance between two similar specs: " + cost.computeDistance(stlSpec6.spec, stlSpec7.spec));
+        System.out.println("Distance between two similar specs: " + cost.computeDistance(stlSpec6.spec, stlSpec7.spec, true));
         
         STLflatAbstractSyntaxTreeExtractor stlSpec8 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlSpec9 = new STLflatAbstractSyntaxTreeExtractor();
@@ -959,7 +959,7 @@ public class DistanceMetricTest {
         cost.setAlphaG(1);
         cost.setAlphaGprime(1);
         
-        System.out.println("Distance between globally and eventually specs: " + cost.computeDistance(stlSpec8.spec, stlSpec9.spec));
+        System.out.println("Distance between globally and eventually specs: " + cost.computeDistance(stlSpec8.spec, stlSpec9.spec, true));
         
         
         
@@ -1073,11 +1073,11 @@ public class DistanceMetricTest {
         cost.setAlphaG(10);
         cost.setAlphaGprime(10);
         
-        BigDecimal inputDistance = cost.computeDistance(stlmodule1Input.spec, stlcascade1Input.spec);
+        BigDecimal inputDistance = cost.computeDistance(stlmodule1Input.spec, stlcascade1Input.spec, true);
 //        BigDecimal inputDistance = cost.computeDistance(stlcascade1Input.spec, stlmodule1Input.spec);
-        BigDecimal internalDistance = cost.computeDistance(mod1mod2Internal, stlcascade1Internal.spec);
+        BigDecimal internalDistance = cost.computeDistance(mod1mod2Internal, stlcascade1Internal.spec, true);
 //        BigDecimal internalDistance = cost.computeDistance(stlcascade1Internal.spec, mod1mod2Internal);
-        BigDecimal outputDistance = cost.computeDistance(stlmodule2Output.spec, stlcascade1Output.spec);
+        BigDecimal outputDistance = cost.computeDistance(stlmodule2Output.spec, stlcascade1Output.spec, true);
 //        BigDecimal outputDistance = cost.computeDistance(stlcascade1Output.spec, stlmodule2Output.spec);
         
         BigDecimal result = max(max(inputDistance, internalDistance), outputDistance);
@@ -1088,7 +1088,7 @@ public class DistanceMetricTest {
         return result;
     }
     
-    public BigDecimal getDistanceBetweenModulesAndCascade(String module1, String module2, String cascade, String inMapping, String outMapping) {
+    public BigDecimal getDistanceBetweenModulesAndCascade(String module1, String module2, String cascade, String inMapping, String outMapping, boolean ignoreInternal) {
         STLflatAbstractSyntaxTreeExtractor stlmodule1 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlmodule2 = new STLflatAbstractSyntaxTreeExtractor();
         STLflatAbstractSyntaxTreeExtractor stlcascade1 = new STLflatAbstractSyntaxTreeExtractor();
@@ -1109,22 +1109,22 @@ public class DistanceMetricTest {
         
         STLflat mod1mod2_out = Compose.composeWithJoin(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1).spec, STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2).spec, mapping);
         
-        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1).spec.toSTL().toString());
+        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1).spec.toSTL(ignoreInternal).toString());
         
-        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2).spec.toSTL().toString());
+        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2).spec.toSTL(ignoreInternal).toString());
         
-        System.out.println(mod1mod2_out.toSTL().toString());
+        System.out.println(mod1mod2_out.toSTL(ignoreInternal).toString());
         
         System.out.println();
         
         CostFunction cost = new CostFunction();
         
-        cost.setAlphaF(0);
-        cost.setAlphaFprime(0);
-        cost.setAlphaG(0);
-        cost.setAlphaGprime(0);
+        cost.setAlphaF(1);
+        cost.setAlphaFprime(1);
+        cost.setAlphaG(1);
+        cost.setAlphaGprime(1);
         
-        return cost.computeDistance(mod1mod2, stlcascade1.spec);
+        return cost.computeDistance(mod1mod2, stlcascade1.spec, ignoreInternal);
     }
     
     public static BigDecimal max(BigDecimal num1, BigDecimal num2) {

@@ -149,7 +149,7 @@ public class HausdorffDistanceMetric {
             return (TreeNode) mod;
         }
         else {
-            return ((STLflat) mod).toSTL();
+            return ((STLflat) mod).toSTL(false);
         }
     }
 

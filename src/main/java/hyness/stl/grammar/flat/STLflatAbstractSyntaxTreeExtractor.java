@@ -218,7 +218,7 @@ public class STLflatAbstractSyntaxTreeExtractor extends STLflatBaseVisitor<TreeN
         STLflatAbstractSyntaxTreeExtractor ast = new STLflatAbstractSyntaxTreeExtractor();
         ast.visit(t);
         
-        System.out.println("toSTL AST::\n" + ast.spec.toSTL());
+        System.out.println("toSTL AST::\n" + ast.spec.toSTL(false));
     }
 
 }

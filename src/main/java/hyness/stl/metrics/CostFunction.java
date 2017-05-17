@@ -78,11 +78,11 @@ public class CostFunction {
         limitsMap.putAll(limits);
     }
     
-    public BigDecimal computeDistance(STLflat spec1, STLflat spec2) {
+    public BigDecimal computeDistance(STLflat spec1, STLflat spec2, boolean ignoreInternal) {
         setLimitsMap(spec1, spec2);
         spec1Modules = spec1.modules;
         spec2Modules = spec2.modules;
-        return computeDistance(spec1.toSTL(), spec2.toSTL());
+        return computeDistance(spec1.toSTL(ignoreInternal), spec2.toSTL(ignoreInternal));
     }
 
     public BigDecimal computeDistance(TreeNode module1, TreeNode module2) {
@@ -120,7 +120,7 @@ public class CostFunction {
         //<editor-fold desc="Module 1 is of type Conjunction">
         if (module1.op.equals(Operation.AND)) {
             if (module2.op.equals(Operation.AND)) {
-                return graphMatching(collapseConjunction(module1), collapseConjunction(module2), Operation.AND, false);
+                return graphMatching(module1, module2, Operation.AND, false);
             }
             else if (module2 instanceof AlwaysNode || module2 instanceof EventNode || module2 instanceof LinearPredicateLeaf) {
                 if (module1 instanceof ModuleNode) {
@@ -962,7 +962,7 @@ public class CostFunction {
             return (TreeNode) mod;
         }
         else {
-            return ((STLflat) mod).toSTL();
+            return ((STLflat) mod).toSTL(false);
         }
     }
 

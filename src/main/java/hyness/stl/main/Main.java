@@ -100,7 +100,7 @@ public class Main {
                     cost.setAlphaFprime(1);
                     cost.setAlphaG(1);
                     cost.setAlphaGprime(1);
-                    val = cost.computeDistance(stlspec1.spec, stlspec2.spec);
+                    val = cost.computeDistance(stlspec1.spec, stlspec2.spec, false);
                     break;
                 default:
                     System.out.println("Invalid METHOD.  METHOD can be either HAUSDORFF or COSTFUNCTION");

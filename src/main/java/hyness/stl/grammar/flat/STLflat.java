@@ -166,16 +166,18 @@ public class STLflat implements Module {
      * 
      * @return
      */
-    public TreeNode toSTL() {
+    public TreeNode toSTL(boolean ignoreInternal) {
         List<String> values = new ArrayList<String>();
         Set<String> duplicatedValues = new HashSet<String>();
-        for (String val : maps.get(IOMAP).values()) {
-            if (values.contains(val)) {
-                duplicatedValues.add(val);
+        if (ignoreInternal) {
+            for (String val : maps.get(IOMAP).values()) {
+                if (values.contains(val)) {
+                    duplicatedValues.add(val);
+                }
+                values.add(val);
             }
-            values.add(val);
         }
-        return translate(toSTL(this.module), maps.get(IOMAP), null, duplicatedValues);
+        return translate(toSTL(this.module, ignoreInternal), maps.get(IOMAP), null, duplicatedValues);
     }
     
     @Override
@@ -209,7 +211,7 @@ public class STLflat implements Module {
             Module mod = modules.get(m);
             stlb += m + " = ";
             if (mod instanceof STLflat) {
-                stlb += ((STLflat) mod).toSTL().toString();
+                stlb += ((STLflat) mod).toSTL(false).toString();
             }
             else {
                 stlb += mod.toString();
@@ -264,14 +266,14 @@ public class STLflat implements Module {
      * @param node
      * @return
      */
-    public TreeNode toSTL(TreeNode node) {
+    public TreeNode toSTL(TreeNode node, boolean ignoreInternal) {
         if (node instanceof ModuleLeaf) {
             Module mod = this.modules.get(((ModuleLeaf)node).getName());
             if (mod instanceof TreeNode) {
                 return (TreeNode) mod;
             }
             else {
-                return ((STLflat) mod).toSTL();
+                return ((STLflat) mod).toSTL(ignoreInternal);
             }
         } else if (node instanceof ModuleNode) {
             TreeNode ret;
@@ -279,15 +281,17 @@ public class STLflat implements Module {
             HashMap<Pair<String, Boolean>, String> map = maps.get(mnode.map);
             List<String> values = new ArrayList<String>();
             Set<String> duplicatedValues = new HashSet<String>();
-            for (String val : map.values()) {
-                if (values.contains(val)) {
-                    duplicatedValues.add(val);
+            if (ignoreInternal) {
+                for (String val : map.values()) {
+                    if (values.contains(val)) {
+                        duplicatedValues.add(val);
+                    }
+                    values.add(val);
                 }
-                values.add(val);
             }
-            TreeNode left = translate(toSTL(mnode.left), map, true, duplicatedValues);
+            TreeNode left = translate(toSTL(mnode.left, ignoreInternal), map, true, duplicatedValues);
 //            System.out.println("----");
-            TreeNode right = translate(toSTL(mnode.right), map, false, duplicatedValues);
+            TreeNode right = translate(toSTL(mnode.right, ignoreInternal), map, false, duplicatedValues);
             
             switch(mnode.op) {
                 case OR:
@@ -312,6 +316,12 @@ public class STLflat implements Module {
                     throw new UnsupportedOperationException(
                             "Modules can only be composed using disjunction, "
                             + "conjunction, implication, join, concatenation, or parallel!");
+            }
+            if (left == null) {
+                ret = right;
+            }
+            else if (right == null) {
+                ret = left;
             }
             return ret;
         } else {
