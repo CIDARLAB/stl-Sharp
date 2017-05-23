@@ -122,7 +122,7 @@ public class CostFunction {
             if (module2.op.equals(Operation.AND)) {
                 return graphMatching(module1, module2, Operation.AND, false);
             }
-            else if (module2 instanceof AlwaysNode || module2 instanceof EventNode || module2 instanceof LinearPredicateLeaf) {
+            else { //if (module2 instanceof AlwaysNode || module2 instanceof EventNode || module2 instanceof LinearPredicateLeaf) {
                 if (module1 instanceof ModuleNode) {
                     TreeNode left = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).left)).getName()));
                     TreeNode right = getTreeNodeFromModule(spec1Modules.get(((ModuleLeaf) (((ModuleNode) module1).right)).getName()));
@@ -131,9 +131,9 @@ public class CostFunction {
                 ConjunctionNode conjunctionModule1 = (ConjunctionNode) module1;
                 return max(computeDistance(conjunctionModule1.left, module2), computeDistance(conjunctionModule1.right, module2));
             }
-            else {
-                return computeDistance(module2, module1);
-            }
+//            else {
+//                return computeDistance(module2, module1);
+//            }
         }
         //</editor-fold>
 
