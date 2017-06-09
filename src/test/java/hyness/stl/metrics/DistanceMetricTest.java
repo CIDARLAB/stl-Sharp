@@ -1138,7 +1138,7 @@ public class DistanceMetricTest {
         if (num2 == null) {
             return num1;
         }
-        if (num1.compareTo(num2) == -1) {
+        if (num1.compareTo(num2) < 0) {
             return num2;
         } else {
             return num1;
@@ -1156,7 +1156,7 @@ public class DistanceMetricTest {
         if (num2 == null) {
             return num1;
         }
-        if (num1.compareTo(num2) == 1) {
+        if (num1.compareTo(num2) > 0) {
             return num2;
         }
         else {

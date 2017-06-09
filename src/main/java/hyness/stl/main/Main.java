@@ -31,14 +31,21 @@ public class Main {
     
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, IOException {
         if (args.length < 3 || args.length == 1 && args[0].equals("-help")) {
-            System.out.println("Usage:  java -jar <STL-flat-jar-name>.jar [OPTION]... [FILE]...");
+            System.out.println("Usage:  java -jar <STL-sharp-jar-name>.jar [OPTION]... [FILE]...");
             System.out.println("Options:");
-            System.out.println("    -compose=OPERATOR   Composes two STLb formulae contained within the first two files and outputs");
+            System.out.println("    -compose=OPERATOR   Composes two STL# formulae contained within the first two files and outputs");
             System.out.println("                        the composed formula into the third file");
-            System.out.println("                        OPERATOR can be AND, OR, PARALLEL, or CONCAT");
-            System.out.println("                        If OPERATOR is CONCAT, then a mapping file is required as a fourth file");
-            System.out.println("    -distance=METHOD    Computes the distance between two STLb formulae contained within two files");
+            System.out.println("                        OPERATOR can be AND, OR, JOIN, PARALLEL, or CONCAT");
+            System.out.println("                        If OPERATOR is CONCAT or JOIN, then a mapping file is required as a fourth file");
+            System.out.println("                        Examples:");
+            System.out.println("                        java -jar STLSharp-jar-with-dependencies.jar -compose=PARALLEL mod1.txt mod2.txt comp.txt");
+            System.out.println("                        java -jar STLSharp-jar-with-dependencies.jar -compose=JOIN mod1.txt mod2.txt comp.txt map.txt");
+            System.out.println();
+            System.out.println("    -distance=METHOD    Computes the distance between two STL# formulae contained within two files");
             System.out.println("                        METHOD can be either HAUSDORFF or COSTFUNCTION");
+            System.out.println("                        Example:");
+            System.out.println("                        java -jar STLSharp-jar-with-dependencies.jar -distance=COSTFUNCTION form1.txt form2.txt");
+            System.out.println();
             System.out.println("    -help               Prints usage information");
         }
         else if (args[0].startsWith("-compose")) {
@@ -46,6 +53,9 @@ public class Main {
             STLflatAbstractSyntaxTreeExtractor stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
             String operator = args[0].split("=")[1];
             STLflat result = null;
+            Map<String, List<String>> mapping = new HashMap<String, List<String>>();
+            BufferedReader br = null;
+            String line = "";
             switch (operator) {
                 case "AND":
                     result = Compose.composeWithAnd(stlspec1.spec, stlspec2.spec);
@@ -58,9 +68,6 @@ public class Main {
                     break;
                 case "CONCAT":
                     //TODO:  Figure out how to input mapping
-                    Map<String, List<String>> mapping = new HashMap<String, List<String>>();
-                    BufferedReader br = null;
-                    String line = "";
                     br = new BufferedReader(new FileReader(args[4]));
                     while ((line = br.readLine()) != null) {
                         String[] splitLine = line.split("=");
@@ -72,6 +79,20 @@ public class Main {
                         mapping.put(splitLine[0], map);
                     }                    
                     result = Compose.composeWithConcatenate(stlspec1.spec, stlspec2.spec, mapping);
+                    break;
+                case "JOIN":
+                    //TODO:  Figure out how to input mapping
+                    br = new BufferedReader(new FileReader(args[4]));
+                    while ((line = br.readLine()) != null) {
+                        String[] splitLine = line.split("=");
+                        List<String> map = mapping.get(splitLine[0]);
+                        if (map == null) {
+                            map = new ArrayList<String>();
+                        }
+                        map.add(splitLine[1]);
+                        mapping.put(splitLine[0], map);
+                    }                    
+                    result = Compose.composeWithJoin(stlspec1.spec, stlspec2.spec, mapping);
                     break;
                 default:
                     System.out.println("Invalid OPERATOR.  OPERATOR can be AND, OR, PARALLEL, or CONCAT");
@@ -106,7 +127,7 @@ public class Main {
                     System.out.println("Invalid METHOD.  METHOD can be either HAUSDORFF or COSTFUNCTION");
                     break;
             }
-            System.out.println("This distance between these STLb formulae is:");
+            System.out.println("This distance between these STL# formulae is:");
             System.out.println(val);
         }
     }
