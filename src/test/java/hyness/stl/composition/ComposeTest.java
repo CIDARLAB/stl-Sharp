@@ -86,7 +86,7 @@ public class ComposeTest {
         System.out.println();
         System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2).spec.toSTL(true));
         System.out.println();
-        System.out.println(Compose.composeWithAnd(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1).spec, STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2).spec, mapping).toSTL(true));
+        System.out.println(Compose.composeWithAnd(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1).spec, STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2).spec, mapping).toSTL(false));
         System.out.println();
         System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3).spec.toSTL(true));
         System.out.println();

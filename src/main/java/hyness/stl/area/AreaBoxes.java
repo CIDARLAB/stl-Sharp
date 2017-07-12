@@ -12,9 +12,13 @@ import hyness.stl.ModuleNode;
 import hyness.stl.TreeNode;
 import hyness.stl.grammar.flat.STLflat;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -109,16 +113,84 @@ public class AreaBoxes {
         for (String key : leftBoxes.keySet()) {
             if (rightBoxes.containsKey(key)) {
                 Set<Box> boxes = new HashSet<Box>();
+                Queue<Box> leftQueue = new LinkedList<Box>();
+                Queue<Box> rightQueue = new LinkedList<Box>();
                 for (Box left : leftBoxes.get(key)) {
-                    boolean matched = false;
-                    for (Box right : rightBoxes.get(key)) {
-                        if (left.getUpperTime().compareTo(right.getLowerTime()) < 0 || right.getUpperTime().compareTo(left.getLowerTime()) < 0) {
-                            break;
+                    leftQueue.add(left);
+                }
+                for (Box right : rightBoxes.get(key)) {
+                    rightQueue.add(right);
+                }
+                while (!leftQueue.isEmpty() && !rightQueue.isEmpty()) {
+                    while (!leftQueue.isEmpty()) {
+                        Box left = leftQueue.poll();
+                        List<Range> noOverlap = new ArrayList<Range>();
+                        noOverlap.add(new Range<BigDecimal, BigDecimal>(new BigDecimal(left.getLowerTime().doubleValue()), new BigDecimal(left.getUpperTime().doubleValue())));
+                        Queue<Box> temp = new LinkedList<Box>();
+                        while (!rightQueue.isEmpty()) {
+                            Box right = rightQueue.poll();
+                            if (left.getUpperTime().compareTo(right.getLowerTime()) <= 0 || right.getUpperTime().compareTo(left.getLowerTime()) <= 0) {
+                                temp.add(right);
+                            }
+                            else if (left.getLowerTime().compareTo(right.getLowerTime()) <= 0) {
+                                for (int i = 0; i < noOverlap.size(); i ++) {
+                                    BigDecimal lower = ((BigDecimal) noOverlap.get(i).getLower());
+                                    BigDecimal upper = ((BigDecimal) noOverlap.get(i).getUpper());
+                                    if (upper.compareTo(right.getLowerTime()) > 0) {
+                                        if (upper.compareTo(right.getUpperTime()) > 0) {
+                                            noOverlap.add(i, new Range<BigDecimal, BigDecimal>(new BigDecimal(lower.doubleValue()), new BigDecimal(right.getLowerTime().doubleValue())));
+                                            noOverlap.set(i+1, new Range<BigDecimal, BigDecimal>(new BigDecimal(right.getUpperTime().doubleValue()), new BigDecimal(upper.doubleValue())));
+                                            i++;
+                                        }
+                                        else {
+                                            noOverlap.set(i, new Range<BigDecimal, BigDecimal>(new BigDecimal(lower.doubleValue()), new BigDecimal(right.getLowerTime().doubleValue())));
+                                        }
+                                    }
+                                }
+                                if (left.getUpperTime().compareTo(right.getUpperTime()) < 0) {
+                                    if (!(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                                    }
+                                    temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                }
+                                else {
+                                    if (!(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                                    }
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < noOverlap.size(); i ++) {
+                                    BigDecimal lower = ((BigDecimal) noOverlap.get(i).getLower());
+                                    BigDecimal upper = ((BigDecimal) noOverlap.get(i).getUpper());
+                                    if (lower.compareTo(right.getUpperTime()) < 0) {
+                                        if (upper.compareTo(right.getUpperTime()) < 0) {
+//                                            noOverlap.add(i, new Range<BigDecimal, BigDecimal>(new BigDecimal(lower.doubleValue()), new BigDecimal(right.getLowerTime().doubleValue())));
+//                                            noOverlap.set(i+1, new Range<BigDecimal, BigDecimal>(new BigDecimal(right.getUpperTime().doubleValue()), new BigDecimal(upper.doubleValue())));
+//                                            i++;
+                                        }
+                                        else {
+//                                            noOverlap.set(i, new Range<BigDecimal, BigDecimal>(new BigDecimal(lower.doubleValue()), new BigDecimal(right.getLowerTime().doubleValue())));
+                                        }
+                                    }
+                                }
+//                                if (left.getUpperTime().compareTo(right.getUpperTime()) < 0) {
+//                                    if (!(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+//                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+//                                    }
+//                                    temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+//                                }
+//                                else {
+//                                    if (!(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+//                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+//                                    }
+//                                }
+                            }
                         }
-                        // else...
-                    }
-                    if (!matched) {
-                        boxes.add(left);
+                        rightQueue.addAll(temp);
+//                        if (lowerTime.compareTo(upperTime) < 0) {
+//                            boxes.add(new Box(lowerTime, upperTime, left.getLowerBound(), left.getUpperBound()));
+//                        }
                     }
                 }
                 boxMap.put(key, boxes);
@@ -135,9 +207,58 @@ public class AreaBoxes {
         return boxMap;
     }
     
+    public static BigDecimal max(BigDecimal num1, BigDecimal num2) {
+        if (num1 == null) {
+            return num2;
+        }
+        else if (num2 == null) {
+            return num1;
+        }
+        else if (num1.compareTo(num2) < 0) {
+            return num2;
+        }
+        else {
+            return num1;
+        }
+    }
+
+    public static BigDecimal min(BigDecimal num1, BigDecimal num2) {
+        if (num1 == null) {
+            return num2;
+        }
+        else if (num2 == null) {
+            return num1;
+        }
+        else if (num1.compareTo(num2) > 0) {
+            return num2;
+        }
+        else {
+            return num1;
+        }
+    }
+
+    private class Range<X, Y> {
+
+        private final X lower;
+        private final Y upper;
+
+        public Range(X lower, Y upper) {
+            this.lower = lower;
+            this.upper = upper;
+        }
+        
+        public X getLower() {
+            return lower;
+        }
+        
+        public Y getUpper() {
+            return upper;
+        } 
+    }
+    
     private class Box {
         
-        private BigDecimal lowerTime, upperTime, lowerBound, upperBound;
+        private final BigDecimal lowerTime, upperTime, lowerBound, upperBound;
         
         public Box (BigDecimal lowerTime, BigDecimal upperTime, BigDecimal lowerBound, BigDecimal upperBound) {
             this.lowerTime = lowerTime;
