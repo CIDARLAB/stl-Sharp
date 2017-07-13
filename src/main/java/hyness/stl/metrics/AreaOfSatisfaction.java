@@ -7,6 +7,7 @@ package hyness.stl.metrics;
 
 import hyness.stl.AlwaysNode;
 import hyness.stl.ConjunctionNode;
+import hyness.stl.DisjunctionNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.Operation;
@@ -32,7 +33,7 @@ public class AreaOfSatisfaction {
         return computeDistance(nodeToBoxes(spec1.toSTL(false), spec1.limitsMap), nodeToBoxes(spec2.toSTL(false), spec2.limitsMap));
     }
     
-    public BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2) {
+    private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2) {
         Map<String, Set<Box>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
         double leftOverArea = 0.0;
         for (String var : boxes.keySet()) {
@@ -41,6 +42,20 @@ public class AreaOfSatisfaction {
             }
         }
         return new BigDecimal(leftOverArea);
+    }
+    
+    public BigDecimal computeArea(STLflat spec) {
+        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap));
+    }
+    
+    private BigDecimal computeArea(Map<String, Set<Box>> boxes) {
+        double area = 0.0;
+        for (String var : boxes.keySet()) {
+            for (Box box : boxes.get(var)) {
+                area += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
+            }
+        }
+        return new BigDecimal(area);
     }
 
     private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap) {
@@ -113,7 +128,7 @@ public class AreaOfSatisfaction {
                     return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap), nodeToBoxes(((ModuleNode) node).right, limitsMap), Operation.OR);
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap), nodeToBoxes(((ConjunctionNode) node).right, limitsMap), Operation.OR);
+                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap), nodeToBoxes(((DisjunctionNode) node).right, limitsMap), Operation.OR);
                 }
             case NOT:
                 break;
@@ -175,7 +190,31 @@ public class AreaOfSatisfaction {
                                     }
                                 }
                                 else if (op == Operation.NOP) {
-                                    //TODO: Remove the overlap area.
+                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                    }
+                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                            }
+                                        }
+                                        left = new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getLowerBound());
+                                    }
+                                    else {
+                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                left = new Box(right.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound());
+                                            }
+                                        }
+                                    }
                                 }
                                 temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                             }
@@ -193,7 +232,31 @@ public class AreaOfSatisfaction {
                                     }
                                 }
                                 else if (op == Operation.NOP) {
-                                    //TODO: Remove the overlap area.
+                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                    }
+                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                            }
+                                        }
+                                        left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
+                                    }
+                                    else {
+                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                left = new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -222,7 +285,31 @@ public class AreaOfSatisfaction {
                                     }
                                 }
                                 else if (op == Operation.NOP) {
-                                    //TODO: Remove the overlap area.
+                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                        temp.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                    }
+                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                            }
+                                        }
+                                        left = new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getLowerBound());
+                                    }
+                                    else {
+                                        temp.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                left = new Box(left.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound());
+                                            }
+                                        }
+                                    }
                                 }
                                 temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                             }
@@ -240,7 +327,31 @@ public class AreaOfSatisfaction {
                                     }
                                 }
                                 else if (op == Operation.NOP) {
-                                    //TODO: Remove the overlap area.
+                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                    }
+                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                            }
+                                        }
+                                        left = new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
+                                    }
+                                    else {
+                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                            temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        }
+                                        else {
+                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                                left = new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -271,7 +382,7 @@ public class AreaOfSatisfaction {
         return boxMap;
     }
 
-    public static BigDecimal max(BigDecimal num1, BigDecimal num2) {
+    private BigDecimal max(BigDecimal num1, BigDecimal num2) {
         if (num1 == null) {
             return num2;
         }
@@ -286,7 +397,7 @@ public class AreaOfSatisfaction {
         }
     }
 
-    public static BigDecimal min(BigDecimal num1, BigDecimal num2) {
+    private BigDecimal min(BigDecimal num1, BigDecimal num2) {
         if (num1 == null) {
             return num2;
         }
