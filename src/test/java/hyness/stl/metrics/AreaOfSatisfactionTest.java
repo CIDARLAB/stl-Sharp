@@ -46,14 +46,32 @@ public class AreaOfSatisfactionTest {
     @Test
     public void testComputeDistance() {
         System.out.println("computeDistance");
-        STLflat spec1 = null;
-        STLflat spec2 = null;
         AreaOfSatisfaction instance = new AreaOfSatisfaction();
-        BigDecimal expResult = null;
-        BigDecimal result = instance.computeDistance(spec1, spec2);
+        
+        String spec1 = "phi1(u1, u2)\n"
+                + "\n"
+                + "phi1 = (G[0,10] u1 >= 2) && (G[0,10] u2 >= 2)\n"
+                + "\n"
+                + "m1 { u1@left: u1, u2@left: u2 }\n"
+                + "io {u1: u1, u2: u2}\n"
+                + "limits [{u1 : {max:10,min:0}}, {u2 : {max:10,min:0}}]\n"
+                ;
+        STLflatAbstractSyntaxTreeExtractor stlSpecExtract1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1);
+        
+        String spec2 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (G[0,10] u1 >= 2) && (G[0,10] u1 < 4)\n"
+                + "\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        STLflatAbstractSyntaxTreeExtractor stlSpecExtract2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
+
+        BigDecimal expResult =  new BigDecimal(140);
+        BigDecimal result = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false);
+        System.out.println(result.doubleValue());
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**

@@ -1117,12 +1117,12 @@ public class DistanceMetricTest {
         
         System.out.println();
         
-        CostFunction cost = new CostFunction();
+        AreaOfSatisfaction cost = new AreaOfSatisfaction();
         
-        cost.setAlphaF(1);
-        cost.setAlphaFprime(1);
-        cost.setAlphaG(1);
-        cost.setAlphaGprime(1);
+//        cost.setAlphaF(1);
+//        cost.setAlphaFprime(1);
+//        cost.setAlphaG(1);
+//        cost.setAlphaGprime(1);
         
         return cost.computeDistance(mod1mod2, stlcascade1.spec, ignoreInternal);
     }

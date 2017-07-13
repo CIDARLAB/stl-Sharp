@@ -29,8 +29,8 @@ import java.util.Set;
  */
 public class AreaOfSatisfaction {
     
-    public BigDecimal computeDistance(STLflat spec1, STLflat spec2) {
-        return computeDistance(nodeToBoxes(spec1.toSTL(false), spec1.limitsMap), nodeToBoxes(spec2.toSTL(false), spec2.limitsMap));
+    public BigDecimal computeDistance(STLflat spec1, STLflat spec2, boolean ignoreInternal) {
+        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap));
     }
     
     private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2) {
@@ -143,6 +143,7 @@ public class AreaOfSatisfaction {
         for (String key : leftBoxes.keySet()) {
             if (rightBoxes.containsKey(key)) {
                 Set<Box> boxes = new HashSet<Box>();
+                List<Box> orOverlapBoxes = new ArrayList<Box>();
                 Queue<Box> leftQueue = new LinkedList<Box>();
                 Queue<Box> rightQueue = new LinkedList<Box>();
                 for (Box left : leftBoxes.get(key)) {
@@ -181,9 +182,10 @@ public class AreaOfSatisfaction {
                                     temp.add(new Box(right.getLowerTime(), left.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
                                 }
                                 else if (op == Operation.OR) {
+                                    modifyOrOverlapBoxes(orOverlapBoxes, right.getLowerTime(), left.getUpperTime());
                                     if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                         temp.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        boxes.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        orOverlapBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
                                         temp.add(new Box(right.getLowerTime(), left.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
@@ -223,9 +225,10 @@ public class AreaOfSatisfaction {
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
                                 }
                                 else if (op == Operation.OR) {
+                                    modifyOrOverlapBoxes(orOverlapBoxes, right.getLowerTime(), right.getUpperTime());
                                     if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        boxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        orOverlapBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
@@ -276,9 +279,10 @@ public class AreaOfSatisfaction {
                                     temp.add(new Box(left.getLowerTime(), left.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
                                 }
                                 else if (op == Operation.OR) {
+                                    modifyOrOverlapBoxes(orOverlapBoxes, left.getLowerTime(), left.getUpperTime());
                                     if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                         temp.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        boxes.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        orOverlapBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
                                         temp.add(new Box(left.getLowerTime(), left.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
@@ -318,9 +322,10 @@ public class AreaOfSatisfaction {
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
                                 }
                                 else if (op == Operation.OR) {
+                                    modifyOrOverlapBoxes(orOverlapBoxes, left.getLowerTime(), right.getUpperTime());
                                     if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        boxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        orOverlapBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
@@ -365,6 +370,9 @@ public class AreaOfSatisfaction {
                         }
                     }
                 }
+                for (Box b : orOverlapBoxes) {
+                    boxes.add(b);
+                }
                 while (!rightQueue.isEmpty()) {
                     boxes.add(rightQueue.poll());
                 }
@@ -380,6 +388,28 @@ public class AreaOfSatisfaction {
             }
         }
         return boxMap;
+    }
+    
+    private void modifyOrOverlapBoxes(List<Box> orOverlapBoxes, BigDecimal lower, BigDecimal upper) {
+        for (int i = 0; i < orOverlapBoxes.size(); i++) {
+            Box b = orOverlapBoxes.get(i);
+            if (!(b.getUpperTime().compareTo(lower) <= 0 || upper.compareTo(b.getLowerTime()) <= 0)) {
+                if (b.getLowerTime().compareTo(lower) < 0) {
+                    orOverlapBoxes.set(i, new Box(new BigDecimal(b.getLowerTime().doubleValue()), new BigDecimal(lower.doubleValue()), new BigDecimal(b.getLowerBound().doubleValue()), new BigDecimal(b.getUpperBound().doubleValue())));
+                    if (b.getUpperTime().compareTo(upper) > 0) {
+                        orOverlapBoxes.add(i+1, new Box(new BigDecimal(upper.doubleValue()), new BigDecimal(b.getUpperTime().doubleValue()), new BigDecimal(b.getLowerBound().doubleValue()), new BigDecimal(b.getUpperBound().doubleValue())));
+                        i++;
+                    }
+                }
+                else if (b.getUpperTime().compareTo(upper) > 0) {
+                    orOverlapBoxes.set(i, new Box(new BigDecimal(upper.doubleValue()), new BigDecimal(b.getUpperTime().doubleValue()), new BigDecimal(b.getLowerBound().doubleValue()), new BigDecimal(b.getUpperBound().doubleValue())));
+                }
+                else {
+                    orOverlapBoxes.remove(i);
+                    i--;
+                }
+            }
+        }
     }
 
     private BigDecimal max(BigDecimal num1, BigDecimal num2) {
