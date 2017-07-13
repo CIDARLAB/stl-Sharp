@@ -28,10 +28,19 @@ import java.util.Set;
  */
 public class AreaOfSatisfaction {
     
-    private Map<String, Set<Box>> boxes;
-
-    public AreaOfSatisfaction(STLflat spec) {
-        boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap);
+    public BigDecimal computeDistance(STLflat spec1, STLflat spec2) {
+        return computeDistance(nodeToBoxes(spec1.toSTL(false), spec1.limitsMap), nodeToBoxes(spec2.toSTL(false), spec2.limitsMap));
+    }
+    
+    public BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2) {
+        Map<String, Set<Box>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
+        double leftOverArea = 0.0;
+        for (String var : boxes.keySet()) {
+            for (Box box : boxes.get(var)) {
+                leftOverArea += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
+            }
+        }
+        return new BigDecimal(leftOverArea);
     }
 
     private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap) {
@@ -165,6 +174,9 @@ public class AreaOfSatisfaction {
                                         temp.add(new Box(right.getLowerTime(), left.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
                                     }
                                 }
+                                else if (op == Operation.NOP) {
+                                    //TODO: Remove the overlap area.
+                                }
                                 temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                             }
                             else {
@@ -179,6 +191,9 @@ public class AreaOfSatisfaction {
                                     else {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
                                     }
+                                }
+                                else if (op == Operation.NOP) {
+                                    //TODO: Remove the overlap area.
                                 }
                             }
                         }
@@ -206,6 +221,9 @@ public class AreaOfSatisfaction {
                                         temp.add(new Box(left.getLowerTime(), left.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
                                     }
                                 }
+                                else if (op == Operation.NOP) {
+                                    //TODO: Remove the overlap area.
+                                }
                                 temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                             }
                             else {
@@ -220,6 +238,9 @@ public class AreaOfSatisfaction {
                                     else {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
                                     }
+                                }
+                                else if (op == Operation.NOP) {
+                                    //TODO: Remove the overlap area.
                                 }
                             }
                         }
