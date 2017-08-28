@@ -30,15 +30,32 @@ import java.util.Set;
 public class AreaOfSatisfaction {
     
     public BigDecimal computeDistance(STLflat spec1, STLflat spec2, boolean ignoreInternal) {
-        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap));
+        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap);
+        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap);
+        Set<String> signals = new HashSet<String>();
+        for (String key : boxes1.keySet()) {
+            signals.add(key);
+        }
+        for (String key : boxes2.keySet()) {
+            if (!signals.contains(key)) {
+                signals.add(key);
+            }
+        }
+        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap), signals);
     }
     
-    private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2) {
+    public BigDecimal computeDistance(STLflat spec1, STLflat spec2, boolean ignoreInternal, Set<String> signals) {
+        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap), signals);
+    }
+    
+    private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals) {
         Map<String, Set<Box>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
         double leftOverArea = 0.0;
         for (String var : boxes.keySet()) {
-            for (Box box : boxes.get(var)) {
-                leftOverArea += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
+            if (signals.contains(var)) {
+                for (Box box : boxes.get(var)) {
+                    leftOverArea += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
+                }
             }
         }
         return new BigDecimal(leftOverArea);
