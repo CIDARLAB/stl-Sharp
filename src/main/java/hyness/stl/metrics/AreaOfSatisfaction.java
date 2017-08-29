@@ -61,11 +61,26 @@ public class AreaOfSatisfaction {
         return new BigDecimal(leftOverArea);
     }
     
-    public BigDecimal computeArea(STLflat spec) {
-        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap));
+    public boolean computeCompatibility(STLflat spec1, STLflat spec2, Set<String> signals, double maxCompatibilityThreshold) {
+        double totalArea = computeArea(spec1, signals).doubleValue() + computeArea(spec2, signals).doubleValue();
+        double differenceArea = computeDistance(spec1, spec2, false, signals).doubleValue();
+        return maxCompatibilityThreshold >= (differenceArea / totalArea);
     }
     
-    private BigDecimal computeArea(Map<String, Set<Box>> boxes) {
+    public BigDecimal computeArea(STLflat spec) {
+        Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap);
+        Set<String> signals = new HashSet<String>();
+        for (String key : boxes.keySet()) {
+            signals.add(key);
+        }
+        return computeArea(boxes, signals);
+    }
+    
+    public BigDecimal computeArea(STLflat spec, Set<String> signals) {
+        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap), signals);
+    }
+    
+    private BigDecimal computeArea(Map<String, Set<Box>> boxes, Set<String> signals) {
         double area = 0.0;
         for (String var : boxes.keySet()) {
             for (Box box : boxes.get(var)) {
