@@ -61,9 +61,27 @@ public class AreaOfSatisfaction {
         return new BigDecimal(leftOverArea);
     }
     
-    public boolean computeCompatibility(STLflat spec1, STLflat spec2, Set<String> signals, double maxCompatibilityThreshold) {
-        double totalArea = computeArea(spec1, signals).doubleValue() + computeArea(spec2, signals).doubleValue();
-        double differenceArea = computeDistance(spec1, spec2, false, signals).doubleValue();
+    public boolean computeCompatibility(STLflat spec1, STLflat spec2, Map<String, String> signals, double maxCompatibilityThreshold) {
+        Set<String> signals1 = signals.keySet();
+        Set<String> signals2 = new HashSet<String>();
+        for (String value : signals.values()) {
+            signals2.add(value);
+        }
+        double totalArea = computeArea(spec1, signals1).doubleValue() + computeArea(spec2, signals2).doubleValue();
+        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap);
+        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap);
+        Map<String, Set<Box>> modifiedBoxes1 = new HashMap<String, Set<Box>>();
+        Map<String, Set<Box>> modifiedBoxes2 = new HashMap<String, Set<Box>>();
+        Set<String> sigs = new HashSet<String>();
+        int counter = 0;
+        for (String key : signals.keySet()) {
+            String sig = "" + counter;
+            modifiedBoxes1.put(sig, boxes1.get(key));
+            modifiedBoxes2.put(sig, boxes2.get(signals.get(key)));
+            sigs.add(sig);
+            counter ++;
+        }
+        double differenceArea = computeDistance(modifiedBoxes1, modifiedBoxes2, sigs).doubleValue();
         return maxCompatibilityThreshold >= (differenceArea / totalArea);
     }
     
