@@ -91,12 +91,23 @@ public class DistanceMetricTest {
     
     public static String andSpec;
     
+    public static String desiredSpec;
+    
     
     public DistanceMetricTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        desiredSpec = "phi1(io1,a1,io2)\n"
+                + "\n"
+                + "phi1 = (G[0.0,200.0](io1 <= 10.0)) && (G[0.0,40.0](a1 <= 10.0)) && (G[40.0,100.0](a1 > 10.0)) && (G[40.0,100.0](a1 <= 20.0)) && (G[100.0,200.0](a1 > 20.0)) && (G[0.0,40.0](io2 > 20.0)) && (G[40.0,100.0](io2 > 10.0)) && (G[40.0,100.0](io2 <= 20.0)) && (G[100.0,200.0](io2 <= 10.0))\n"
+                + "\n"
+                + "m1 { io1@left: io1, a1@left: a1, io2@left: io2 }\n"
+                + "io {io1: io1, io2: io2}\n"
+                + "limits [{io1 : {max:250,min:0}},{a1 : {max:250,min:0}},{io2 : {max:250,min:0}}]\n"
+                ;
+        
         notSpec = "phi1(x,y)\n"
                 + "\n"
                 + "phi1 = ((x <= 5.4) || (G[0, 10] x > 5.4 && F[0, 8](G[0, 2] y <= 0.02))) && ((x > 0.5) || (G[0, 10] x <= 0.5 && F[0, 8](G[0, 2] y > 6.8)))\n"
@@ -778,14 +789,26 @@ public class DistanceMetricTest {
         
         List<String> results = new ArrayList<String>();
         
-        for (int i = 0; i < modules.size(); i ++) {
-            for (int j = 0; j < modulesHighInput.size(); j ++) {
-                for (int k = 0; k < cascades.size(); k ++) {
-                    if (i != j) {
-                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modulesHighInput.get(j), cascades.get(k), "i" + (j+1), "o" + (i+1), false));
-                    }
-                }
-            }
+//        for (int i = 0; i < modules.size(); i ++) {
+//            for (int j = 0; j < modulesHighInput.size(); j ++) {
+//                for (int k = 0; k < cascades.size(); k ++) {
+//                    if (i != j) {
+//                        results.add("distance(module" + (i+1) + "+module" + (j+1) + ",cascade" + (k+1) + "): " + getDistanceBetweenModulesAndCascade(modules.get(i), modulesHighInput.get(j), cascades.get(k), "i" + (j+1), "o" + (i+1), false));
+//                    }
+//                }
+//            }
+//        }
+//        System.out.println("Distance Results:");
+//        for (String result : results) {
+//            System.out.println(result);
+//        }
+        
+        results = new ArrayList<String>();
+        
+        
+        for (int i = 0; i < cascades.size(); i ++) {
+            List<BigDecimal> distances = getDistanceBetweenDesiredAndCascade(desiredSpec, cascades.get(i), false);
+            results.add("Cascade " + (i+1) + ":\n" + "  Hausdorff: " + distances.get(0) + "\n  Cost: " + distances.get(1) + "\n  Area: " + distances.get(2));
         }
         System.out.println("Distance Results:");
         for (String result : results) {
@@ -1125,6 +1148,32 @@ public class DistanceMetricTest {
 //        cost.setAlphaGprime(1);
         
         return cost.computeDistance(mod1mod2, stlcascade1.spec, ignoreInternal);
+    }
+    
+    public List<BigDecimal> getDistanceBetweenDesiredAndCascade(String desired, String cascade, boolean ignoreInternal) {
+        List<BigDecimal> distances = new ArrayList<BigDecimal>();
+        
+        HausdorffDistanceMetric hausdorff = new HausdorffDistanceMetric();
+        
+        distances.add(hausdorff.computeDistance(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(desired).spec,
+                STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade).spec));
+        
+        CostFunction cost = new CostFunction();
+        
+        cost.setAlphaF(1);
+        cost.setAlphaFprime(1);
+        cost.setAlphaG(1);
+        cost.setAlphaGprime(1);
+        
+        distances.add(cost.computeDistance(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(desired).spec,
+                STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
+        
+        AreaOfSatisfaction area = new AreaOfSatisfaction();
+        
+        distances.add(area.computeDistance(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(desired).spec,
+                STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
+        
+        return distances;
     }
     
     public static BigDecimal max(BigDecimal num1, BigDecimal num2) {
