@@ -12,7 +12,7 @@ import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.Operation;
 import hyness.stl.TreeNode;
-import hyness.stl.grammar.flat.STLflat;
+import hyness.stl.grammar.sharp.STLSharp;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import java.util.Set;
  */
 public class AreaOfSatisfaction {
     
-    public BigDecimal computeDistance(STLflat spec1, STLflat spec2, boolean ignoreInternal) {
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal) {
         Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap);
         Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap);
         Set<String> signals = new HashSet<String>();
@@ -44,7 +44,7 @@ public class AreaOfSatisfaction {
         return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap), signals);
     }
     
-    public BigDecimal computeDistance(STLflat spec1, STLflat spec2, boolean ignoreInternal, Set<String> signals) {
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals) {
         return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap), signals);
     }
     
@@ -61,7 +61,7 @@ public class AreaOfSatisfaction {
         return new BigDecimal(leftOverArea);
     }
     
-    public boolean computeCompatibility(STLflat spec1, STLflat spec2, Map<String, String> signals, double maxCompatibilityThreshold) {
+    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold) {
         Set<String> signals1 = signals.keySet();
         Set<String> signals2 = new HashSet<String>();
         for (String value : signals.values()) {
@@ -85,7 +85,7 @@ public class AreaOfSatisfaction {
         return maxCompatibilityThreshold >= (differenceArea / totalArea);
     }
     
-    public BigDecimal computeArea(STLflat spec) {
+    public BigDecimal computeArea(STLSharp spec) {
         Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap);
         Set<String> signals = new HashSet<String>();
         for (String key : boxes.keySet()) {
@@ -94,7 +94,7 @@ public class AreaOfSatisfaction {
         return computeArea(boxes, signals);
     }
     
-    public BigDecimal computeArea(STLflat spec, Set<String> signals) {
+    public BigDecimal computeArea(STLSharp spec, Set<String> signals) {
         return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap), signals);
     }
     

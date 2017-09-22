@@ -23,7 +23,7 @@ import hyness.stl.Pair;
 import hyness.stl.ParallelNode;
 import hyness.stl.RelOperation;
 import hyness.stl.TreeNode;
-import hyness.stl.grammar.flat.STLflat;
+import hyness.stl.grammar.sharp.STLSharp;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +78,7 @@ public class CostFunction {
         limitsMap.putAll(limits);
     }
     
-    public BigDecimal computeDistance(STLflat spec1, STLflat spec2, boolean ignoreInternal) {
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal) {
         setLimitsMap(spec1, spec2);
         spec1Modules = spec1.modules;
         spec2Modules = spec2.modules;
@@ -962,11 +962,11 @@ public class CostFunction {
             return (TreeNode) mod;
         }
         else {
-            return ((STLflat) mod).toSTL(false);
+            return ((STLSharp) mod).toSTL(false);
         }
     }
 
-    private void setLimitsMap(STLflat spec1, STLflat spec2) {
+    private void setLimitsMap(STLSharp spec1, STLSharp spec2) {
 
         limitsMap.putAll(spec1.limitsMap);
         for (String signal : spec2.limitsMap.keySet()) {

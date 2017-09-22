@@ -10,7 +10,7 @@ import hyness.stl.ModuleNode;
 import hyness.stl.Operation;
 import hyness.stl.Pair;
 import hyness.stl.TreeNode;
-import hyness.stl.grammar.flat.STLflat;
+import hyness.stl.grammar.sharp.STLSharp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,35 +23,35 @@ import java.util.Vector;
  */
 public class Compose {
     
-        public static STLflat composeWithAnd(STLflat left, STLflat right) {
+        public static STLSharp composeWithAnd(STLSharp left, STLSharp right) {
             return composeWithOperator(hyness.stl.Operation.AND, left, right, null);
 	}
         
-        public static STLflat composeWithOr(STLflat left, STLflat right) {
+        public static STLSharp composeWithOr(STLSharp left, STLSharp right) {
             return composeWithOperator(hyness.stl.Operation.OR, left, right, null);
 	}
         
-        public static STLflat composeWithParallel(STLflat left, STLflat right) {
+        public static STLSharp composeWithParallel(STLSharp left, STLSharp right) {
             return composeWithOperator(hyness.stl.Operation.PARALLEL, left, right, null);
 	}
         
-        public static STLflat composeWithAnd(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+        public static STLSharp composeWithAnd(STLSharp left, STLSharp right, Map<String, List<String>> internalMapping) {
             return composeWithOperator(hyness.stl.Operation.AND, left, right, internalMapping);
 	}
         
-        public static STLflat composeWithOr(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+        public static STLSharp composeWithOr(STLSharp left, STLSharp right, Map<String, List<String>> internalMapping) {
             return composeWithOperator(hyness.stl.Operation.OR, left, right, internalMapping);
 	}
         
-        public static STLflat composeWithConcatenate(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+        public static STLSharp composeWithConcatenate(STLSharp left, STLSharp right, Map<String, List<String>> internalMapping) {
             return composeWithOperator(hyness.stl.Operation.CONCAT, left, right, internalMapping);
 	}
         
-        public static STLflat composeWithJoin(STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+        public static STLSharp composeWithJoin(STLSharp left, STLSharp right, Map<String, List<String>> internalMapping) {
             return composeWithOperator(hyness.stl.Operation.JOIN, left, right, internalMapping);
 	}
         
-        private static STLflat composeWithOperator(Operation operation, STLflat left, STLflat right, Map<String, List<String>> internalMapping) {
+        private static STLSharp composeWithOperator(Operation operation, STLSharp left, STLSharp right, Map<String, List<String>> internalMapping) {
             HashMap<Pair<String, Boolean>,String> m1Map = new HashMap<Pair<String, Boolean>,String>();
             HashMap<Pair<String, Boolean>,String> ioMap = new HashMap<Pair<String, Boolean>,String>();
             HashMap<String,HashMap<String,Double>> limitsMap = new HashMap<String,HashMap<String,Double>>();
@@ -117,7 +117,7 @@ public class Compose {
             TreeNode leftNode = new ModuleLeaf("phi1", leftPorts);
             TreeNode rightNode = new ModuleLeaf("phi2", rightPorts);
             TreeNode operationNode = new ModuleNode(operation, leftNode, rightNode, "m1");
-            STLflat stl = new STLflat(operationNode);
+            STLSharp stl = new STLSharp(operationNode);
             stl.modules.put("phi1", left);
             stl.modules.put("phi2", right);
             stl.maps.put("m1", m1Map);

@@ -6,8 +6,8 @@
 package hyness.stl.metrics;
 
 import hyness.stl.composition.Compose;
-import hyness.stl.grammar.flat.STLflat;
-import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
+import hyness.stl.grammar.sharp.STLSharp;
+import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -663,25 +663,25 @@ public class DistanceMetricTest {
     @Test
     public void testComputeDistance() {
         
-//        STLflatAbstractSyntaxTreeExtractor stlmodule1 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlmodule2 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlmodule3 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlcascade1 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlcascade2 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlcascade3 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlcascade4 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlcascade5 = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor stlcascade6 = new STLflatAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlmodule1 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlmodule2 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlmodule3 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlcascade1 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlcascade2 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlcascade3 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlcascade4 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlcascade5 = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor stlcascade6 = new STLSharpAbstractSyntaxTreeExtractor();
 //        
-//        stlmodule1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1);
-//        stlmodule2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2);
-//        stlmodule3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module3);
-//        stlcascade1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade1);
-//        stlcascade2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade2);
-//        stlcascade3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade3);
-//        stlcascade4 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade4);
-//        stlcascade5 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade5);
-//        stlcascade6 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade6);
+//        stlmodule1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module1);
+//        stlmodule2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module2);
+//        stlmodule3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module3);
+//        stlcascade1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade1);
+//        stlcascade2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade2);
+//        stlcascade3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade3);
+//        stlcascade4 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade4);
+//        stlcascade5 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade5);
+//        stlcascade6 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade6);
 //        
 //        Map<String, List<String>> mapping = new HashMap<String, List<String>>();
 //        Map<String, List<String>> mapping2 = new HashMap<String, List<String>>();
@@ -695,12 +695,12 @@ public class DistanceMetricTest {
 //        mapping.put("y", signal);
 //        mapping2.put("y", signal2);
 //        
-//        STLflat mod1mod2 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule2.spec, mapping);
-//        STLflat mod1mod3 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule3.spec, mapping2);
-//        STLflat mod2mod1 = Compose.composeWithConcatenate(stlmodule2.spec, stlmodule1.spec, mapping);
-//        STLflat mod2mod3 = Compose.composeWithConcatenate(stlmodule2.spec, stlmodule3.spec, mapping);
-//        STLflat mod3mod1 = Compose.composeWithConcatenate(stlmodule3.spec, stlmodule1.spec, mapping);
-//        STLflat mod3mod2 = Compose.composeWithConcatenate(stlmodule3.spec, stlmodule2.spec, mapping);
+//        STLSharp mod1mod2 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule2.spec, mapping);
+//        STLSharp mod1mod3 = Compose.composeWithConcatenate(stlmodule1.spec, stlmodule3.spec, mapping2);
+//        STLSharp mod2mod1 = Compose.composeWithConcatenate(stlmodule2.spec, stlmodule1.spec, mapping);
+//        STLSharp mod2mod3 = Compose.composeWithConcatenate(stlmodule2.spec, stlmodule3.spec, mapping);
+//        STLSharp mod3mod1 = Compose.composeWithConcatenate(stlmodule3.spec, stlmodule1.spec, mapping);
+//        STLSharp mod3mod2 = Compose.composeWithConcatenate(stlmodule3.spec, stlmodule2.spec, mapping);
 //        
 //        
 //        DistanceMetric dist = new DistanceMetric();
@@ -920,11 +920,11 @@ public class DistanceMetricTest {
         
 
         
-        STLflatAbstractSyntaxTreeExtractor stlSpec1 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlSpec2 = new STLflatAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec1 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec2 = new STLSharpAbstractSyntaxTreeExtractor();
         
-        stlSpec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
-        stlSpec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec4);
+        stlSpec1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
+        stlSpec2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec4);
         
         CostFunction cost = new CostFunction();
         
@@ -935,15 +935,15 @@ public class DistanceMetricTest {
         
         System.out.println("Distance of different specs: " + cost.computeDistance(stlSpec1.spec, stlSpec2.spec, true));
         
-        STLflatAbstractSyntaxTreeExtractor stlSpec3 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlSpec4 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlSpec5 = new STLflatAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec3 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec4 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec5 = new STLSharpAbstractSyntaxTreeExtractor();
         
-        stlSpec3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
-        stlSpec4 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
-        stlSpec5 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec4);
+        stlSpec3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
+        stlSpec4 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
+        stlSpec5 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec4);
         
-        STLflat conjunction = Compose.composeWithAnd(stlSpec4.spec, stlSpec5.spec);
+        STLSharp conjunction = Compose.composeWithAnd(stlSpec4.spec, stlSpec5.spec);
         
         cost = new CostFunction();
         
@@ -954,11 +954,11 @@ public class DistanceMetricTest {
         
         System.out.println("Distance of same specs using composition: " + cost.computeDistance(conjunction, stlSpec3.spec, false));
         
-        STLflatAbstractSyntaxTreeExtractor stlSpec6 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlSpec7 = new STLflatAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec6 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec7 = new STLSharpAbstractSyntaxTreeExtractor();
         
-        stlSpec6 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec5);
-        stlSpec7 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec6);
+        stlSpec6 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec5);
+        stlSpec7 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec6);
         
         cost = new CostFunction();
         
@@ -969,11 +969,11 @@ public class DistanceMetricTest {
         
         System.out.println("Distance between two similar specs: " + cost.computeDistance(stlSpec6.spec, stlSpec7.spec, true));
         
-        STLflatAbstractSyntaxTreeExtractor stlSpec8 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlSpec9 = new STLflatAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec8 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlSpec9 = new STLSharpAbstractSyntaxTreeExtractor();
         
-        stlSpec8 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec7);
-        stlSpec9 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec8);
+        stlSpec8 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec7);
+        stlSpec9 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec8);
         
         cost = new CostFunction();
         
@@ -997,13 +997,13 @@ public class DistanceMetricTest {
         
         
         
-//        STLflatAbstractSyntaxTreeExtractor norSpecExtract = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor notSpecExtract = new STLflatAbstractSyntaxTreeExtractor();
-//        STLflatAbstractSyntaxTreeExtractor orSpecExtract = new STLflatAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor norSpecExtract = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor notSpecExtract = new STLSharpAbstractSyntaxTreeExtractor();
+//        STLSharpAbstractSyntaxTreeExtractor orSpecExtract = new STLSharpAbstractSyntaxTreeExtractor();
 //        
-//        norSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(norSpec);
-//        notSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(notSpec);
-//        orSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(orSpec1);
+//        norSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(norSpec);
+//        notSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(notSpec);
+//        orSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(orSpec1);
 //        
 //        Map<String, List<String>> mapping = new HashMap<String, List<String>>();
 //        
@@ -1013,7 +1013,7 @@ public class DistanceMetricTest {
 //        
 //        mapping.put("z", signal);
 //        
-//        STLflat composedOr = Compose.composeWithConcatenate(norSpecExtract.spec, notSpecExtract.spec, mapping);
+//        STLSharp composedOr = Compose.composeWithConcatenate(norSpecExtract.spec, notSpecExtract.spec, mapping);
 //        
 //        cost = new CostFunction();
 //        
@@ -1022,7 +1022,7 @@ public class DistanceMetricTest {
 //        cost.setAlphaG(10);
 //        cost.setAlphaGprime(10);
 //        
-//        System.out.println("Distance between composed OR and flat OR specs: " + cost.computeDistance(composedOr, orSpecExtract.spec));
+//        System.out.println("Distance between composed OR and Sharp OR specs: " + cost.computeDistance(composedOr, orSpecExtract.spec));
         
         
         
@@ -1071,13 +1071,13 @@ public class DistanceMetricTest {
     }
     
     public BigDecimal getDistanceBetweenModulesAndCascade(List<String> module1, List<String> module2, List<String> cascade, String inMapping, String outMapping) {
-        STLflatAbstractSyntaxTreeExtractor stlmodule1Input = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1.get(0));
-        STLflatAbstractSyntaxTreeExtractor stlmodule1Output = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1.get(1));
-        STLflatAbstractSyntaxTreeExtractor stlmodule2Input = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2.get(0));
-        STLflatAbstractSyntaxTreeExtractor stlmodule2Output = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2.get(1));
-        STLflatAbstractSyntaxTreeExtractor stlcascade1Input = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade.get(0));
-        STLflatAbstractSyntaxTreeExtractor stlcascade1Internal = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade.get(1));
-        STLflatAbstractSyntaxTreeExtractor stlcascade1Output = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade.get(2));
+        STLSharpAbstractSyntaxTreeExtractor stlmodule1Input = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module1.get(0));
+        STLSharpAbstractSyntaxTreeExtractor stlmodule1Output = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module1.get(1));
+        STLSharpAbstractSyntaxTreeExtractor stlmodule2Input = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module2.get(0));
+        STLSharpAbstractSyntaxTreeExtractor stlmodule2Output = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module2.get(1));
+        STLSharpAbstractSyntaxTreeExtractor stlcascade1Input = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade.get(0));
+        STLSharpAbstractSyntaxTreeExtractor stlcascade1Internal = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade.get(1));
+        STLSharpAbstractSyntaxTreeExtractor stlcascade1Output = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade.get(2));
         
         Map<String, List<String>> mapping = new HashMap<String, List<String>>();
         
@@ -1087,7 +1087,7 @@ public class DistanceMetricTest {
         
         mapping.put(outMapping, signal);
         
-        STLflat mod1mod2Internal = Compose.composeWithConcatenate(stlmodule1Output.spec, stlmodule2Input.spec, mapping);
+        STLSharp mod1mod2Internal = Compose.composeWithConcatenate(stlmodule1Output.spec, stlmodule2Input.spec, mapping);
         
         CostFunction cost = new CostFunction();
         
@@ -1112,13 +1112,13 @@ public class DistanceMetricTest {
     }
     
     public BigDecimal getDistanceBetweenModulesAndCascade(String module1, String module2, String cascade, String inMapping, String outMapping, boolean ignoreInternal) {
-        STLflatAbstractSyntaxTreeExtractor stlmodule1 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlmodule2 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlcascade1 = new STLflatAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlmodule1 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlmodule2 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlcascade1 = new STLSharpAbstractSyntaxTreeExtractor();
         
-        stlmodule1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1);
-        stlmodule2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2);
-        stlcascade1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade);
+        stlmodule1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module1);
+        stlmodule2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module2);
+        stlcascade1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade);
         
         Map<String, List<String>> mapping = new HashMap<String, List<String>>();
         
@@ -1128,13 +1128,13 @@ public class DistanceMetricTest {
         
         mapping.put(outMapping, signal);
         
-        STLflat mod1mod2 = Compose.composeWithJoin(stlmodule1.spec, stlmodule2.spec, mapping);
+        STLSharp mod1mod2 = Compose.composeWithJoin(stlmodule1.spec, stlmodule2.spec, mapping);
         
-        STLflat mod1mod2_out = Compose.composeWithJoin(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1).spec, STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2).spec, mapping);
+        STLSharp mod1mod2_out = Compose.composeWithJoin(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module1).spec, STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module2).spec, mapping);
         
-        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module1).spec.toSTL(ignoreInternal).toString());
+        System.out.println(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module1).spec.toSTL(ignoreInternal).toString());
         
-        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(module2).spec.toSTL(ignoreInternal).toString());
+        System.out.println(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(module2).spec.toSTL(ignoreInternal).toString());
         
         System.out.println(mod1mod2_out.toSTL(ignoreInternal).toString());
         
@@ -1155,8 +1155,8 @@ public class DistanceMetricTest {
         
         HausdorffDistanceMetric hausdorff = new HausdorffDistanceMetric();
         
-        distances.add(hausdorff.computeDistance(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(desired).spec,
-                STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade).spec));
+        distances.add(hausdorff.computeDistance(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired).spec,
+                STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec));
         
         CostFunction cost = new CostFunction();
         
@@ -1165,13 +1165,13 @@ public class DistanceMetricTest {
         cost.setAlphaG(1);
         cost.setAlphaGprime(1);
         
-        distances.add(cost.computeDistance(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(desired).spec,
-                STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
+        distances.add(cost.computeDistance(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired).spec,
+                STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
         
         AreaOfSatisfaction area = new AreaOfSatisfaction();
         
-        distances.add(area.computeDistance(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(desired).spec,
-                STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
+        distances.add(area.computeDistance(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired).spec,
+                STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
         
         return distances;
     }

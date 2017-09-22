@@ -20,7 +20,7 @@ import hyness.stl.Pair;
 import hyness.stl.ParallelNode;
 import hyness.stl.TreeNode;
 import hyness.stl.UntilNode;
-import hyness.stl.grammar.flat.STLflat;
+import hyness.stl.grammar.sharp.STLSharp;
 import java.util.HashMap;
 import lombok.Setter;
 
@@ -42,7 +42,7 @@ public class TimeMetric {
         specMaps = new HashMap();
     }
     
-    public double computeTimeHorizon(STLflat spec){
+    public double computeTimeHorizon(STLSharp spec){
         specModules = spec.modules;
         specMaps = spec.maps;
         return computeTimeHorizon(spec.module);

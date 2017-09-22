@@ -5,8 +5,8 @@
  */
 package hyness.stl.composition;
 
-import hyness.stl.grammar.flat.STLflat;
-import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
+import hyness.stl.grammar.sharp.STLSharp;
+import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
 import hyness.stl.metrics.CostFunction;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,21 +74,21 @@ public class ComposeTest {
                 + "io {io1: io1, io2: io2}\n"
                 + "limits [{io1 : {max:30,min:0}}, {io2 : {max:30,min:0}}]\n"
                 ;
-        STLflatAbstractSyntaxTreeExtractor stlmodule1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1);
-        STLflatAbstractSyntaxTreeExtractor stlmodule2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
-        STLflatAbstractSyntaxTreeExtractor stlmodule3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
+        STLSharpAbstractSyntaxTreeExtractor stlmodule1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
+        STLSharpAbstractSyntaxTreeExtractor stlmodule2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
+        STLSharpAbstractSyntaxTreeExtractor stlmodule3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
         Map<String, List<String>> mapping = new HashMap<String, List<String>>();
         List<String> signal = new ArrayList<String>();
         signal.add("in");
         mapping.put("out", signal);
-        STLflat composition = Compose.composeWithAnd(stlmodule1.spec, stlmodule2.spec, mapping);
-        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1).spec.toSTL(true));
+        STLSharp composition = Compose.composeWithAnd(stlmodule1.spec, stlmodule2.spec, mapping);
+        System.out.println(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1).spec.toSTL(true));
         System.out.println();
-        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2).spec.toSTL(true));
+        System.out.println(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2).spec.toSTL(true));
         System.out.println();
-        System.out.println(Compose.composeWithAnd(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1).spec, STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2).spec, mapping).toSTL(false));
+        System.out.println(Compose.composeWithAnd(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1).spec, STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2).spec, mapping).toSTL(false));
         System.out.println();
-        System.out.println(STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3).spec.toSTL(true));
+        System.out.println(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3).spec.toSTL(true));
         System.out.println();
         
         CostFunction cost = new CostFunction();
@@ -106,10 +106,10 @@ public class ComposeTest {
 //    @Test
 //    public void testComposeWithAnd() {
 //        System.out.println("composeWithAnd");
-//        STLflat left = null;
-//        STLflat right = null;
-//        STLflat expResult = null;
-//        STLflat result = Compose.composeWithAnd(left, right);
+//        STLSharp left = null;
+//        STLSharp right = null;
+//        STLSharp expResult = null;
+//        STLSharp result = Compose.composeWithAnd(left, right);
 //        assertEquals(expResult, result);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
@@ -121,10 +121,10 @@ public class ComposeTest {
 //    @Test
 //    public void testComposeWithOr() {
 //        System.out.println("composeWithOr");
-//        STLflat left = null;
-//        STLflat right = null;
-//        STLflat expResult = null;
-//        STLflat result = Compose.composeWithOr(left, right);
+//        STLSharp left = null;
+//        STLSharp right = null;
+//        STLSharp expResult = null;
+//        STLSharp result = Compose.composeWithOr(left, right);
 //        assertEquals(expResult, result);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
@@ -136,10 +136,10 @@ public class ComposeTest {
 //    @Test
 //    public void testComposeWithParallel() {
 //        System.out.println("composeWithParallel");
-//        STLflat left = null;
-//        STLflat right = null;
-//        STLflat expResult = null;
-//        STLflat result = Compose.composeWithParallel(left, right);
+//        STLSharp left = null;
+//        STLSharp right = null;
+//        STLSharp expResult = null;
+//        STLSharp result = Compose.composeWithParallel(left, right);
 //        assertEquals(expResult, result);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
@@ -151,11 +151,11 @@ public class ComposeTest {
 //    @Test
 //    public void testComposeWithConcatenate() {
 //        System.out.println("composeWithConcatenate");
-//        STLflat left = null;
-//        STLflat right = null;
+//        STLSharp left = null;
+//        STLSharp right = null;
 //        HashMap<String, List<String>> internalMapping = null;
-//        STLflat expResult = null;
-//        STLflat result = Compose.composeWithConcatenate(left, right, internalMapping);
+//        STLSharp expResult = null;
+//        STLSharp result = Compose.composeWithConcatenate(left, right, internalMapping);
 //        assertEquals(expResult, result);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");

@@ -6,8 +6,8 @@
 package hyness.stl.main;
 
 import hyness.stl.composition.Compose;
-import hyness.stl.grammar.flat.STLflat;
-import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
+import hyness.stl.grammar.sharp.STLSharp;
+import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
 import hyness.stl.metrics.CostFunction;
 import hyness.stl.metrics.HausdorffDistanceMetric;
 import hyness.stl.metrics.Utilities;
@@ -49,10 +49,10 @@ public class Main {
             System.out.println("    -help               Prints usage information");
         }
         else if (args[0].startsWith("-compose")) {
-            STLflatAbstractSyntaxTreeExtractor stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
-            STLflatAbstractSyntaxTreeExtractor stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
+            STLSharpAbstractSyntaxTreeExtractor stlspec1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
+            STLSharpAbstractSyntaxTreeExtractor stlspec2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
             String operator = args[0].split("=")[1];
-            STLflat result = null;
+            STLSharp result = null;
             Map<String, List<String>> mapping = new HashMap<String, List<String>>();
             BufferedReader br = null;
             String line = "";
@@ -106,8 +106,8 @@ public class Main {
             }
         }
         else if (args[0].startsWith("-distance")) {
-            STLflatAbstractSyntaxTreeExtractor stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
-            STLflatAbstractSyntaxTreeExtractor stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
+            STLSharpAbstractSyntaxTreeExtractor stlspec1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[1]));
+            STLSharpAbstractSyntaxTreeExtractor stlspec2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(Utilities.getFileContentAsString(args[2]));
             String method = args[0].split("=")[1];
             BigDecimal val = new BigDecimal(Double.MAX_VALUE);
             switch (method) {

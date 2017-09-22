@@ -24,7 +24,7 @@ import hyness.stl.ParallelNode;
 import hyness.stl.RelOperation;
 import hyness.stl.TreeNode;
 import hyness.stl.UntilNode;
-import hyness.stl.grammar.flat.STLflat;
+import hyness.stl.grammar.sharp.STLSharp;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +76,7 @@ public class HausdorffDistanceMetric {
         this.muMax = max;
     }
 
-    private void setLimitsMap(STLflat spec1, STLflat spec2) {
+    private void setLimitsMap(STLSharp spec1, STLSharp spec2) {
         //HashMap<String, HashMap<String,Double>> spec1Limits = spec1.limitsMap;
         //HashMap<String, HashMap<String,Double>> spec2Limits = spec2.limitsMap;
         limitsMap.putAll(spec1.limitsMap);
@@ -90,7 +90,7 @@ public class HausdorffDistanceMetric {
         }
     }
 
-    public BigDecimal computeDistance(STLflat spec1, STLflat spec2) {
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2) {
         spec1Modules = spec1.modules;
         spec2Modules = spec2.modules;
 
@@ -149,7 +149,7 @@ public class HausdorffDistanceMetric {
             return (TreeNode) mod;
         }
         else {
-            return ((STLflat) mod).toSTL(false);
+            return ((STLSharp) mod).toSTL(false);
         }
     }
 

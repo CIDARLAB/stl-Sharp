@@ -5,8 +5,8 @@
  */
 package hyness.stl.metrics;
 
-import hyness.stl.grammar.flat.STLflat;
-import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
+import hyness.stl.grammar.sharp.STLSharp;
+import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
 import java.math.BigDecimal;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -56,7 +56,7 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1, u2: u2}\n"
                 + "limits [{u1 : {max:10,min:0}}, {u2 : {max:10,min:0}}]\n"
                 ;
-        STLflatAbstractSyntaxTreeExtractor stlSpecExtract1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1);
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
         
         String spec2 = "phi1(u1)\n"
                 + "\n"
@@ -66,7 +66,7 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1}\n"
                 + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
-        STLflatAbstractSyntaxTreeExtractor stlSpecExtract2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
 
         BigDecimal expResult =  new BigDecimal(140);
         BigDecimal result = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false);
@@ -92,7 +92,7 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1, u2: u2}\n"
                 + "limits [{u1 : {max:10,min:0}}, {u2 : {max:10,min:0}}]\n"
                 ;
-        STLflatAbstractSyntaxTreeExtractor stlSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec);
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         AreaOfSatisfaction instance = new AreaOfSatisfaction();
         BigDecimal expResult = new BigDecimal(160);
         BigDecimal result = instance.computeArea(stlSpecExtract.spec);
@@ -107,7 +107,7 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1}\n"
                 + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
-        stlSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec);
+        stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(20);
         result = instance.computeArea(stlSpecExtract.spec);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
@@ -121,7 +121,7 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1}\n"
                 + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
-        stlSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec);
+        stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(44);
         result = instance.computeArea(stlSpecExtract.spec);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
@@ -135,7 +135,7 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1}\n"
                 + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
-        stlSpecExtract = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec);
+        stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(56);
         result = instance.computeArea(stlSpecExtract.spec);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");

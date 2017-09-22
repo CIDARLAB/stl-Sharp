@@ -6,7 +6,7 @@
 package hyness.stl.metrics;
 
 import hyness.stl.TreeNode;
-import hyness.stl.grammar.flat.STLflatAbstractSyntaxTreeExtractor;
+import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -93,16 +93,16 @@ public class TimeMetricTest {
      */
     @Test
     public void testComputeTimeHorizon() {
-       STLflatAbstractSyntaxTreeExtractor stlspec1 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlspec2 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlspec3 = new STLflatAbstractSyntaxTreeExtractor();
-        STLflatAbstractSyntaxTreeExtractor stlspec4 = new STLflatAbstractSyntaxTreeExtractor();
+       STLSharpAbstractSyntaxTreeExtractor stlspec1 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlspec2 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlspec3 = new STLSharpAbstractSyntaxTreeExtractor();
+        STLSharpAbstractSyntaxTreeExtractor stlspec4 = new STLSharpAbstractSyntaxTreeExtractor();
         
-        stlspec1 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec1);
-        stlspec2 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec2);
+        stlspec1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
+        stlspec2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
         
-        stlspec3 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec3);
-        stlspec4 = STLflatAbstractSyntaxTreeExtractor.getSTLflatAbstractSyntaxTreeExtractor(spec4);
+        stlspec3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
+        stlspec4 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec4);
         TimeMetric timeMetric = new TimeMetric();
         double timeval = timeMetric.computeTimeHorizon(stlspec4.spec);
         System.out.println("Module :: " + stlspec4.spec);
