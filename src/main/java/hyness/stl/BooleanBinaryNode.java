@@ -32,8 +32,10 @@ public abstract class BooleanBinaryNode extends TreeNode{
         this.right = right;
     }
     
+    @Override
     public String toString() {
-        return "(" + op + " " + left + " " + right + ")";
+        return "(" + left + " " + Operation.getString(op) + " " + right + ")"; 
+        //return "(" + op + " " + left + " " + right + ")";
     }
 }
 

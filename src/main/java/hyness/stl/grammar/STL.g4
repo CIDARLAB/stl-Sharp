@@ -2,11 +2,12 @@ grammar STL;
 
 @header {
 /**
- * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>
+ * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>, Prashant Vaidyanathan <prash@bu.edu>, Curtis Madsen <ckmadsen@bu.edu>
  * Hybrid and Networked Systems (HyNeSs) Group, BU Robotics Lab, Boston University
+ * Cross Disciplinary Integration for Design Automation Research (CIDAR Lab), Boston University        
  * See license.txt file for license information.
  */
-package hyness.stl.grammar.flat;
+package hyness.stl.grammar;
 }
 
 
@@ -37,5 +38,5 @@ booleanExpr:
     ;
 BOOLEAN : ('true'|'false');
 VARIABLE : ([a-z]|[A-Z])([a-z]|[A-Z]|[0-9]|'_')*;
-RATIONAL : ('-')?[0-9]*('.')?[0-9]+ ;
+RATIONAL : ('-')?[0-9]*('.')?[0-9]+('E'|'E-')?[0-9]* ;
 WS : ( ' ' | '\t' | '\r' | '\n' )+ { skip(); };

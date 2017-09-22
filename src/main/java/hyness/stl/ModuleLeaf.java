@@ -6,6 +6,7 @@
 package hyness.stl;
 
 import java.util.Vector;
+import lombok.Getter;
 
 /**
  * @author Cristian-Ioan Vasile
@@ -13,7 +14,9 @@ import java.util.Vector;
  */
 public class ModuleLeaf extends TreeNode {
     
-    public String name;
+    @Getter
+    private String name;
+    
     Vector<String> signals;
     
     /**
@@ -37,11 +40,27 @@ public class ModuleLeaf extends TreeNode {
     
     @Override
     public String toString() {
-        return name;
+        String string = name;
+        if (signals.size() > 0) {
+            string += "(";
+        }
+        for (String s : signals) {
+            string += s + ",";
+        }
+        if (signals.size() > 0) {
+            string = string.substring(0, string.length() - 1);
+            string += ")";
+        }
+        return string;
     }
 
     @Override
     public TreeNode negate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public TreeNode shifted(double shift) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

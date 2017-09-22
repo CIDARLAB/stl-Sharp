@@ -1,8 +1,9 @@
-// Generated from C:\Users\Cristian\Dropbox\work\workspace\STL\src\hyness\stl\STL.g4 by ANTLR 4.5.1
+// Generated from STL.g4 by ANTLR 4.5.1
 
 /**
- * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>
+ * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>, Prashant Vaidyanathan <prash@bu.edu>, Curtis Madsen <ckmadsen@bu.edu>
  * Hybrid and Networked Systems (HyNeSs) Group, BU Robotics Lab, Boston University
+ * Cross Disciplinary Integration for Design Automation Research (CIDAR Lab), Boston University        
  * See license.txt file for license information.
  */
 package hyness.stl.grammar;

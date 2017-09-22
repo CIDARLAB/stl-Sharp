@@ -21,13 +21,13 @@ public abstract class TemporalBinaryNode extends TreeNode {
     /**
      * The lower bound of the temporal operator's interval.
      */
-    public int low;
+    public double low;
     /**
      * The upper bound of the temporal operator's interval.
      */
-    public int high;
+    public double high;
     
-    public TemporalBinaryNode(Operation op, TreeNode left, TreeNode right, int l, int h) {
+    public TemporalBinaryNode(Operation op, TreeNode left, TreeNode right, double l, double h) {
         super(op);
         this.left = left;
         this.right = right;

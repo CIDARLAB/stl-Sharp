@@ -20,7 +20,8 @@ public abstract class BooleanUnaryNode extends TreeNode{
         this.child = ch;
     }
     
+    @Override
     public String toString() {
-        return "(" + op + " " + child + ")";
+        return "(" + Operation.getString(op) + " " + child + ")";
     }
 }

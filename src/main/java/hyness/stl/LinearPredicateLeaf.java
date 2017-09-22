@@ -5,6 +5,8 @@
  */
 package hyness.stl;
 
+import java.util.Objects;
+
 /**
  * LinearPredicateLeaf class represents simple linear predicates.
  * 
@@ -57,7 +59,7 @@ public class LinearPredicateLeaf extends TreeNode {
     }
     
     public String toString() {
-        return "(" + variable + " " + rop + " " + threshold + ")";
+        return "(" + variable + " " + RelOperation.getString(rop) + " " + threshold + ")";
     } 
 
     @Override
@@ -82,5 +84,30 @@ public class LinearPredicateLeaf extends TreeNode {
                 throw new RuntimeException("Unknown relation!");
         }
         return new LinearPredicateLeaf(newRop,this.variable,this.threshold);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof TreeNode){
+            TreeNode ot = (TreeNode)o;
+            if(o.toString().equals(this.toString())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.variable);
+        hash = 31 * hash + (int) (Double.doubleToLongBits(this.threshold) ^ (Double.doubleToLongBits(this.threshold) >>> 32));
+        hash = 31 * hash + Objects.hashCode(this.rop);
+        return hash;
+    }
+    
+    @Override
+    public TreeNode shifted(double shift) {
+        return this;
     }
 }

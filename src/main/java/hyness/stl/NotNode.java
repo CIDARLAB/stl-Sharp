@@ -25,4 +25,13 @@ public class NotNode extends BooleanUnaryNode {
         return this.child;
     }
     
+    public String toString(){
+        return "(" + Operation.getString(Operation.NOT) + child + ")" ;
+    }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return new NotNode(this.child.shifted(shift));
+    }
+    
 }

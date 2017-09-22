@@ -25,4 +25,13 @@ public class ConjunctionNode extends BooleanBinaryNode {
         return new DisjunctionNode(left.negate(),right.negate());
     }
     
+    @Override
+    public String toString(){
+        return "(" + left + " " + Operation.getString(Operation.AND) + " " + right + ")";
+    }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return new ConjunctionNode(this.left.shifted(shift),this.right.shifted(shift));
+    }
 }

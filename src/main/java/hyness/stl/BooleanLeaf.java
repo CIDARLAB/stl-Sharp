@@ -28,11 +28,16 @@ public class BooleanLeaf extends TreeNode {
     }
     
     public String toString() {
-        return "(Bool " + value + ")"; 
+        return "(" + value + ")"; 
     }
 
     @Override
     public TreeNode negate() {
         return new BooleanLeaf(!this.value);
+    }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return this;
     }
 }

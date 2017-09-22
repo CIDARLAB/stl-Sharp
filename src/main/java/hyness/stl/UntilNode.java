@@ -11,7 +11,7 @@ package hyness.stl;
  */
 public class UntilNode extends TemporalBinaryNode {
     
-    public UntilNode(TreeNode left, TreeNode right, int l, int h) {
+    public UntilNode(TreeNode left, TreeNode right, double l, double h) {
         super(Operation.UNTIL, left, right, l, h);
     }
     
@@ -43,6 +43,15 @@ public class UntilNode extends TemporalBinaryNode {
     @Override
     public TreeNode negate() {
         return new UntilNode(this.left.negate(),this.right.negate(),this.low,this.high);
+    }
+    
+    public String toString(){
+        return "(U["  + low + "," + high + "]" + left + " " + right +  ")";
+    }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

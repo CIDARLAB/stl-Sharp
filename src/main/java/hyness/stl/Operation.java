@@ -13,7 +13,7 @@ package hyness.stl;
  */
 
 public enum Operation {
-    NOP, NOT, OR, AND, UNTIL, EVENT, ALWAYS, PRED, IMPLIES, BOOL, CONCAT, PARALLEL;
+    NOP, NOT, OR, AND, UNTIL, EVENT, ALWAYS, PRED, IMPLIES, BOOL, CONCAT, PARALLEL, JOIN;
     
     /**
      * Gets the code corresponding to the string representation.
@@ -29,6 +29,7 @@ public enum Operation {
         if(text.equals("U")) return Operation.UNTIL;
         if(text.equals("F")) return Operation.EVENT;
         if(text.equals("G")) return Operation.ALWAYS;
+        if(text.equals("<<")) return Operation.JOIN;
         if(text.equals(">>")) return Operation.CONCAT;
         if(text.equals("#")) return Operation.PARALLEL;
         return Operation.NOP;
@@ -48,6 +49,7 @@ public enum Operation {
             case UNTIL: return "U";
             case EVENT: return "F";
             case ALWAYS: return "G";
+            case JOIN: return "<<";
             case CONCAT: return ">>";
             case PARALLEL: return "#";
             default: return "";

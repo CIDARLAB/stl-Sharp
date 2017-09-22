@@ -11,8 +11,19 @@ package hyness.stl;
  */
 public class EventNode extends TemporalUnaryNode {
     
-    public EventNode(TreeNode child, int l, int h) {
+    public EventNode(TreeNode child, double l, double h) {
         super(Operation.EVENT, child, l, h);
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof TreeNode){
+            TreeNode ot = (TreeNode)o;
+            if(o.toString().equals(this.toString())){
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override
@@ -33,5 +44,14 @@ public class EventNode extends TemporalUnaryNode {
         return new EventNode(this.child.negate(),this.low,this.high);
     }
     
+    @Override
+    public String toString(){
+        return "(F[" + low + "," + high + "]" + child + ")";
+    }
+
+    @Override
+    public TreeNode shifted(double shift) {
+        return new EventNode(this.child,this.low+shift,this.high+shift);
+    }
     
 }

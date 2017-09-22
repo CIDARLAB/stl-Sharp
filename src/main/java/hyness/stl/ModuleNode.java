@@ -47,11 +47,16 @@ public class ModuleNode extends TreeNode {
     
     @Override
     public String toString() {
-        return "(" + op + " " + left + " " + right + ")";
+        return "(" +left + " " + Operation.getString(op) + " " + right + ")";
     }
 
     @Override
     public TreeNode negate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public TreeNode shifted(double shift) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
