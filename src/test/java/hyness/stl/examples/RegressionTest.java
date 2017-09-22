@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RegressionTest {
     
-    private static int xmin = -20;
+    private static int xmin = -12;
     private static int xmax = 20;
     private static int tmax = 20;
     
