@@ -41,7 +41,7 @@ public class LinearPredicateLeaf extends TreeNode {
     }
     
     public double robustness(Trace s, double t) {
-        double value = s.eval(this.variable, t);
+        double value = s.getValue(this.variable, t);
         switch(this.rop) {
             case LT: case LE:
                 value = this.threshold - value;

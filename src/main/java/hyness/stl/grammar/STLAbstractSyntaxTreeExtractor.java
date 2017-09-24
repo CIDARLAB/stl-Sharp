@@ -19,7 +19,6 @@ import hyness.stl.Trace;
 import hyness.stl.TreeNode;
 import hyness.stl.UntilNode;
 import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -108,7 +107,8 @@ public class STLAbstractSyntaxTreeExtractor extends STLBaseVisitor<TreeNode>{
         
         String[] varnames = new String[] {new String("x"), new String("y"), new String("z")};
         double[][] data = new double[][]{{8, 8, 11, 11}, {2, 3, 1, 2}, {3, 9, 8, 9}};
-        Trace s = new Trace(varnames, data, 1);
+        double[] timepoints = new double[]{0,1,2};
+        Trace s = new Trace(varnames, timepoints, data);
         
         System.out.println("r: " + ast.robustness(s, 0));
     }

@@ -5,101 +5,116 @@
  */
 package hyness.stl;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Vector;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-/**
- * @author Cristian-Ioan Vasile
- *
- */
 public class Trace {
-    // delimiter used in CSV file
-    public static String delimiter = ",";
-    
-    public HashMap<String, Vector<Double>> data;
-    public double timestep;
-    
-    /**
-     * 
-     * @param variables
-     * @param data
-     * @param timestep
-     */
-    public Trace(String[] variables, double[][] data, double timestep) {
-        Vector<Double> d;
-        this.timestep = timestep;
-        this.data = new HashMap<String, Vector<Double>>();
-        for(int i=0; i < variables.length; i++) {
-            d = new Vector<Double>();
-            for(int j=0; j < data[i].length; j++) {
-                d.add(data[i][j]);
-            }
-            this.data.put(variables[i], d);
-        }
-    }
-    
-    /**
-     * 
-     * @param data
-     * @param timestep
-     */
-    public Trace(HashMap<String, Vector<Double>> data, double timestep) {
-        this.timestep = timestep;
-        this.data = data;
-    }
-    
-    /**
-     * 
-     * @param variable
-     * @param t
-     * @return
-     */
-    public double eval(String variable, double t) {
-        return this.data.get(variable).get((int)Math.floor(t/timestep));
-    }
-    
-    /**
-     * 
-     * @param filename
-     * @param timestep
-     * @return
-     */
-    public static Trace loadFromFile(String filename, double timestep) {
-        BufferedReader fileReader = null;
-        HashMap<String, Vector<Double>> data = null;
+
+	private String[] variables;
+
+	private double[][] data;
+
+	private double[] timePoints;
+
+	public Trace(List<String> variables, List<Double> timePoints, List<List<Double>> data) {
+		this.variables = variables.toArray(new String[0]);
+		this.timePoints = new double[timePoints.size()];
+                
+		for (int i = 0; i < timePoints.size(); i++) {
+			this.timePoints[i] = timePoints.get(i);
+		}
+		this.data = new double[data.size()][data.get(0).size()];
+		for (int i = 0; i < data.size(); i++) {
+			for (int j = 0; j < data.get(0).size(); j++) {
+				this.data[i][j] = data.get(i).get(j);
+			}
+		}
+	}
+
+	public Trace(String[] variables, double[] timePoints, double[][] data) {
+		this.variables = variables;
+		this.timePoints = timePoints;
+		this.data = data;
+	}
+
+	public String[] getVariables() {
+		return variables;
+	}
+
+	public double[] getTimePoints() {
+		return timePoints;
+	}
+
+	public double getValue(String variable, double timePoint) {
+		for (int i = 0; i < timePoints.length; i ++) {
+			if (timePoints[i] == timePoint) {
+				for (int j = 0; j < variables.length; j ++) {
+					if (variables[j].equals(variable)) {
+						return data[j][i];
+					}
+				}
+			}
+		}
+		return Double.NaN;
+	}
         
-        try {
-            String line;
-            String[] tokens;
-            data = new HashMap<String, Vector<Double>>();
-            fileReader = new BufferedReader(new FileReader(filename));
-            
-            // header
-            line = fileReader.readLine();
-            String[] signals = line.split(delimiter);
-            for(String signal : signals) {
-                data.put(signal, new Vector<Double>());
-            }
-            // read the file line by line
-            while((line = fileReader.readLine()) != null) {
-                tokens = line.split(delimiter);
-                assert tokens.length == signals.length;
-                for(int i=0; i<tokens.length; i++) {
-                    data.get(signals[i]).add(Double.valueOf(tokens[i]));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fileReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return new Trace(data, timestep);
-    }
+        public double[] getValues(String variable) {
+		int var = -1;
+		for (int i = 0; i < variables.length; i ++) {
+			if (variables[i].equals(variable)) {
+				var = i;
+				break;
+			}
+		}
+		double[] values = new double[data[var].length];
+		for (int i = 0; i < data[var].length; i ++) {
+			values[i] = data[var][i];
+		}
+		return values;
+	}
+
+	public String toString() {
+		String trace = "((\"time\"";
+		for (String variable : variables) {
+			trace += ", \"" + variable + "\"";
+		}
+		trace += ")";
+		for (int i = 0; i < timePoints.length; i++) {
+			trace += ",(" + timePoints[i];
+			for (double value : data[i]) {
+				trace += ", " + value;
+			}
+			trace += ")";
+		}
+		trace += ")";
+		return trace;
+	}
+
+	public static Trace parseCSV(String file) throws FileNotFoundException {
+		Scanner scanner = new Scanner(new File(file));
+		List<String> variables = new ArrayList<String>();
+		List<Double> timePoints = new ArrayList<Double>();
+		List<List<Double>> data = new ArrayList<List<Double>>();
+		if (scanner.hasNextLine()) {
+			String[] vars = scanner.nextLine().split(",");
+			for (int i = 1; i < vars.length; i++) {
+				variables.add(vars[i]);
+			}
+		}
+		for (int i = 0; i < variables.size(); i++) {
+			data.add(new ArrayList<Double>());
+		}
+		while (scanner.hasNextLine()) {
+			String[] dataLine = scanner.nextLine().split(",");
+			timePoints.add(Double.parseDouble(dataLine[0]));
+			for (int i = 1; i < dataLine.length; i++) {
+				data.get(i - 1).add(Double.parseDouble(dataLine[i]));
+			}
+		}
+		scanner.close();
+		return new Trace(variables, timePoints, data);
+	}
 }
