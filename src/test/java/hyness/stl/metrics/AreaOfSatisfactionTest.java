@@ -46,7 +46,7 @@ public class AreaOfSatisfactionTest {
     @Test
     public void testComputeDistance() {
         System.out.println("computeDistance");
-        AreaOfSatisfaction instance = new AreaOfSatisfaction();
+        AreaOfSatisfaction instance = new AreaOfSatisfaction(new BigDecimal(0.1));
         
         String spec1 = "phi1(u1, u2)\n"
                 + "\n"
@@ -93,7 +93,7 @@ public class AreaOfSatisfactionTest {
                 + "limits [{u1 : {max:10,min:0}}, {u2 : {max:10,min:0}}]\n"
                 ;
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
-        AreaOfSatisfaction instance = new AreaOfSatisfaction();
+        AreaOfSatisfaction instance = new AreaOfSatisfaction(new BigDecimal(0.1));
         BigDecimal expResult = new BigDecimal(160);
         BigDecimal result = instance.computeArea(stlSpecExtract.spec);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");

@@ -1140,7 +1140,7 @@ public class DistanceMetricTest {
         
         System.out.println();
         
-        AreaOfSatisfaction cost = new AreaOfSatisfaction();
+        AreaOfSatisfaction cost = new AreaOfSatisfaction(new BigDecimal(0.1));
         
 //        cost.setAlphaF(1);
 //        cost.setAlphaFprime(1);
@@ -1168,7 +1168,7 @@ public class DistanceMetricTest {
         distances.add(cost.computeDistance(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired).spec,
                 STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
         
-        AreaOfSatisfaction area = new AreaOfSatisfaction();
+        AreaOfSatisfaction area = new AreaOfSatisfaction(new BigDecimal(0.1));
         
         distances.add(area.computeDistance(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired).spec,
                 STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
