@@ -49,16 +49,10 @@ public class AreaOfSatisfaction {
     }
     
     private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals) {
-        Map<String, Set<Box>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
-        double leftOverArea = 0.0;
-        for (String var : boxes.keySet()) {
-            if (signals.contains(var)) {
-                for (Box box : boxes.get(var)) {
-                    leftOverArea += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
-                }
-            }
-        }
-        return new BigDecimal(leftOverArea);
+        List<Map<String, Set<Box>>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
+        Map<String, Set<Box>> distinctBoxes = boxes.get(0);
+        Map<String, Set<Box>> overlapBoxes = boxes.get(1);
+        return computeArea(overlapBoxes, signals).subtract(computeArea(distinctBoxes, signals));
     }
     
     public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold) {
@@ -101,8 +95,10 @@ public class AreaOfSatisfaction {
     private BigDecimal computeArea(Map<String, Set<Box>> boxes, Set<String> signals) {
         double area = 0.0;
         for (String var : boxes.keySet()) {
-            for (Box box : boxes.get(var)) {
-                area += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
+            if (signals.contains(var)) {
+                for (Box box : boxes.get(var)) {
+                    area += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
+                }
             }
         }
         return new BigDecimal(area);
@@ -168,17 +164,17 @@ public class AreaOfSatisfaction {
                 break;
             case AND:
                 if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap), nodeToBoxes(((ModuleNode) node).right, limitsMap), Operation.AND);
+                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap), nodeToBoxes(((ModuleNode) node).right, limitsMap), Operation.AND).get(0);
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap), nodeToBoxes(((ConjunctionNode) node).right, limitsMap), Operation.AND);
+                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap), nodeToBoxes(((ConjunctionNode) node).right, limitsMap), Operation.AND).get(0);
                 }
             case OR:
                 if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap), nodeToBoxes(((ModuleNode) node).right, limitsMap), Operation.OR);
+                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap), nodeToBoxes(((ModuleNode) node).right, limitsMap), Operation.OR).get(0);
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap), nodeToBoxes(((DisjunctionNode) node).right, limitsMap), Operation.OR);
+                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap), nodeToBoxes(((DisjunctionNode) node).right, limitsMap), Operation.OR).get(0);
                 }
             case NOT:
                 break;
@@ -188,11 +184,19 @@ public class AreaOfSatisfaction {
         return new HashMap<String, Set<Box>>();
     }
 
-    private Map<String, Set<Box>> mergeBoxes(Map<String, Set<Box>> leftBoxes, Map<String, Set<Box>> rightBoxes, Operation op) {
-        Map<String, Set<Box>> boxMap = new HashMap<String, Set<Box>>();
+    private List<Map<String, Set<Box>>> mergeBoxes(Map<String, Set<Box>> leftBoxes, Map<String, Set<Box>> rightBoxes, Operation op) {
+        List<Map<String, Set<Box>>> boxMap = new ArrayList<Map<String, Set<Box>>>();
+        boxMap.add(new HashMap<String, Set<Box>>());
+        if (op == Operation.NOP) {
+            boxMap.add(new HashMap<String, Set<Box>>());
+        }
         for (String key : leftBoxes.keySet()) {
             if (rightBoxes.containsKey(key)) {
                 Set<Box> boxes = new HashSet<Box>();
+                Set<Box> nopBoxes = null;
+                if (op == Operation.NOP) {
+                    nopBoxes = new HashSet<Box>();
+                }
                 List<Box> orOverlapBoxes = new ArrayList<Box>();
                 Queue<Box> leftQueue = new LinkedList<Box>();
                 Queue<Box> rightQueue = new LinkedList<Box>();
@@ -248,11 +252,13 @@ public class AreaOfSatisfaction {
                                     else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
                                             }
+                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                         }
                                         left = new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                     }
@@ -260,11 +266,13 @@ public class AreaOfSatisfaction {
                                         temp.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 left = new Box(right.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound());
                                             }
+                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
                                         }
                                     }
                                 }
@@ -291,11 +299,13 @@ public class AreaOfSatisfaction {
                                     else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
                                             }
+                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                         }
                                         left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                     }
@@ -303,11 +313,13 @@ public class AreaOfSatisfaction {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 left = new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
                                             }
+                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
                                         }
                                     }
                                 }
@@ -345,11 +357,13 @@ public class AreaOfSatisfaction {
                                     else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
                                             }
+                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                         }
                                         left = new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                     }
@@ -357,11 +371,13 @@ public class AreaOfSatisfaction {
                                         temp.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 left = new Box(left.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound());
                                             }
+                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
                                         }
                                     }
                                 }
@@ -388,11 +404,13 @@ public class AreaOfSatisfaction {
                                     else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
                                             }
+                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                         }
                                         left = new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                     }
@@ -400,11 +418,13 @@ public class AreaOfSatisfaction {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                             temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                         }
                                         else {
                                             if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
                                                 left = new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
                                             }
+                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
                                         }
                                     }
                                 }
@@ -426,15 +446,18 @@ public class AreaOfSatisfaction {
                 while (!rightQueue.isEmpty()) {
                     boxes.add(rightQueue.poll());
                 }
-                boxMap.put(key, boxes);
+                boxMap.get(0).put(key, boxes);
+                if (op == Operation.NOP) {
+                    boxMap.get(1).put(key, nopBoxes);
+                }
             }
             else {
-                boxMap.put(key, leftBoxes.get(key));
+                boxMap.get(0).put(key, leftBoxes.get(key));
             }
         }
         for (String key : rightBoxes.keySet()) {
             if (!leftBoxes.containsKey(key)) {
-                boxMap.put(key, rightBoxes.get(key));
+                boxMap.get(0).put(key, rightBoxes.get(key));
             }
         }
         return boxMap;
