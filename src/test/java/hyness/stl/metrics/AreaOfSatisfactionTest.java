@@ -68,7 +68,7 @@ public class AreaOfSatisfactionTest {
                 ;
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
 
-        BigDecimal expResult =  new BigDecimal(140);
+        BigDecimal expResult =  new BigDecimal(-120);
         BigDecimal result = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false);
         System.out.println(result.doubleValue());
         assertEquals(expResult, result);
