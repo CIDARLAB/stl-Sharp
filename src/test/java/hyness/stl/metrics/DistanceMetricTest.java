@@ -1147,7 +1147,7 @@ public class DistanceMetricTest {
 //        cost.setAlphaG(1);
 //        cost.setAlphaGprime(1);
         
-        return cost.computeDistance(mod1mod2, stlcascade1.spec, ignoreInternal);
+        return cost.computeDistance(mod1mod2, stlcascade1.spec, ignoreInternal, 0.1);
     }
     
     public List<BigDecimal> getDistanceBetweenDesiredAndCascade(String desired, String cascade, boolean ignoreInternal) {
@@ -1171,7 +1171,7 @@ public class DistanceMetricTest {
         AreaOfSatisfaction area = new AreaOfSatisfaction();
         
         distances.add(area.computeDistance(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired).spec,
-                STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal));
+                STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal, 0.1));
         
         return distances;
     }

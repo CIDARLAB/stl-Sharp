@@ -8,6 +8,7 @@ package hyness.stl.metrics;
 import hyness.stl.AlwaysNode;
 import hyness.stl.ConjunctionNode;
 import hyness.stl.DisjunctionNode;
+import hyness.stl.EventNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.ModuleNode;
 import hyness.stl.Operation;
@@ -29,9 +30,9 @@ import java.util.Set;
  */
 public class AreaOfSatisfaction {
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal) {
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap);
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, double eventuallyStep) {
+        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallyStep);
+        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallyStep);
         Set<String> signals = new HashSet<String>();
         for (String key : boxes1.keySet()) {
             signals.add(key);
@@ -41,11 +42,11 @@ public class AreaOfSatisfaction {
                 signals.add(key);
             }
         }
-        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap), signals);
+        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallyStep), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallyStep), signals);
     }
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals) {
-        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap), signals);
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, double eventuallyStep) {
+        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallyStep), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallyStep), signals);
     }
     
     private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals) {
@@ -55,15 +56,15 @@ public class AreaOfSatisfaction {
         return computeArea(overlapBoxes, signals).subtract(computeArea(distinctBoxes, signals));
     }
     
-    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold) {
+    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, double eventuallyStep) {
         Set<String> signals1 = signals.keySet();
         Set<String> signals2 = new HashSet<String>();
         for (String value : signals.values()) {
             signals2.add(value);
         }
-        double totalArea = computeArea(spec1, signals1).doubleValue() + computeArea(spec2, signals2).doubleValue();
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap);
+        double totalArea = computeArea(spec1, signals1, eventuallyStep).doubleValue() + computeArea(spec2, signals2, eventuallyStep).doubleValue();
+        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallyStep);
+        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallyStep);
         Map<String, Set<Box>> modifiedBoxes1 = new HashMap<String, Set<Box>>();
         Map<String, Set<Box>> modifiedBoxes2 = new HashMap<String, Set<Box>>();
         Set<String> sigs = new HashSet<String>();
@@ -79,8 +80,8 @@ public class AreaOfSatisfaction {
         return maxCompatibilityThreshold >= (differenceArea / totalArea);
     }
     
-    public BigDecimal computeArea(STLSharp spec) {
-        Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap);
+    public BigDecimal computeArea(STLSharp spec, double eventuallyStep) {
+        Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallyStep);
         Set<String> signals = new HashSet<String>();
         for (String key : boxes.keySet()) {
             signals.add(key);
@@ -88,8 +89,8 @@ public class AreaOfSatisfaction {
         return computeArea(boxes, signals);
     }
     
-    public BigDecimal computeArea(STLSharp spec, Set<String> signals) {
-        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap), signals);
+    public BigDecimal computeArea(STLSharp spec, Set<String> signals, double eventuallyStep) {
+        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallyStep), signals);
     }
     
     private BigDecimal computeArea(Map<String, Set<Box>> boxes, Set<String> signals) {
@@ -104,7 +105,7 @@ public class AreaOfSatisfaction {
         return new BigDecimal(area);
     }
 
-    private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap) {
+    private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, double eventuallyStep) {
         switch (node.op) {
             case CONCAT:
                 // TODO: Special case of shift and conjunction
@@ -146,7 +147,7 @@ public class AreaOfSatisfaction {
                 break;
             case ALWAYS:
                 AlwaysNode always = (AlwaysNode) node;
-                Map<String, Set<Box>> childBoxMap = nodeToBoxes(always.child, limitsMap);
+                Map<String, Set<Box>> childBoxMap = nodeToBoxes(always.child, limitsMap, eventuallyStep);
                 Map<String, Set<Box>> boxMap = new HashMap<String, Set<Box>>();
                 for (String key : childBoxMap.keySet()) {
                     Set<Box> boxes = new HashSet<Box>();
@@ -157,24 +158,30 @@ public class AreaOfSatisfaction {
                 }
                 return boxMap;
             case EVENT:
-                // TODO: Abstract to a set of globally properties and convert to boxes
-                break;
+                EventNode event = (EventNode) node;
+                TreeNode abstraction = new AlwaysNode(event.child, event.low, Double.min(event.low+eventuallyStep, event.high));
+                if (event.low+eventuallyStep < event.high) {
+                    for (double i = event.low+eventuallyStep; i < event.high; i += eventuallyStep) {
+                        abstraction = new DisjunctionNode(abstraction, new AlwaysNode(event.child, i, Double.min(i+eventuallyStep, event.high)));
+                    }
+                }
+                return nodeToBoxes(abstraction, limitsMap, eventuallyStep);
             case UNTIL:
                 // TODO: Figure out how to convert to boxes
                 break;
             case AND:
                 if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap), nodeToBoxes(((ModuleNode) node).right, limitsMap), Operation.AND).get(0);
+                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallyStep), Operation.AND).get(0);
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap), nodeToBoxes(((ConjunctionNode) node).right, limitsMap), Operation.AND).get(0);
+                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((ConjunctionNode) node).right, limitsMap, eventuallyStep), Operation.AND).get(0);
                 }
             case OR:
                 if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap), nodeToBoxes(((ModuleNode) node).right, limitsMap), Operation.OR).get(0);
+                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallyStep), Operation.OR).get(0);
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap), nodeToBoxes(((DisjunctionNode) node).right, limitsMap), Operation.OR).get(0);
+                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallyStep), Operation.OR).get(0);
                 }
             case NOT:
                 break;
