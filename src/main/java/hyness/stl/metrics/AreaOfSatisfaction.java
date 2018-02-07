@@ -42,7 +42,7 @@ public class AreaOfSatisfaction {
                 signals.add(key);
             }
         }
-        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallyStep), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallyStep), signals);
+        return computeDistance(boxes1, boxes2, signals);
     }
     
     public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, double eventuallyStep) {

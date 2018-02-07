@@ -72,6 +72,32 @@ public class AreaOfSatisfactionTest {
         BigDecimal result = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 0.1);
         System.out.println(result.doubleValue());
         assertEquals(expResult, result);
+        
+        
+        spec1 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (G[0,10] u1 >= 2)\n"
+                + "\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        stlSpecExtract1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
+        
+        spec2 = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (F[0,5] u1 >= 2)\n"
+                + "\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
+        
+        expResult =  new BigDecimal(0);
+        result = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
+        System.out.println(result.doubleValue());
+        assertEquals(expResult, result);
     }
 
     /**
@@ -138,6 +164,20 @@ public class AreaOfSatisfactionTest {
         stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(56);
         result = instance.computeArea(stlSpecExtract.spec, 0.1);
+        System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
+        assertEquals(expResult, result);
+        
+        spec = "phi1(u1)\n"
+                + "\n"
+                + "phi1 = (F[0,5] u1 >= 2)\n"
+                + "\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
+        expResult = new BigDecimal(40);
+        result = instance.computeArea(stlSpecExtract.spec, 1);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
         assertEquals(expResult, result);
     }
