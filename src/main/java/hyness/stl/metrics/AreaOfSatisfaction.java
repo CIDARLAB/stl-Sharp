@@ -215,237 +215,134 @@ public class AreaOfSatisfaction {
                 }
                 while (!leftQueue.isEmpty()) {
                     Box left = leftQueue.poll();
-                    List<Range> noOverlap = new ArrayList<Range>();
-                    noOverlap.add(new Range<BigDecimal, BigDecimal>(new BigDecimal(left.getLowerTime().doubleValue()), new BigDecimal(left.getUpperTime().doubleValue())));
                     Queue<Box> temp = new LinkedList<Box>();
+                    boolean overlapped = false;
                     while (!rightQueue.isEmpty()) {
                         Box right = rightQueue.poll();
                         if (left.getUpperTime().compareTo(right.getLowerTime()) <= 0 || right.getUpperTime().compareTo(left.getLowerTime()) <= 0) {
                             temp.add(right);
                         }
                         else if (left.getLowerTime().compareTo(right.getLowerTime()) <= 0) {
-                            for (int i = 0; i < noOverlap.size(); i++) {
-                                BigDecimal lower = ((BigDecimal) noOverlap.get(i).getLower());
-                                BigDecimal upper = ((BigDecimal) noOverlap.get(i).getUpper());
-                                if (upper.compareTo(right.getLowerTime()) > 0) {
-                                    if (upper.compareTo(right.getUpperTime()) > 0) {
-                                        noOverlap.add(i, new Range<BigDecimal, BigDecimal>(new BigDecimal(lower.doubleValue()), new BigDecimal(right.getLowerTime().doubleValue())));
-                                        noOverlap.set(i + 1, new Range<BigDecimal, BigDecimal>(new BigDecimal(right.getUpperTime().doubleValue()), new BigDecimal(upper.doubleValue())));
-                                        i++;
-                                    }
-                                    else {
-                                        noOverlap.set(i, new Range<BigDecimal, BigDecimal>(new BigDecimal(lower.doubleValue()), new BigDecimal(right.getLowerTime().doubleValue())));
-                                    }
-                                }
+                            overlapped = true;
+                            if (left.getLowerTime().compareTo(right.getLowerTime()) != 0) {
+                                leftQueue.add(new Box(left.getLowerTime(), right.getLowerTime(), left.getLowerBound(), left.getUpperBound()));
                             }
-                            if (left.getUpperTime().compareTo(right.getUpperTime()) < 0) {
-                                if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
-                                    temp.add(new Box(right.getLowerTime(), left.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
-                                }
-                                else if (op == Operation.OR) {
-                                    modifyOrOverlapBoxes(orOverlapBoxes, right.getLowerTime(), left.getUpperTime());
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        orOverlapBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
-                                    }
-                                    else {
-                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
-                                    }
-                                }
-                                else if (op == Operation.NOP) {
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                    }
-                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
-                                        }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
-                                            }
-                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        }
-                                        left = new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getLowerBound());
-                                    }
-                                    else {
-                                        temp.add(new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
-                                        }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                left = new Box(right.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound());
-                                            }
-                                            nopBoxes.add(new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
-                                        }
-                                    }
-                                }
+                            if (left.getUpperTime().compareTo(right.getUpperTime()) > 0) {
+                                leftQueue.add(new Box(right.getUpperTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound());
+                            }
+                            else if (left.getUpperTime().compareTo(right.getUpperTime()) < 0) {
                                 temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                right = new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound());
+                                left = new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound());
                             }
-                            else {
-                                if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
-                                    temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                            if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+                                temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                            }
+                            else if (op == Operation.OR) {
+                                modifyOrOverlapBoxes(orOverlapBoxes, right.getLowerTime(), right.getUpperTime());
+                                if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                    temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                    orOverlapBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                 }
-                                else if (op == Operation.OR) {
-                                    modifyOrOverlapBoxes(orOverlapBoxes, right.getLowerTime(), right.getUpperTime());
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        orOverlapBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                else {
+                                    temp.add(new Box(right.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
+                                }
+                            }
+                            else if (op == Operation.NOP) {
+                                if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                    temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                }
+                                else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                    if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
-                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                            ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                        }
+                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                     }
+                                    left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                 }
-                                else if (op == Operation.NOP) {
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                    }
-                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
-                                        }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
-                                            }
-                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        }
-                                        left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
+                                else {
+                                    temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
+                                    if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
-                                        temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                            left = new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
                                         }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                left = new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
-                                            }
-                                            nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
-                                        }
+                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
                                     }
                                 }
                             }
                         }
                         else {
-                            for (int i = 0; i < noOverlap.size(); i++) {
-                                BigDecimal lower = ((BigDecimal) noOverlap.get(i).getLower());
-                                BigDecimal upper = ((BigDecimal) noOverlap.get(i).getUpper());
-                                if (lower.compareTo(right.getUpperTime()) < 0) {
-                                    if (upper.compareTo(right.getUpperTime()) > 0) {
-                                        noOverlap.set(i, new Range<BigDecimal, BigDecimal>(new BigDecimal(right.getUpperTime().doubleValue()), new BigDecimal(upper.doubleValue())));
-                                    }
-                                }
-                            }
+                            overlapped = true;
                             temp.add(new Box(right.getLowerTime(), left.getLowerTime(), right.getLowerBound(), right.getUpperBound()));
-                            if (left.getUpperTime().compareTo(right.getUpperTime()) < 0) {
-                                if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
-                                    temp.add(new Box(left.getLowerTime(), left.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
-                                }
-                                else if (op == Operation.OR) {
-                                    modifyOrOverlapBoxes(orOverlapBoxes, left.getLowerTime(), left.getUpperTime());
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        orOverlapBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
-                                    }
-                                    else {
-                                        temp.add(new Box(left.getLowerTime(), left.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
-                                    }
-                                }
-                                else if (op == Operation.NOP) {
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                    }
-                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
-                                        }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
-                                            }
-                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        }
-                                        left = new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getLowerBound());
-                                    }
-                                    else {
-                                        temp.add(new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
-                                        }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                left = new Box(left.getLowerTime(), left.getUpperTime(), right.getUpperBound(), left.getUpperBound());
-                                            }
-                                            nopBoxes.add(new Box(left.getLowerTime(), left.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
-                                        }
-                                    }
-                                }
-                                temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                            if (left.getUpperTime().compareTo(right.getUpperTime()) > 0) {
+                                leftQueue.add(new Box(right.getUpperTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                right = new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound());
+                                left = new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound());
                             }
-                            else {
-                                if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
-                                    temp.add(new Box(left.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                            if (left.getUpperTime().compareTo(right.getUpperTime()) < 0) {
+                                temp.add(new Box(left.getUpperTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                right = new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound());
+                            }
+                            if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+                                temp.add(new Box(left.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                            }
+                            else if (op == Operation.OR) {
+                                modifyOrOverlapBoxes(orOverlapBoxes, left.getLowerTime(), right.getUpperTime());
+                                if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                    temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                    orOverlapBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                 }
-                                else if (op == Operation.OR) {
-                                    modifyOrOverlapBoxes(orOverlapBoxes, left.getLowerTime(), right.getUpperTime());
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        orOverlapBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                else {
+                                    temp.add(new Box(left.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
+                                }
+                            }
+                            else if (op == Operation.NOP) {
+                                if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
+                                    temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                }
+                                else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                    if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
-                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                            ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                        }
+                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                     }
+                                    left = new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                 }
-                                else if (op == Operation.NOP) {
-                                    if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
-                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                    }
-                                    else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
-                                        }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
-                                            }
-                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                        }
-                                        left = new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
+                                else {
+                                    temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
+                                    if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
+                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
+                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                     }
                                     else {
-                                        temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
-                                            temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
+                                            left = new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
                                         }
-                                        else {
-                                            if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                                left = new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
-                                            }
-                                            nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
-                                        }
+                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
                                     }
                                 }
                             }
                         }
+                    }
+                    if (!overlapped) {
+                        boxes.add(left);
                     }
                     rightQueue.addAll(temp);
-                    for (Range range : noOverlap) {
-                        BigDecimal lowerTime = (BigDecimal) range.getLower();
-                        BigDecimal upperTime = (BigDecimal) range.getUpper();
-                        if (lowerTime.compareTo(upperTime) < 0) {
-                            boxes.add(new Box(lowerTime, upperTime, left.getLowerBound(), left.getUpperBound()));
-                        }
-                    }
                 }
                 for (Box b : orOverlapBoxes) {
                     boxes.add(b);

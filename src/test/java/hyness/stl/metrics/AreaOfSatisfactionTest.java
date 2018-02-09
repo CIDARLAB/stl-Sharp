@@ -155,6 +155,20 @@ public class AreaOfSatisfactionTest {
         
         spec = "phi1(u1)\n"
                 + "\n"
+                + "phi1 = (G[3,7] u1 < 6) && (G[0,5] u1 >= 2)\n"
+                + "\n"
+                + "m1 { u1@left: u1 }\n"
+                + "io {u1: u1}\n"
+                + "limits [{u1 : {max:10,min:0}}]\n"
+                ;
+        stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
+        expResult = new BigDecimal(44);
+        result = instance.computeArea(stlSpecExtract.spec, 0.1);
+        System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
+        assertEquals(expResult, result);
+        
+        spec = "phi1(u1)\n"
+                + "\n"
                 + "phi1 = (G[0,5] u1 >= 2) || (G[3,7] u1 < 6)\n"
                 + "\n"
                 + "m1 { u1@left: u1 }\n"
