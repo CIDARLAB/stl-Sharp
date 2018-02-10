@@ -191,6 +191,21 @@ public class AreaOfSatisfaction {
         return new HashMap<String, Set<Box>>();
     }
 
+    /**
+     *
+     * This method will take two sets of boxes and merge them together based on an operator.
+     * For conjunction, the set of merged boxes contains the intersection of the satifaction areas
+     * for overlapping time windows plus the satisfaction areas of the non-overlapping areas.
+     * For disjuntion, the set of merged boxes contains the union of the satifaction areas
+     * for overlapping time windows plus the satisfaction areas of the non-overlapping areas.
+     * For NOP, two sets are returned: a set of overlapping satifaction areas and a set of non-overlapping
+     * satisfaction areas (index 0 and index 1, respectively).
+     * 
+     * @param leftBoxes - the satisfaction areas of the expression on the left
+     * @param rightBoxes - the satisfaction areas of the expression on the right
+     * @param op - the operator (AND, OR, or NOP)
+     * @return a list of satisfaction boxes representing the merger of the satisaction areas from each side of the expression
+     */
     private List<Map<String, Set<Box>>> mergeBoxes(Map<String, Set<Box>> leftBoxes, Map<String, Set<Box>> rightBoxes, Operation op) {
         List<Map<String, Set<Box>>> boxMap = new ArrayList<Map<String, Set<Box>>>();
         boxMap.add(new HashMap<String, Set<Box>>());
