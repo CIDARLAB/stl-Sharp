@@ -53,7 +53,10 @@ public class AreaOfSatisfaction {
         List<Map<String, Set<Box>>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
         Map<String, Set<Box>> distinctBoxes = boxes.get(0);
         Map<String, Set<Box>> overlapBoxes = boxes.get(1);
-        return computeArea(overlapBoxes, signals).subtract(computeArea(distinctBoxes, signals));
+        BigDecimal overlap = computeArea(overlapBoxes, signals);
+        BigDecimal distinct = computeArea(distinctBoxes, signals);
+        BigDecimal result = overlap.subtract(distinct);
+        return result;
     }
     
     public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, double eventuallyStep) {
@@ -238,7 +241,6 @@ public class AreaOfSatisfaction {
                             temp.add(right);
                         }
                         else if (left.getLowerTime().compareTo(right.getLowerTime()) <= 0) {
-                            overlapped = true;
                             if (left.getLowerTime().compareTo(right.getLowerTime()) != 0) {
                                 leftQueue.add(new Box(left.getLowerTime(), right.getLowerTime(), left.getLowerBound(), left.getUpperBound()));
                             }
@@ -252,9 +254,11 @@ public class AreaOfSatisfaction {
                                 left = new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound());
                             }
                             if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+                                overlapped = true;
                                 temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
                             }
                             else if (op == Operation.OR) {
+                                overlapped = true;
                                 modifyOrOverlapBoxes(orOverlapBoxes, right.getLowerTime(), right.getUpperTime());
                                 if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
@@ -269,6 +273,7 @@ public class AreaOfSatisfaction {
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                 }
                                 else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                    overlapped = true;
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
                                         nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
@@ -282,6 +287,7 @@ public class AreaOfSatisfaction {
                                     left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                 }
                                 else {
+                                    overlapped = true;
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
@@ -297,7 +303,6 @@ public class AreaOfSatisfaction {
                             }
                         }
                         else {
-                            overlapped = true;
                             temp.add(new Box(right.getLowerTime(), left.getLowerTime(), right.getLowerBound(), right.getUpperBound()));
                             if (left.getUpperTime().compareTo(right.getUpperTime()) > 0) {
                                 leftQueue.add(new Box(right.getUpperTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
@@ -309,9 +314,11 @@ public class AreaOfSatisfaction {
                                 right = new Box(left.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound());
                             }
                             if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
+                                overlapped = true;
                                 temp.add(new Box(left.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
                             }
                             else if (op == Operation.OR) {
+                                overlapped = true;
                                 modifyOrOverlapBoxes(orOverlapBoxes, left.getLowerTime(), right.getUpperTime());
                                 if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
@@ -326,6 +333,7 @@ public class AreaOfSatisfaction {
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                 }
                                 else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
+                                    overlapped = true;
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
                                         nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
@@ -339,6 +347,7 @@ public class AreaOfSatisfaction {
                                     left = new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                 }
                                 else {
+                                    overlapped = true;
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));

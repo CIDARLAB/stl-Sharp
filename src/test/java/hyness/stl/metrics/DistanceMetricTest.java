@@ -860,8 +860,10 @@ public class DistanceMetricTest {
         
         AreaOfSatisfaction aos = new AreaOfSatisfaction();
         
-        System.out.println("Distance between desired and constitutive: " + aos.computeDistance(toggleSTL.spec, constitutiveSTL.spec, false, 0.1));
+        System.out.println("Distance between desired and constitutive: " + aos.computeDistance(desiredSTL.spec, constitutiveSTL.spec, false, 0.1));
+        System.out.println("Distance between constitutive and desired: " + aos.computeDistance(constitutiveSTL.spec, desiredSTL.spec, false, 0.1));
         System.out.println("Distance between desired and toggle: " + aos.computeDistance(desiredSTL.spec, toggleSTL.spec, false, 0.1));
+        System.out.println("Distance between toggle and desired: " + aos.computeDistance(toggleSTL.spec, desiredSTL.spec, false, 0.1));
 
 
 
