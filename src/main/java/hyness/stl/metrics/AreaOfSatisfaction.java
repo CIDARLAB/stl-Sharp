@@ -23,12 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+//import javax.swing.JFrame;
 
 /**
  *
  * @author ckmadsen
  */
-public class AreaOfSatisfaction {
+public class AreaOfSatisfaction {//extends JFrame{
     
     public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, double eventuallyStep) {
         Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallyStep);
@@ -53,9 +54,30 @@ public class AreaOfSatisfaction {
         List<Map<String, Set<Box>>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
         Map<String, Set<Box>> distinctBoxes = boxes.get(0);
         Map<String, Set<Box>> overlapBoxes = boxes.get(1);
+        System.out.println("Distinct:");
+        for (String var : distinctBoxes.keySet()) {
+            if (signals.contains(var)) {
+                for (Box box : distinctBoxes.get(var)) {
+                    System.out.println("x(" + box.getLowerTime().doubleValue() + ", " + box.getUpperTime().doubleValue() + "); y(" + box.getLowerBound().doubleValue() + ", " + box.getUpperBound().doubleValue() + ")");
+                }
+            }
+        }
+        System.out.println();
+        System.out.println("Overlap:");
+        for (String var : overlapBoxes.keySet()) {
+            if (signals.contains(var)) {
+                for (Box box : overlapBoxes.get(var)) {
+                    System.out.println("x(" + box.getLowerTime().doubleValue() + ", " + box.getUpperTime().doubleValue() + "); y(" + box.getLowerBound().doubleValue() + ", " + box.getUpperBound().doubleValue() + ")");
+                }
+            }
+        }
+        System.out.println();
+        System.out.println("Distance:");
         BigDecimal overlap = computeArea(overlapBoxes, signals);
         BigDecimal distinct = computeArea(distinctBoxes, signals);
         BigDecimal result = overlap.subtract(distinct);
+        System.out.println(result.doubleValue());
+        System.out.println();
         return result;
     }
     
@@ -97,15 +119,28 @@ public class AreaOfSatisfaction {
     }
     
     private BigDecimal computeArea(Map<String, Set<Box>> boxes, Set<String> signals) {
-        double area = 0.0;
+        BigDecimal area = new BigDecimal(0.0);
         for (String var : boxes.keySet()) {
             if (signals.contains(var)) {
                 for (Box box : boxes.get(var)) {
-                    area += (box.getUpperTime().doubleValue() - box.getLowerTime().doubleValue()) * (box.getUpperBound().doubleValue() - box.getLowerBound().doubleValue());
+                    area = area.add(box.getUpperTime().subtract(box.getLowerTime()).multiply(box.getUpperBound().subtract(box.getLowerBound())));
                 }
             }
         }
-        return new BigDecimal(area);
+//        setSize(1200,1200);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setLocationRelativeTo(null);
+//        setVisible(true);
+//        for (String var : boxes.keySet()) {
+//            for (Box box : boxes.get(var)) {
+//                int xmin = (int) box.getLowerTime().doubleValue();
+//                int xmax = (int) box.getUpperTime().doubleValue();
+//                int ymin = (int) box.getLowerBound().doubleValue();
+//                int ymax = (int) box.getUpperBound().doubleValue();
+//                this.getGraphics().drawRect(xmin, 800 - ymax, xmax - xmin, ymax - ymin);
+//            }
+//        }
+        return area;
     }
 
     private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, double eventuallyStep) {

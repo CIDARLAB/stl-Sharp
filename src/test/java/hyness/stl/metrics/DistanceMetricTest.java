@@ -839,14 +839,14 @@ public class DistanceMetricTest {
 //        results = new ArrayList<String>();
         
         
-        for (int i = 0; i < cascades.size(); i ++) {
-            List<BigDecimal> distances = getDistanceBetweenDesiredAndCascade(desiredSpec, cascades.get(i), false);
-            results.add("Cascade " + (i+1) + ":\n" + "  Hausdorff: " + distances.get(0) + "\n  Cost: " + distances.get(1) + "\n  Area: " + distances.get(2));
-        }
-        System.out.println("Distance Results:");
-        for (String result : results) {
-            System.out.println(result);
-        }
+//        for (int i = 0; i < cascades.size(); i ++) {
+//            List<BigDecimal> distances = getDistanceBetweenDesiredAndCascade(desiredSpec, cascades.get(i), false);
+//            results.add("Cascade " + (i+1) + ":\n" + "  Hausdorff: " + distances.get(0) + "\n  Cost: " + distances.get(1) + "\n  Area: " + distances.get(2));
+//        }
+//        System.out.println("Distance Results:");
+//        for (String result : results) {
+//            System.out.println(result);
+//        }
         
         
         
@@ -859,6 +859,12 @@ public class DistanceMetricTest {
         STLSharpAbstractSyntaxTreeExtractor toggleSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(toggle);
         
         AreaOfSatisfaction aos = new AreaOfSatisfaction();
+        
+        aos.computeArea(constitutiveSTL.spec, 0.1);
+        aos = new AreaOfSatisfaction();
+        aos.computeArea(toggleSTL.spec, 0.1);
+        aos = new AreaOfSatisfaction();
+        aos.computeArea(desiredSTL.spec, 0.1);
         
         System.out.println("Distance between desired and constitutive: " + aos.computeDistance(desiredSTL.spec, constitutiveSTL.spec, false, 0.1));
         System.out.println("Distance between constitutive and desired: " + aos.computeDistance(constitutiveSTL.spec, desiredSTL.spec, false, 0.1));
