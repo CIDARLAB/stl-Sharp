@@ -1,4 +1,4 @@
-// Generated from STL.g4 by ANTLR 4.5.1
+// Generated from STL.g4 by ANTLR 4.7
 
 /**
  * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>, Prashant Vaidyanathan <prash@bu.edu>, Curtis Madsen <ckmadsen@bu.edu>

@@ -76,9 +76,14 @@ public class AreaOfSatisfactionTest {
         assertEquals(expResult, result1);
         assertEquals(expResult, result2);
         assertEquals(result1, result2);
+    }
+    
+    @Test
+    public void testComputeDistance2() {
+        System.out.println("computeDistance-2");
+        AreaOfSatisfaction instance = new AreaOfSatisfaction();
         
-        
-        spec1 = "phi1(u1)\n"
+        String spec1 = "phi1(u1)\n"
                 + "\n"
                 + "phi1 = (G[0,10] u1 >= 2)\n"
                 + "\n"
@@ -86,9 +91,9 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1}\n"
                 + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
-        stlSpecExtract1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
         
-        spec2 = "phi1(u1)\n"
+        String spec2 = "phi1(u1)\n"
                 + "\n"
                 + "phi1 = (F[0,5] u1 >= 2)\n"
                 + "\n"
@@ -96,19 +101,26 @@ public class AreaOfSatisfactionTest {
                 + "io {u1: u1}\n"
                 + "limits [{u1 : {max:10,min:0}}]\n"
                 ;
-        stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
         
-        expResult =  new BigDecimal(0);
-        result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
-        result2 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract1.spec, false, 1);
+        BigDecimal expResult =  new BigDecimal(0);
+        BigDecimal result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
+        BigDecimal result2 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract1.spec, false, 1);
         System.out.println(result1.doubleValue());
         System.out.println(result2.doubleValue());
         assertEquals(expResult, result1);
         assertEquals(expResult, result2);
         assertEquals(result1, result2);
         
+    }
+    
+    @Test
+    public void testComputeDistance3(){
         
-        spec1 = "phi1(x)\n"
+        System.out.println("computeDistance-3");
+        AreaOfSatisfaction instance = new AreaOfSatisfaction();
+        
+        String spec1 = "phi1(x)\n"
                 + "\n"
                 + "phi1 = (G[0,2](x<13) && G[0,2](x>0) && G[2,10](x<13) && G[2,10](x>2)) || (G[0,10](x<1) && G[0,10](x>0))\n"
                 + "\n"
@@ -116,9 +128,9 @@ public class AreaOfSatisfactionTest {
                 + "io {x: x}\n"
                 + "limits [{x : {max:15,min:0}}]\n"
                 ;
-        stlSpecExtract1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
         
-        spec2 = "phi1(x)\n"
+        String spec2 = "phi1(x)\n"
                 + "\n"
                 + "phi1 = (G[0,2](x<13) && G[0,2](x>0) && G[2,10](x<13) && G[2,10](x>2))\n"
                 + "\n"
@@ -126,7 +138,7 @@ public class AreaOfSatisfactionTest {
                 + "io {x: x}\n"
                 + "limits [{x : {max:15,min:0}}]\n"
                 ;
-        stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
         
         String spec3 = "phi1(x)\n"
                 + "\n"
@@ -138,36 +150,75 @@ public class AreaOfSatisfactionTest {
                 ;
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
         
-        expResult =  new BigDecimal(122);
+        BigDecimal expResult =  new BigDecimal(122);
         BigDecimal result = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract1.spec, false, 1);
 //        System.out.println(result.doubleValue());
         assertEquals(expResult, result);
-        expResult =  new BigDecimal(-118);
-        result1 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract3.spec, false, 1);
-        result2 = instance.computeDistance(stlSpecExtract3.spec, stlSpecExtract2.spec, false, 1);
+        BigDecimal expResult2 =  new BigDecimal(-118);
+        BigDecimal result1 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract3.spec, false, 1);
+        BigDecimal result2 = instance.computeDistance(stlSpecExtract3.spec, stlSpecExtract2.spec, false, 1);
 //        System.out.println(result1.doubleValue());
 //        System.out.println(result2.doubleValue());
-        assertEquals(expResult, result1);
-        assertEquals(expResult, result2);
+        assertEquals(expResult2, result1);
+        assertEquals(expResult2, result2);
         assertEquals(result1, result2);
-        expResult =  new BigDecimal(106);
-        result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
-        result2 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract1.spec, false, 1);
-//        System.out.println(result1.doubleValue());
-//        System.out.println(result2.doubleValue());
-        assertEquals(expResult, result1);
-        assertEquals(expResult, result2);
-        assertEquals(result1, result2);
-        expResult =  new BigDecimal(-102);
-        result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract3.spec, false, 1);
-        result2 = instance.computeDistance(stlSpecExtract3.spec, stlSpecExtract1.spec, false, 1);
-//        System.out.println(result1.doubleValue());
-//        System.out.println(result2.doubleValue());
-        assertEquals(expResult, result1);
-        assertEquals(expResult, result2);
-        assertEquals(result1, result2);
+        
+        
     }
-
+    
+    @Test
+    public void testComputeDistance4(){
+        System.out.println("computeDistance-3");
+        AreaOfSatisfaction instance = new AreaOfSatisfaction();
+        
+        String spec1 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (G[0,2](x<13) && G[0,2](x>0) && G[2,10](x<13) && G[2,10](x>2)) || (G[0,10](x<1) && G[0,10](x>0))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:15,min:0}}]\n"
+                ;
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1);
+        
+        String spec2 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (G[0,2](x<13) && G[0,2](x>0) && G[2,10](x<13) && G[2,10](x>2))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:15,min:0}}]\n"
+                ;
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
+        
+        String spec3 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (G[0,10](x<1) && G[0,10](x>0))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:15,min:0}}]\n"
+                ;
+        STLSharpAbstractSyntaxTreeExtractor stlSpecExtract3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
+        
+        BigDecimal expResult =  new BigDecimal(106);
+        BigDecimal result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
+        BigDecimal result2 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract1.spec, false, 1);
+//        System.out.println(result1.doubleValue());
+//        System.out.println(result2.doubleValue());
+        assertEquals(expResult, result1);
+        assertEquals(expResult, result2);
+        assertEquals(result1, result2);
+        
+        BigDecimal expResult2 =  new BigDecimal(-102);
+        BigDecimal result3 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract3.spec, false, 1);
+        BigDecimal result4 = instance.computeDistance(stlSpecExtract3.spec, stlSpecExtract1.spec, false, 1);
+//        System.out.println(result1.doubleValue());
+//        System.out.println(result2.doubleValue());
+        assertEquals(expResult2, result3);
+        assertEquals(expResult2, result4);
+        assertEquals(result3, result4);
+    }
     /**
      * Test of computeArea method, of class AreaOfSatisfaction.
      */

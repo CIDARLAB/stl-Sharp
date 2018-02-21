@@ -1,4 +1,4 @@
-// Generated from STL.g4 by ANTLR 4.5.1
+// Generated from STL.g4 by ANTLR 4.7
 
 /**
  * Copyright (C) 2015  Cristian Ioan Vasile <cvasile@bu.edu>, Prashant Vaidyanathan <prash@bu.edu>, Curtis Madsen <ckmadsen@bu.edu>
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class STLParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -196,38 +196,29 @@ public class STLParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(28);
+			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
 				{
-				_localctx = new FormulaContext(_localctx);
+				_localctx = new ParpropContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
 				setState(7);
-				((FormulaContext)_localctx).op = match(T__2);
+				match(T__0);
 				setState(8);
-				((FormulaContext)_localctx).child = property(8);
+				((ParpropContext)_localctx).child = property(0);
+				setState(9);
+				match(T__1);
 				}
 				break;
 			case 2:
 				{
-				_localctx = new FormulaContext(_localctx);
+				_localctx = new BooleanPredContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(9);
-				((FormulaContext)_localctx).op = match(T__3);
-				setState(10);
-				match(T__4);
 				setState(11);
-				((FormulaContext)_localctx).low = match(RATIONAL);
-				setState(12);
-				match(T__5);
-				setState(13);
-				((FormulaContext)_localctx).high = match(RATIONAL);
-				setState(14);
-				match(T__6);
-				setState(15);
-				((FormulaContext)_localctx).child = property(7);
+				booleanExpr();
 				}
 				break;
 			case 3:
@@ -235,42 +226,52 @@ public class STLParser extends Parser {
 				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(16);
-				((FormulaContext)_localctx).op = match(T__7);
-				setState(17);
-				match(T__4);
-				setState(18);
-				((FormulaContext)_localctx).low = match(RATIONAL);
-				setState(19);
-				match(T__5);
-				setState(20);
-				((FormulaContext)_localctx).high = match(RATIONAL);
-				setState(21);
-				match(T__6);
-				setState(22);
-				((FormulaContext)_localctx).child = property(6);
+				setState(12);
+				((FormulaContext)_localctx).op = match(T__2);
+				setState(13);
+				((FormulaContext)_localctx).child = property(8);
 				}
 				break;
 			case 4:
 				{
-				_localctx = new ParpropContext(_localctx);
+				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(23);
-				match(T__0);
-				setState(24);
-				((ParpropContext)_localctx).child = property(0);
-				setState(25);
-				match(T__1);
+				setState(14);
+				((FormulaContext)_localctx).op = match(T__3);
+				setState(15);
+				match(T__4);
+				setState(16);
+				((FormulaContext)_localctx).low = match(RATIONAL);
+				setState(17);
+				match(T__5);
+				setState(18);
+				((FormulaContext)_localctx).high = match(RATIONAL);
+				setState(19);
+				match(T__6);
+				setState(20);
+				((FormulaContext)_localctx).child = property(7);
 				}
 				break;
 			case 5:
 				{
-				_localctx = new BooleanPredContext(_localctx);
+				_localctx = new FormulaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
+				setState(21);
+				((FormulaContext)_localctx).op = match(T__7);
+				setState(22);
+				match(T__4);
+				setState(23);
+				((FormulaContext)_localctx).low = match(RATIONAL);
+				setState(24);
+				match(T__5);
+				setState(25);
+				((FormulaContext)_localctx).high = match(RATIONAL);
+				setState(26);
+				match(T__6);
 				setState(27);
-				booleanExpr();
+				((FormulaContext)_localctx).child = property(6);
 				}
 				break;
 			}
@@ -284,6 +285,7 @@ public class STLParser extends Parser {
 					_prevctx = _localctx;
 					{
 					setState(50);
+					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
@@ -425,6 +427,7 @@ public class STLParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(66);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
 			case T__13:
@@ -433,7 +436,10 @@ public class STLParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==T__0 || _la==T__13) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				setState(57);
@@ -453,7 +459,10 @@ public class STLParser extends Parser {
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__15) | (1L << T__16) | (1L << T__17) | (1L << T__18) | (1L << T__19) | (1L << T__20))) != 0)) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				setState(61);
@@ -487,6 +496,7 @@ public class STLParser extends Parser {
 					_prevctx = _localctx;
 					{
 					setState(77);
+					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 					case 1:
 						{
@@ -510,7 +520,10 @@ public class STLParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==T__21 || _la==T__22) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(73);
@@ -527,7 +540,10 @@ public class STLParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==T__23 || _la==T__24) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(76);
@@ -590,6 +606,7 @@ public class STLParser extends Parser {
 		int _la;
 		try {
 			setState(87);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
 			case T__13:
@@ -610,7 +627,10 @@ public class STLParser extends Parser {
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__25) | (1L << T__26) | (1L << T__27) | (1L << T__28) | (1L << T__29))) != 0)) ) {
 					((BooleanExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				setState(84);
@@ -676,31 +696,31 @@ public class STLParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3$\\\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3$\\\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
 		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\37\n\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3"+
 		"\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\7\2\65\n\2\f\2\16\2"+
 		"8\13\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3E\n\3\3\3\3\3\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3P\n\3\f\3\16\3S\13\3\3\4\3\4\3\4\3\4\3\4"+
 		"\5\4Z\n\4\3\4\2\4\2\4\5\2\4\6\2\7\4\2\3\3\20\20\3\2\22\27\3\2\30\31\3"+
-		"\2\32\33\3\2\34 h\2\36\3\2\2\2\4D\3\2\2\2\6Y\3\2\2\2\b\t\b\2\1\2\t\n\7"+
-		"\5\2\2\n\37\5\2\2\n\13\f\7\6\2\2\f\r\7\7\2\2\r\16\7#\2\2\16\17\7\b\2\2"+
-		"\17\20\7#\2\2\20\21\7\t\2\2\21\37\5\2\2\t\22\23\7\n\2\2\23\24\7\7\2\2"+
-		"\24\25\7#\2\2\25\26\7\b\2\2\26\27\7#\2\2\27\30\7\t\2\2\30\37\5\2\2\b\31"+
-		"\32\7\3\2\2\32\33\5\2\2\2\33\34\7\4\2\2\34\37\3\2\2\2\35\37\5\6\4\2\36"+
-		"\b\3\2\2\2\36\13\3\2\2\2\36\22\3\2\2\2\36\31\3\2\2\2\36\35\3\2\2\2\37"+
-		"\66\3\2\2\2 !\f\7\2\2!\"\7\13\2\2\"\65\5\2\2\b#$\f\6\2\2$%\7\f\2\2%\65"+
-		"\5\2\2\7&\'\f\5\2\2\'(\7\r\2\2(\65\5\2\2\6)*\f\4\2\2*+\7\16\2\2+\65\5"+
-		"\2\2\5,-\f\3\2\2-.\7\17\2\2./\7\7\2\2/\60\7#\2\2\60\61\7\b\2\2\61\62\7"+
-		"#\2\2\62\63\7\t\2\2\63\65\5\2\2\4\64 \3\2\2\2\64#\3\2\2\2\64&\3\2\2\2"+
-		"\64)\3\2\2\2\64,\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\67\3"+
-		"\3\2\2\28\66\3\2\2\29:\b\3\1\2:;\t\2\2\2;<\5\4\3\2<=\7\4\2\2=E\3\2\2\2"+
-		">?\t\3\2\2?@\5\4\3\2@A\7\4\2\2AE\3\2\2\2BE\7#\2\2CE\7\"\2\2D9\3\2\2\2"+
-		"D>\3\2\2\2DB\3\2\2\2DC\3\2\2\2EQ\3\2\2\2FG\f\b\2\2GH\7\21\2\2HP\5\4\3"+
-		"\tIJ\f\6\2\2JK\t\4\2\2KP\5\4\3\7LM\f\5\2\2MN\t\5\2\2NP\5\4\3\6OF\3\2\2"+
-		"\2OI\3\2\2\2OL\3\2\2\2PS\3\2\2\2QO\3\2\2\2QR\3\2\2\2R\5\3\2\2\2SQ\3\2"+
-		"\2\2TU\5\4\3\2UV\t\6\2\2VW\5\4\3\2WZ\3\2\2\2XZ\7!\2\2YT\3\2\2\2YX\3\2"+
-		"\2\2Z\7\3\2\2\2\t\36\64\66DOQY";
+		"\2\32\33\3\2\34 \2h\2\36\3\2\2\2\4D\3\2\2\2\6Y\3\2\2\2\b\t\b\2\1\2\t\n"+
+		"\7\3\2\2\n\13\5\2\2\2\13\f\7\4\2\2\f\37\3\2\2\2\r\37\5\6\4\2\16\17\7\5"+
+		"\2\2\17\37\5\2\2\n\20\21\7\6\2\2\21\22\7\7\2\2\22\23\7#\2\2\23\24\7\b"+
+		"\2\2\24\25\7#\2\2\25\26\7\t\2\2\26\37\5\2\2\t\27\30\7\n\2\2\30\31\7\7"+
+		"\2\2\31\32\7#\2\2\32\33\7\b\2\2\33\34\7#\2\2\34\35\7\t\2\2\35\37\5\2\2"+
+		"\b\36\b\3\2\2\2\36\r\3\2\2\2\36\16\3\2\2\2\36\20\3\2\2\2\36\27\3\2\2\2"+
+		"\37\66\3\2\2\2 !\f\7\2\2!\"\7\13\2\2\"\65\5\2\2\b#$\f\6\2\2$%\7\f\2\2"+
+		"%\65\5\2\2\7&\'\f\5\2\2\'(\7\r\2\2(\65\5\2\2\6)*\f\4\2\2*+\7\16\2\2+\65"+
+		"\5\2\2\5,-\f\3\2\2-.\7\17\2\2./\7\7\2\2/\60\7#\2\2\60\61\7\b\2\2\61\62"+
+		"\7#\2\2\62\63\7\t\2\2\63\65\5\2\2\4\64 \3\2\2\2\64#\3\2\2\2\64&\3\2\2"+
+		"\2\64)\3\2\2\2\64,\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\67"+
+		"\3\3\2\2\28\66\3\2\2\29:\b\3\1\2:;\t\2\2\2;<\5\4\3\2<=\7\4\2\2=E\3\2\2"+
+		"\2>?\t\3\2\2?@\5\4\3\2@A\7\4\2\2AE\3\2\2\2BE\7#\2\2CE\7\"\2\2D9\3\2\2"+
+		"\2D>\3\2\2\2DB\3\2\2\2DC\3\2\2\2EQ\3\2\2\2FG\f\b\2\2GH\7\21\2\2HP\5\4"+
+		"\3\tIJ\f\6\2\2JK\t\4\2\2KP\5\4\3\7LM\f\5\2\2MN\t\5\2\2NP\5\4\3\6OF\3\2"+
+		"\2\2OI\3\2\2\2OL\3\2\2\2PS\3\2\2\2QO\3\2\2\2QR\3\2\2\2R\5\3\2\2\2SQ\3"+
+		"\2\2\2TU\5\4\3\2UV\t\6\2\2VW\5\4\3\2WZ\3\2\2\2XZ\7!\2\2YT\3\2\2\2YX\3"+
+		"\2\2\2Z\7\3\2\2\2\t\36\64\66DOQY";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -60,14 +60,19 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20090211</version>
+            <version>20160810</version>
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>
-            <artifactId>antlr4-maven-plugin</artifactId>
-            <version>4.5.3</version>
-            <type>maven-plugin</type>
+            <artifactId>antlr4</artifactId>
+            <version>4.7</version>
         </dependency>
+<!--        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-maven-plugin</artifactId>
+            <version>4.7</version>
+            <type>maven-plugin</type>
+        </dependency>-->
         <dependency>
             <groupId>com.fasterxml.uuid</groupId>
             <artifactId>java-uuid-generator</artifactId>
