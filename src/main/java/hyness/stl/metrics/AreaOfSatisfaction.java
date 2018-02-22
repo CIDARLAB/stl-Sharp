@@ -54,9 +54,8 @@ public class AreaOfSatisfaction {
         List<Map<String, Set<Box>>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
         Map<String, Set<Box>> distinctBoxes = boxes.get(0);
         Map<String, Set<Box>> overlapBoxes = boxes.get(1);
-        BigDecimal overlap = computeArea(overlapBoxes, signals);
-        BigDecimal distinct = computeArea(distinctBoxes, signals);
-        BigDecimal result = overlap.subtract(distinct);
+        double overlap = computeArea(overlapBoxes, signals).doubleValue();
+        double distinct = computeArea(distinctBoxes, signals).doubleValue();
 //        System.out.println("Distinct:");
 //        for (String var : distinctBoxes.keySet()) {
 //            if (signals.contains(var)) {
@@ -78,7 +77,7 @@ public class AreaOfSatisfaction {
 //        System.out.println("Distance:");
 //        System.out.println(result.doubleValue());
 //        System.out.println();
-        return result;
+        return new BigDecimal((overlap - distinct)/(overlap + distinct));
     }
     
     public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, int eventuallySteps) {

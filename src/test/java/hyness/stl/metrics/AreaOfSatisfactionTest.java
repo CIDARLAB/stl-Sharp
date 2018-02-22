@@ -68,7 +68,7 @@ public class AreaOfSatisfactionTest {
                 ;
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
 
-        BigDecimal expResult =  new BigDecimal(-120);
+        BigDecimal expResult =  new BigDecimal(-120.0/160.0);
         BigDecimal result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
         BigDecimal result2 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract1.spec, false, 1);
         System.out.println(result1.doubleValue());
@@ -103,7 +103,7 @@ public class AreaOfSatisfactionTest {
                 ;
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2);
         
-        BigDecimal expResult =  new BigDecimal(0);
+        BigDecimal expResult =  new BigDecimal(0.0/80.0);
         BigDecimal result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
         BigDecimal result2 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract1.spec, false, 1);
         System.out.println(result1.doubleValue());
@@ -150,11 +150,11 @@ public class AreaOfSatisfactionTest {
                 ;
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
         
-        BigDecimal expResult =  new BigDecimal(122);
+        BigDecimal expResult =  new BigDecimal(122.0/122.0);
         BigDecimal result = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract1.spec, false, 1);
 //        System.out.println(result.doubleValue());
         assertEquals(expResult, result);
-        BigDecimal expResult2 =  new BigDecimal(-118);
+        BigDecimal expResult2 =  new BigDecimal(-118.0/122.0);
         BigDecimal result1 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract3.spec, false, 1);
         BigDecimal result2 = instance.computeDistance(stlSpecExtract3.spec, stlSpecExtract2.spec, false, 1);
 //        System.out.println(result1.doubleValue());
@@ -201,7 +201,7 @@ public class AreaOfSatisfactionTest {
                 ;
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3);
         
-        BigDecimal expResult =  new BigDecimal(106);
+        BigDecimal expResult =  new BigDecimal(106.0/122.0);
         BigDecimal result1 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract2.spec, false, 1);
         BigDecimal result2 = instance.computeDistance(stlSpecExtract2.spec, stlSpecExtract1.spec, false, 1);
 //        System.out.println(result1.doubleValue());
@@ -210,7 +210,7 @@ public class AreaOfSatisfactionTest {
         assertEquals(expResult, result2);
         assertEquals(result1, result2);
         
-        BigDecimal expResult2 =  new BigDecimal(-102);
+        BigDecimal expResult2 =  new BigDecimal(-102.0/122.0);
         BigDecimal result3 = instance.computeDistance(stlSpecExtract1.spec, stlSpecExtract3.spec, false, 1);
         BigDecimal result4 = instance.computeDistance(stlSpecExtract3.spec, stlSpecExtract1.spec, false, 1);
 //        System.out.println(result1.doubleValue());
