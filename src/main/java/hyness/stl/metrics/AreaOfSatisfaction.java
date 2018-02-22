@@ -29,11 +29,11 @@ import java.util.Set;
  *
  * @author ckmadsen
  */
-public class AreaOfSatisfaction {//extends JFrame{
+public class AreaOfSatisfaction {
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, double eventuallyStep) {
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallyStep);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallyStep);
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, int eventuallySteps) {
+        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps);
+        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps);
         Set<String> signals = new HashSet<String>();
         for (String key : boxes1.keySet()) {
             signals.add(key);
@@ -46,50 +46,50 @@ public class AreaOfSatisfaction {//extends JFrame{
         return computeDistance(boxes1, boxes2, signals);
     }
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, double eventuallyStep) {
-        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallyStep), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallyStep), signals);
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, int eventuallySteps) {
+        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps), signals);
     }
     
     private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals) {
         List<Map<String, Set<Box>>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
         Map<String, Set<Box>> distinctBoxes = boxes.get(0);
         Map<String, Set<Box>> overlapBoxes = boxes.get(1);
-        System.out.println("Distinct:");
-        for (String var : distinctBoxes.keySet()) {
-            if (signals.contains(var)) {
-                for (Box box : distinctBoxes.get(var)) {
-                    System.out.println("x(" + box.getLowerTime().doubleValue() + ", " + box.getUpperTime().doubleValue() + "); y(" + box.getLowerBound().doubleValue() + ", " + box.getUpperBound().doubleValue() + ")");
-                }
-            }
-        }
-        System.out.println();
-        System.out.println("Overlap:");
-        for (String var : overlapBoxes.keySet()) {
-            if (signals.contains(var)) {
-                for (Box box : overlapBoxes.get(var)) {
-                    System.out.println("x(" + box.getLowerTime().doubleValue() + ", " + box.getUpperTime().doubleValue() + "); y(" + box.getLowerBound().doubleValue() + ", " + box.getUpperBound().doubleValue() + ")");
-                }
-            }
-        }
-        System.out.println();
-        System.out.println("Distance:");
         BigDecimal overlap = computeArea(overlapBoxes, signals);
         BigDecimal distinct = computeArea(distinctBoxes, signals);
         BigDecimal result = overlap.subtract(distinct);
-        System.out.println(result.doubleValue());
-        System.out.println();
+//        System.out.println("Distinct:");
+//        for (String var : distinctBoxes.keySet()) {
+//            if (signals.contains(var)) {
+//                for (Box box : distinctBoxes.get(var)) {
+//                    System.out.println("x(" + box.getLowerTime().doubleValue() + ", " + box.getUpperTime().doubleValue() + "); y(" + box.getLowerBound().doubleValue() + ", " + box.getUpperBound().doubleValue() + ")");
+//                }
+//            }
+//        }
+//        System.out.println();
+//        System.out.println("Overlap:");
+//        for (String var : overlapBoxes.keySet()) {
+//            if (signals.contains(var)) {
+//                for (Box box : overlapBoxes.get(var)) {
+//                    System.out.println("x(" + box.getLowerTime().doubleValue() + ", " + box.getUpperTime().doubleValue() + "); y(" + box.getLowerBound().doubleValue() + ", " + box.getUpperBound().doubleValue() + ")");
+//                }
+//            }
+//        }
+//        System.out.println();
+//        System.out.println("Distance:");
+//        System.out.println(result.doubleValue());
+//        System.out.println();
         return result;
     }
     
-    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, double eventuallyStep) {
+    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, int eventuallySteps) {
         Set<String> signals1 = signals.keySet();
         Set<String> signals2 = new HashSet<String>();
         for (String value : signals.values()) {
             signals2.add(value);
         }
-        double totalArea = computeArea(spec1, signals1, eventuallyStep).doubleValue() + computeArea(spec2, signals2, eventuallyStep).doubleValue();
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallyStep);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallyStep);
+        double totalArea = computeArea(spec1, signals1, eventuallySteps).doubleValue() + computeArea(spec2, signals2, eventuallySteps).doubleValue();
+        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallySteps);
+        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallySteps);
         Map<String, Set<Box>> modifiedBoxes1 = new HashMap<String, Set<Box>>();
         Map<String, Set<Box>> modifiedBoxes2 = new HashMap<String, Set<Box>>();
         Set<String> sigs = new HashSet<String>();
@@ -105,8 +105,8 @@ public class AreaOfSatisfaction {//extends JFrame{
         return maxCompatibilityThreshold >= (differenceArea / totalArea);
     }
     
-    public BigDecimal computeArea(STLSharp spec, double eventuallyStep) {
-        Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallyStep);
+    public BigDecimal computeArea(STLSharp spec, int eventuallySteps) {
+        Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps);
         Set<String> signals = new HashSet<String>();
         for (String key : boxes.keySet()) {
             signals.add(key);
@@ -114,8 +114,8 @@ public class AreaOfSatisfaction {//extends JFrame{
         return computeArea(boxes, signals);
     }
     
-    public BigDecimal computeArea(STLSharp spec, Set<String> signals, double eventuallyStep) {
-        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallyStep), signals);
+    public BigDecimal computeArea(STLSharp spec, Set<String> signals, int eventuallySteps) {
+        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps), signals);
     }
     
     private BigDecimal computeArea(Map<String, Set<Box>> boxes, Set<String> signals) {
@@ -127,36 +127,37 @@ public class AreaOfSatisfaction {//extends JFrame{
                 }
             }
         }
-//        setSize(1200,1200);
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setLocationRelativeTo(null);
-//        setVisible(true);
+//        JFrame frame = new JFrame();
+//        frame.setSize(1200,1200);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
 //        for (String var : boxes.keySet()) {
 //            for (Box box : boxes.get(var)) {
 //                int xmin = (int) box.getLowerTime().doubleValue();
 //                int xmax = (int) box.getUpperTime().doubleValue();
 //                int ymin = (int) box.getLowerBound().doubleValue();
 //                int ymax = (int) box.getUpperBound().doubleValue();
-//                this.getGraphics().drawRect(xmin, 800 - ymax, xmax - xmin, ymax - ymin);
+//                frame.getGraphics().drawRect(xmin, 800 - ymax, xmax - xmin, ymax - ymin);
 //            }
 //        }
         return area;
     }
 
-    private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, double eventuallyStep) {
+    private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, int eventuallySteps) {
         switch (node.op) {
-            case CONCAT:
-                // TODO: Special case of shift and conjunction
-                break;
-            case PARALLEL:
-                // TODO: Special case of conjunction
-                break;
-            case JOIN:
-                // TODO: Special case of parallel
-                break;
-            case IMPLIES:
-                // TODO: Special case of conjunction
-                break;
+//            case CONCAT:
+//                // TODO: Special case of shift and conjunction
+//                break;
+//            case PARALLEL:
+//                // TODO: Special case of conjunction
+//                break;
+//            case JOIN:
+//                // TODO: Special case of parallel
+//                break;
+//            case IMPLIES:
+//                // TODO: Special case of conjunction
+//                break;
             case BOOL:
                 return new HashMap<String, Set<Box>>();
             case PRED:
@@ -185,7 +186,7 @@ public class AreaOfSatisfaction {//extends JFrame{
                 break;
             case ALWAYS:
                 AlwaysNode always = (AlwaysNode) node;
-                Map<String, Set<Box>> childBoxMap = nodeToBoxes(always.child, limitsMap, eventuallyStep);
+                Map<String, Set<Box>> childBoxMap = nodeToBoxes(always.child, limitsMap, eventuallySteps);
                 Map<String, Set<Box>> boxMap = new HashMap<String, Set<Box>>();
                 for (String key : childBoxMap.keySet()) {
                     Set<Box> boxes = new HashSet<Box>();
@@ -197,31 +198,33 @@ public class AreaOfSatisfaction {//extends JFrame{
                 return boxMap;
             case EVENT:
                 EventNode event = (EventNode) node;
-                TreeNode abstraction = new AlwaysNode(event.child, event.low, Double.min(event.low+eventuallyStep, event.high));
-                if (event.low+eventuallyStep < event.high) {
-                    for (double i = event.low+eventuallyStep; i < event.high; i += eventuallyStep) {
-                        abstraction = new DisjunctionNode(abstraction, new AlwaysNode(event.child, i, Double.min(i+eventuallyStep, event.high)));
+                double eventuallyStepSize = (event.high - event.low) / eventuallySteps;
+                TreeNode abstraction = new AlwaysNode(event.child, event.low, Double.min(event.low+eventuallyStepSize, event.high));
+                if (event.low+eventuallyStepSize < event.high) {
+                    for (double i = event.low+eventuallyStepSize; i < event.high; i += eventuallyStepSize) {
+                        abstraction = new DisjunctionNode(abstraction, new AlwaysNode(event.child, i, Double.min(i+eventuallyStepSize, event.high)));
                     }
                 }
-                return nodeToBoxes(abstraction, limitsMap, eventuallyStep);
+                return nodeToBoxes(abstraction, limitsMap, eventuallySteps);
             case UNTIL:
                 // TODO: Figure out how to convert to boxes
                 break;
             case AND:
                 if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallyStep), Operation.AND).get(0);
+                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps), Operation.AND).get(0);
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((ConjunctionNode) node).right, limitsMap, eventuallyStep), Operation.AND).get(0);
+                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((ConjunctionNode) node).right, limitsMap, eventuallySteps), Operation.AND).get(0);
                 }
             case OR:
                 if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallyStep), Operation.OR).get(0);
+                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps), Operation.OR).get(0);
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallyStep), nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallyStep), Operation.OR).get(0);
+                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallySteps), Operation.OR).get(0);
                 }
             case NOT:
+                // Not currently handled
                 break;
             case NOP:
                 return new HashMap<String, Set<Box>>();
@@ -257,7 +260,6 @@ public class AreaOfSatisfaction {//extends JFrame{
                 if (op == Operation.NOP) {
                     nopBoxes = new HashSet<Box>();
                 }
-                List<Box> orOverlapBoxes = new ArrayList<Box>();
                 Queue<Box> leftQueue = new LinkedList<Box>();
                 Queue<Box> rightQueue = new LinkedList<Box>();
                 for (Box left : leftBoxes.get(key)) {
@@ -288,18 +290,20 @@ public class AreaOfSatisfaction {//extends JFrame{
                                 right = new Box(right.getLowerTime(), left.getUpperTime(), right.getLowerBound(), right.getUpperBound());
                                 left = new Box(right.getLowerTime(), left.getUpperTime(), left.getLowerBound(), left.getUpperBound());
                             }
+                            else {
+                                left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound());
+                            }
                             if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
                                 overlapped = true;
                                 temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                                left = new Box(right.getLowerTime(), right.getUpperTime(), new BigDecimal(-1), new BigDecimal(-1));
                             }
                             else if (op == Operation.OR) {
-                                overlapped = true;
-                                modifyOrOverlapBoxes(orOverlapBoxes, right.getLowerTime(), right.getUpperTime());
                                 if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                    orOverlapBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                 }
                                 else {
+                                    overlapped = true;
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
                                 }
                             }
@@ -308,32 +312,28 @@ public class AreaOfSatisfaction {//extends JFrame{
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                 }
                                 else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
-                                    overlapped = true;
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
+                                        addBoxToSet(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()), nopBoxes);
                                     }
                                     else {
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                            ((LinkedList) leftQueue).add(0, new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                            ((LinkedList) leftQueue).add(new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
                                         }
-                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                        addBoxToSet(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()), nopBoxes);
                                     }
                                     left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                 }
                                 else {
-                                    overlapped = true;
                                     temp.add(new Box(right.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        addBoxToSet(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()), nopBoxes);
                                     }
                                     else {
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                            left = new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
-                                        }
-                                        nopBoxes.add(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
+                                        addBoxToSet(new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()), nopBoxes);
                                     }
+                                    left = new Box(right.getLowerTime(), right.getUpperTime(), right.getUpperBound(), max(left.getUpperBound(), right.getUpperBound()));
                                 }
                             }
                         }
@@ -351,15 +351,14 @@ public class AreaOfSatisfaction {//extends JFrame{
                             if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
                                 overlapped = true;
                                 temp.add(new Box(left.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
+                                left = new Box(left.getLowerTime(), right.getUpperTime(), new BigDecimal(-1), new BigDecimal(-1));
                             }
                             else if (op == Operation.OR) {
-                                overlapped = true;
-                                modifyOrOverlapBoxes(orOverlapBoxes, left.getLowerTime(), right.getUpperTime());
                                 if (left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0) {
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
-                                    orOverlapBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
                                 }
                                 else {
+                                    overlapped = true;
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), min(left.getLowerBound(), right.getLowerBound()), max(left.getUpperBound(), right.getUpperBound())));
                                 }
                             }
@@ -368,46 +367,39 @@ public class AreaOfSatisfaction {//extends JFrame{
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
                                 }
                                 else if (left.getLowerBound().compareTo(right.getLowerBound()) <= 0) {
-                                    overlapped = true;
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()));
+                                        addBoxToSet(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getUpperBound()), nopBoxes);
                                     }
                                     else {
                                         if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                            ((LinkedList) leftQueue).add(0, new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
+                                            ((LinkedList) leftQueue).add(new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound()));
                                         }
-                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()));
+                                        addBoxToSet(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), right.getUpperBound()), nopBoxes);
                                     }
                                     left = new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getLowerBound());
                                 }
                                 else {
-                                    overlapped = true;
                                     temp.add(new Box(left.getLowerTime(), right.getUpperTime(), right.getLowerBound(), left.getLowerBound()));
                                     if (left.getUpperBound().compareTo(right.getUpperBound()) < 0) {
                                         temp.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getUpperBound(), right.getUpperBound()));
-                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()));
+                                        addBoxToSet(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound()), nopBoxes);
                                     }
                                     else {
-                                        if (left.getUpperBound().compareTo(right.getUpperBound()) != 0) {
-                                            left = new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), left.getUpperBound());
-                                        }
-                                        nopBoxes.add(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()));
+                                        addBoxToSet(new Box(left.getLowerTime(), right.getUpperTime(), left.getLowerBound(), right.getUpperBound()), nopBoxes);
                                     }
+                                    left = new Box(left.getLowerTime(), right.getUpperTime(), right.getUpperBound(), max(left.getUpperBound(), right.getUpperBound()));
                                 }
                             }
                         }
                     }
                     if (!overlapped) {
-                        boxes.add(left);
+                        addBoxToSet(left, boxes);
                     }
                     rightQueue.addAll(temp);
                 }
-                for (Box b : orOverlapBoxes) {
-                    boxes.add(b);
-                }
                 while (!rightQueue.isEmpty()) {
-                    boxes.add(rightQueue.poll());
+                    addBoxToSet(rightQueue.poll(), boxes);
                 }
                 boxMap.get(0).put(key, boxes);
                 if (op == Operation.NOP) {
@@ -424,6 +416,12 @@ public class AreaOfSatisfaction {//extends JFrame{
             }
         }
         return boxMap;
+    }
+    
+    private void addBoxToSet(Box box, Set set) {
+        if (box.getLowerTime().compareTo(box.getUpperTime()) != 0 && box.getLowerBound().compareTo(box.getUpperBound()) != 0) {
+            set.add(box);
+        }
     }
     
     private void modifyOrOverlapBoxes(List<Box> orOverlapBoxes, BigDecimal lower, BigDecimal upper) {

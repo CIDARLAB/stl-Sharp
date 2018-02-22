@@ -240,7 +240,7 @@ public class AreaOfSatisfactionTest {
         STLSharpAbstractSyntaxTreeExtractor stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         AreaOfSatisfaction instance = new AreaOfSatisfaction();
         BigDecimal expResult = new BigDecimal(160);
-        BigDecimal result = instance.computeArea(stlSpecExtract.spec, 0.1);
+        BigDecimal result = instance.computeArea(stlSpecExtract.spec, 100);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
         assertEquals(expResult, result);
         
@@ -254,7 +254,7 @@ public class AreaOfSatisfactionTest {
                 ;
         stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(20);
-        result = instance.computeArea(stlSpecExtract.spec, 0.1);
+        result = instance.computeArea(stlSpecExtract.spec, 100);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
         assertEquals(expResult, result);
         
@@ -268,7 +268,7 @@ public class AreaOfSatisfactionTest {
                 ;
         stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(44);
-        result = instance.computeArea(stlSpecExtract.spec, 0.1);
+        result = instance.computeArea(stlSpecExtract.spec, 100);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
         assertEquals(expResult, result);
         
@@ -282,7 +282,7 @@ public class AreaOfSatisfactionTest {
                 ;
         stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(44);
-        result = instance.computeArea(stlSpecExtract.spec, 0.1);
+        result = instance.computeArea(stlSpecExtract.spec, 100);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
         assertEquals(expResult, result);
         
@@ -296,7 +296,7 @@ public class AreaOfSatisfactionTest {
                 ;
         stlSpecExtract = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec);
         expResult = new BigDecimal(56);
-        result = instance.computeArea(stlSpecExtract.spec, 0.1);
+        result = instance.computeArea(stlSpecExtract.spec, 100);
         System.out.println(expResult.doubleValue() + " = " + result.doubleValue() + "?");
         assertEquals(expResult, result);
         
