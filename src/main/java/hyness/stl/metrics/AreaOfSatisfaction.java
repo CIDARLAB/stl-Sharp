@@ -418,7 +418,7 @@ public class AreaOfSatisfaction {
     }
     
     private void addBoxToSet(Box box, Set set) {
-        if (box.getLowerTime().compareTo(box.getUpperTime()) != 0 && box.getLowerBound().compareTo(box.getUpperBound()) != 0) {
+        if (box.getLowerTime().compareTo(box.getUpperTime()) < 0 && box.getLowerBound().compareTo(box.getUpperBound()) < 0) {
             set.add(box);
         }
     }
