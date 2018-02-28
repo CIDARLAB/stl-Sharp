@@ -32,8 +32,8 @@ import java.util.Set;
 public class AreaOfSatisfaction {
     
     public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, int eventuallySteps) {
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps);
+        Map<String, Set<Box>> boxes1 = removeOverlapBoxes(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps));
+        Map<String, Set<Box>> boxes2 = removeOverlapBoxes(nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps));
         Set<String> signals = new HashSet<String>();
         for (String key : boxes1.keySet()) {
             signals.add(key);
@@ -47,7 +47,7 @@ public class AreaOfSatisfaction {
     }
     
     public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, int eventuallySteps) {
-        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps), signals);
+        return computeDistance(removeOverlapBoxes(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps)), removeOverlapBoxes(nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps)), signals);
     }
     
     private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals) {
@@ -87,8 +87,8 @@ public class AreaOfSatisfaction {
             signals2.add(value);
         }
         double totalArea = computeArea(spec1, signals1, eventuallySteps).doubleValue() + computeArea(spec2, signals2, eventuallySteps).doubleValue();
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallySteps);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallySteps);
+        Map<String, Set<Box>> boxes1 = removeOverlapBoxes(nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallySteps));
+        Map<String, Set<Box>> boxes2 = removeOverlapBoxes(nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallySteps));
         Map<String, Set<Box>> modifiedBoxes1 = new HashMap<String, Set<Box>>();
         Map<String, Set<Box>> modifiedBoxes2 = new HashMap<String, Set<Box>>();
         Set<String> sigs = new HashSet<String>();
@@ -105,7 +105,7 @@ public class AreaOfSatisfaction {
     }
     
     public BigDecimal computeArea(STLSharp spec, int eventuallySteps) {
-        Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps);
+        Map<String, Set<Box>> boxes = removeOverlapBoxes(nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps));
         Set<String> signals = new HashSet<String>();
         for (String key : boxes.keySet()) {
             signals.add(key);
@@ -114,7 +114,7 @@ public class AreaOfSatisfaction {
     }
     
     public BigDecimal computeArea(STLSharp spec, Set<String> signals, int eventuallySteps) {
-        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps), signals);
+        return computeArea(removeOverlapBoxes(nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps)), signals);
     }
     
     private BigDecimal computeArea(Map<String, Set<Box>> boxes, Set<String> signals) {
@@ -137,6 +137,9 @@ public class AreaOfSatisfaction {
 //                int xmax = (int) box.getUpperTime().doubleValue();
 //                int ymin = (int) box.getLowerBound().doubleValue();
 //                int ymax = (int) box.getUpperBound().doubleValue();
+//                if(xmin == 80 && xmax == 90) {
+//                    System.out.println("x(" + box.getLowerTime().doubleValue() + ", " + box.getUpperTime().doubleValue() + "); y(" + box.getLowerBound().doubleValue() + ", " + box.getUpperBound().doubleValue() + ")");
+//                }
 //                frame.getGraphics().drawRect(xmin, 800 - ymax, xmax - xmin, ymax - ymin);
 //            }
 //        }
@@ -292,6 +295,9 @@ public class AreaOfSatisfaction {
                             else {
                                 left = new Box(right.getLowerTime(), right.getUpperTime(), left.getLowerBound(), left.getUpperBound());
                             }
+                            if(left.getLowerTime().doubleValue() == 80) {
+                                System.out.print("");
+                            }
                             if (op == Operation.AND && !(left.getUpperBound().compareTo(right.getLowerBound()) <= 0 || right.getUpperBound().compareTo(left.getLowerBound()) <= 0)) {
                                 overlapped = true;
                                 temp.add(new Box(right.getLowerTime(), right.getUpperTime(), max(left.getLowerBound(), right.getLowerBound()), min(left.getUpperBound(), right.getUpperBound())));
@@ -423,26 +429,42 @@ public class AreaOfSatisfaction {
         }
     }
     
-    private void modifyOrOverlapBoxes(List<Box> orOverlapBoxes, BigDecimal lower, BigDecimal upper) {
-        for (int i = 0; i < orOverlapBoxes.size(); i++) {
-            Box b = orOverlapBoxes.get(i);
-            if (!(b.getUpperTime().compareTo(lower) <= 0 || upper.compareTo(b.getLowerTime()) <= 0)) {
-                if (b.getLowerTime().compareTo(lower) < 0) {
-                    orOverlapBoxes.set(i, new Box(new BigDecimal(b.getLowerTime().doubleValue()), new BigDecimal(lower.doubleValue()), new BigDecimal(b.getLowerBound().doubleValue()), new BigDecimal(b.getUpperBound().doubleValue())));
-                    if (b.getUpperTime().compareTo(upper) > 0) {
-                        orOverlapBoxes.add(i+1, new Box(new BigDecimal(upper.doubleValue()), new BigDecimal(b.getUpperTime().doubleValue()), new BigDecimal(b.getLowerBound().doubleValue()), new BigDecimal(b.getUpperBound().doubleValue())));
-                        i++;
+    private Map<String, Set<Box>> removeOverlapBoxes(Map<String, Set<Box>> boxes) {
+        Map<String, Set<Box>> noOverlapBoxes = new HashMap<String, Set<Box>>();
+        for (String var : boxes.keySet()) {
+            Set<Box> noOverlap = new HashSet<Box>();
+            Queue<Box> oldBoxes = new LinkedList<Box>();
+            for (Box box : boxes.get(var)) {
+                oldBoxes.add(box);
+            }
+            while (!oldBoxes.isEmpty()) {
+                Box box = oldBoxes.poll();
+                for (Box b : oldBoxes) {
+                    if (box.isOverlapped(b)) {
+                        if (box.getLowerTime().compareTo(b.getLowerTime()) < 0) {
+                            oldBoxes.add(new Box(box.getLowerTime(), b.getLowerTime(), box.getLowerBound(), box.getUpperBound()));
+                        }
+                        if (box.getUpperTime().compareTo(b.getUpperTime()) > 0) {
+                            oldBoxes.add(new Box(b.getUpperTime(), box.getUpperTime(), box.getLowerBound(), box.getUpperBound()));
+                        }
+                        box = new Box(b.getLowerTime(), b.getUpperTime(), box.getLowerBound(), box.getUpperBound());
+                        if (box.getLowerBound().compareTo(b.getLowerBound()) < 0) {
+                            oldBoxes.add(new Box(box.getLowerTime(), box.getUpperTime(), box.getLowerBound(), b.getLowerBound()));
+                            box = new Box(box.getLowerTime(), box.getUpperTime(), b.getLowerBound(), box.getUpperBound());
+                        }
+                        if (box.getUpperBound().compareTo(b.getUpperBound()) > 0) {
+                            box = new Box(box.getLowerTime(), box.getUpperTime(), b.getUpperBound(), box.getUpperBound());
+                        }
+                        else {
+                            box = new Box(box.getLowerTime(), box.getUpperTime(), box.getUpperBound(), box.getUpperBound());
+                        }
                     }
                 }
-                else if (b.getUpperTime().compareTo(upper) > 0) {
-                    orOverlapBoxes.set(i, new Box(new BigDecimal(upper.doubleValue()), new BigDecimal(b.getUpperTime().doubleValue()), new BigDecimal(b.getLowerBound().doubleValue()), new BigDecimal(b.getUpperBound().doubleValue())));
-                }
-                else {
-                    orOverlapBoxes.remove(i);
-                    i--;
-                }
+                addBoxToSet(box, noOverlap);
             }
+            noOverlapBoxes.put(var, noOverlap);
         }
+        return noOverlapBoxes;
     }
 
     private BigDecimal max(BigDecimal num1, BigDecimal num2) {
@@ -503,6 +525,11 @@ public class AreaOfSatisfaction {
             this.upperTime = upperTime;
             this.lowerBound = lowerBound;
             this.upperBound = upperBound;
+        }
+        
+        public boolean isOverlapped(Box box) {
+            return !(upperTime.compareTo(box.getLowerTime()) <= 0 || box.getUpperTime().compareTo(lowerTime) <= 0) &&
+                    !(upperBound.compareTo(box.getLowerBound()) <= 0 || box.getUpperBound().compareTo(lowerBound) <= 0);
         }
 
         public BigDecimal getLowerTime() {

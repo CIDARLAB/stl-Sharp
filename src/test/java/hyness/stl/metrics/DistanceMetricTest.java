@@ -95,9 +95,13 @@ public class DistanceMetricTest {
     
     public static String toggle;
     
+    public static String toggleShort;
+    
     public static String constitutive;
     
     public static String desired;
+    
+    public static String desiredShort;
     
     
     public DistanceMetricTest() {
@@ -658,6 +662,15 @@ public class DistanceMetricTest {
                 + "limits [{x : {max:200,min:0}}]\n"
                 ;
         
+        toggleShort = "phi1(x)\n"
+                + "\n"
+                + "phi1 = ((((((G[0.0,10.0](x <= 20.0)) && (G[10.0,30.0](x <= 30.0))) && ((G[30.0,100.0](x <= 40.0)) && (G[100.0,130.0](x <= 50.0)))) && (((G[130.0,180.0](x <= 70.0)) && (G[180.0,210.0](x <= 60.0))) && ((G[210.0,240.0](x <= 70.0)) && (G[240.0,250.0](x <= 60.0))))) && (G[0.0,250.0](x >= 0.0))) || ((((((G[0.0,20.0](x <= 10.0)) && (G[20.0,50.0](x <= 20.0))) && ((G[50.0,70.0](x <= 40.0)) && (G[70.0,90.0](x <= 60.0)))) && (((G[90.0,120.0](x <= 80.0)) && (G[120.0,160.0](x <= 70.0))) && ((G[160.0,200.0](x <= 80.0)) && (G[200.0,220.0](x <= 70.0))))) && ((((G[220.0,250.0](x <= 60.0)) && (G[0.0,30.0](x >= 0.0))) && ((G[30.0,60.0](x >= 10.0)) && (G[60.0,80.0](x >= 30.0)))) && (((G[80.0,90.0](x >= 40.0)) && (G[90.0,100.0](x >= 50.0))) && ((G[100.0,110.0](x >= 70.0)) && (G[110.0,140.0](x >= 60.0)))))) && (((G[140.0,160.0](x >= 50.0)) && (G[160.0,210.0](x >= 60.0))) && (G[210.0,250.0](x >= 50.0)))))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:200,min:0}}]\n"
+                ;
+        
         constitutive = "phi1(x)\n"
                 + "\n"
                 + "phi1 = (((((((G[0.0,10.0](x <= 30.0)) && (G[10.0,30.0](x <= 40.0))) && ((G[30.0,50.0](x <= 60.0)) && (G[50.0,190.0](x <= 70.0)))) && (((G[190.0,220.0](x <= 80.0)) && (G[220.0,230.0](x <= 70.0))) && ((G[230.0,240.0](x <= 90.0)) && (G[240.0,260.0](x <= 100.0))))) && ((((G[260.0,270.0](x <= 90.0)) && (G[270.0,280.0](x <= 80.0))) && ((G[280.0,330.0](x <= 110.0)) && (G[330.0,340.0](x <= 100.0)))) && (((G[340.0,370.0](x <= 110.0)) && (G[370.0,390.0](x <= 100.0))) && ((G[390.0,420.0](x <= 90.0)) && (G[420.0,470.0](x <= 80.0)))))) && (((((G[470.0,520.0](x <= 90.0)) && (G[520.0,580.0](x <= 80.0))) && ((G[580.0,610.0](x <= 90.0)) && (G[610.0,620.0](x <= 100.0)))) && (((G[620.0,640.0](x <= 120.0)) && (G[640.0,650.0](x <= 110.0))) && ((G[650.0,660.0](x <= 100.0)) && (G[660.0,700.0](x <= 90.0))))) && ((((G[700.0,720.0](x <= 100.0)) && (G[720.0,740.0](x <= 90.0))) && ((G[740.0,760.0](x <= 100.0)) && (G[760.0,780.0](x <= 90.0)))) && (((G[780.0,790.0](x <= 100.0)) && (G[790.0,810.0](x <= 110.0))) && ((G[810.0,860.0](x <= 100.0)) && (G[860.0,930.0](x <= 90.0))))))) && ((((((G[930.0,960.0](x <= 110.0)) && (G[960.0,990.0](x <= 100.0))) && ((G[990.0,1000.0](x <= 90.0)) && (G[0.0,230.0](x >= 0.0)))) && (((G[230.0,270.0](x >= 10.0)) && (G[270.0,290.0](x >= 0.0))) && ((G[290.0,400.0](x >= 10.0)) && (G[400.0,510.0](x >= 20.0))))) && ((((G[510.0,520.0](x >= 10.0)) && (G[520.0,530.0](x >= 20.0))) && ((G[530.0,560.0](x >= 10.0)) && (G[560.0,640.0](x >= 20.0)))) && (((G[640.0,660.0](x >= 10.0)) && (G[660.0,670.0](x >= 20.0))) && ((G[670.0,690.0](x >= 10.0)) && (G[690.0,700.0](x >= 20.0)))))) && ((((G[700.0,750.0](x >= 10.0)) && (G[750.0,770.0](x >= 30.0))) && ((G[770.0,800.0](x >= 20.0)) && (G[800.0,820.0](x >= 30.0)))) && (((G[820.0,850.0](x >= 20.0)) && (G[850.0,870.0](x >= 10.0))) && (G[870.0,1000.0](x >= 20.0))))))\n"
@@ -670,6 +683,15 @@ public class DistanceMetricTest {
         desired = "phi1(x)\n"
                 + "\n"
                 + "phi1 = (G[0,250](x<70) && G[0,250](x>0) && G[250,1000](x<90) && G[250,1000](x>20)) || (G[0,1000](x<10) && G[0,1000](x>0))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:200,min:0}}]\n"
+                ;
+        
+        desiredShort = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (G[0,250](x<70) && G[0,250](x>0))\n"
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
@@ -855,8 +877,10 @@ public class DistanceMetricTest {
 
 
         STLSharpAbstractSyntaxTreeExtractor desiredSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired);
+        STLSharpAbstractSyntaxTreeExtractor desiredShortSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desiredShort);
         STLSharpAbstractSyntaxTreeExtractor constitutiveSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(constitutive);
         STLSharpAbstractSyntaxTreeExtractor toggleSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(toggle);
+        STLSharpAbstractSyntaxTreeExtractor toggleShortSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(toggleShort);
         
         AreaOfSatisfaction aos = new AreaOfSatisfaction();
         
@@ -864,6 +888,8 @@ public class DistanceMetricTest {
         System.out.println("Distance between constitutive and desired: " + aos.computeDistance(constitutiveSTL.spec, desiredSTL.spec, false, 100));
         System.out.println("Distance between desired and toggle: " + aos.computeDistance(desiredSTL.spec, toggleSTL.spec, false, 100));
         System.out.println("Distance between toggle and desired: " + aos.computeDistance(toggleSTL.spec, desiredSTL.spec, false, 100));
+        System.out.println("Distance between desired and toggle (short): " + aos.computeDistance(desiredShortSTL.spec, toggleShortSTL.spec, false, 100));
+        System.out.println("Distance between toggle and desired (short): " + aos.computeDistance(toggleShortSTL.spec, desiredShortSTL.spec, false, 100));
 
 
 
