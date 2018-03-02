@@ -77,7 +77,9 @@ public class AreaOfSatisfaction {
 //        System.out.println("Distance:");
 //        System.out.println(result.doubleValue());
 //        System.out.println();
-        return new BigDecimal((overlap - distinct)/(overlap + distinct));
+
+//        return new BigDecimal((overlap - distinct)/(overlap + distinct));
+        return new BigDecimal(distinct/(overlap + distinct));
     }
     
     public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, int eventuallySteps) {
