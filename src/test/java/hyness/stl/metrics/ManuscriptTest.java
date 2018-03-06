@@ -175,11 +175,11 @@ public class ManuscriptTest {
         
         AreaOfSatisfaction aos = new AreaOfSatisfaction();
         
-        System.out.println("Distance between desired and constitutive: " + aos.computeDistance(desiredSTL.spec, constitutiveSTL.spec, false, 100));
+        System.out.println("Distance between desired and constitutive: " + aos.computeDistance(desiredSTL.spec, constitutiveSTL.spec, false, 100, true));
 //        System.out.println("Distance between constitutive and desired: " + aos.computeDistance(constitutiveSTL.spec, desiredSTL.spec, false, 100));
-        System.out.println("Distance between desired and induction: " + aos.computeDistance(desiredSTL.spec, inductionSTL.spec, false, 100));
+        System.out.println("Distance between desired and induction: " + aos.computeDistance(desiredSTL.spec, inductionSTL.spec, false, 100, true));
 //        System.out.println("Distance between induction and desired: " + aos.computeDistance(inductionSTL.spec, desiredSTL.spec, false, 100));
-        System.out.println("Distance between desired and latch: " + aos.computeDistance(desiredSTL.spec, latchSTL.spec, false, 100));
+        System.out.println("Distance between desired and latch: " + aos.computeDistance(desiredSTL.spec, latchSTL.spec, false, 100, true));
 //        System.out.println("Distance between latch and desired: " + aos.computeDistance(latchSTL.spec, desiredSTL.spec, false, 100));
 
     }
@@ -204,7 +204,7 @@ public class ManuscriptTest {
         
         for (int i = 0; i < formulae.size(); i ++) {
             for (int j = 0; j < formulae.size(); j ++) {
-                System.out.println("Distance between spec" + (i+1) + " and spec" + (j+1) + ": " + aos.computeDistance(formulae.get(i).spec, formulae.get(j).spec, false, 10));
+                System.out.println("Distance between spec" + (i+1) + " and spec" + (j+1) + ": " + aos.computeDistance(formulae.get(i).spec, formulae.get(j).spec, false, 10, false));
             }
         }
     }

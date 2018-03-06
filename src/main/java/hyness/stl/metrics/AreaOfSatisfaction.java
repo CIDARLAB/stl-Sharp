@@ -31,23 +31,39 @@ import java.util.Set;
  */
 public class AreaOfSatisfaction {
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, int eventuallySteps) {
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps);
-        Set<String> signals = new HashSet<String>();
-        for (String key : boxes1.keySet()) {
-            signals.add(key);
-        }
-        for (String key : boxes2.keySet()) {
-            if (!signals.contains(key)) {
-                signals.add(key);
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, int eventuallySteps, boolean union) {
+        BigDecimal distance = null;
+        for (Map<String, Set<Box>> boxes1 : nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps, union)) {
+            for (Map<String, Set<Box>> boxes2 : nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps, union)) {
+                Set<String> signals = new HashSet<String>();
+                for (String key : boxes1.keySet()) {
+                    signals.add(key);
+                }
+                for (String key : boxes2.keySet()) {
+                    if (!signals.contains(key)) {
+                        signals.add(key);
+                    }
+                }
+                BigDecimal newDistance = computeDistance(boxes1, boxes2, signals);
+                if (distance == null || newDistance.compareTo(distance) < 0) {
+                    distance = newDistance;
+                }
             }
         }
-        return computeDistance(boxes1, boxes2, signals);
+        return distance;
     }
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, int eventuallySteps) {
-        return computeDistance(nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps), nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps), signals);
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, int eventuallySteps, boolean union) {
+        BigDecimal distance = null;
+        for (Map<String, Set<Box>> boxes1 : nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps, union)) {
+            for (Map<String, Set<Box>> boxes2 : nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps, union)) {
+                BigDecimal newDistance = computeDistance(boxes1, boxes2, signals);
+                if (distance == null || newDistance.compareTo(distance) < 0) {
+                    distance = newDistance;
+                }
+            }
+        }
+        return distance;
     }
     
     private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals) {      
@@ -85,23 +101,23 @@ public class AreaOfSatisfaction {
         }
     }
     
-    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, int eventuallySteps) {
+    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, int eventuallySteps, boolean union) {
         Set<String> signals1 = signals.keySet();
         Set<String> signals2 = new HashSet<String>();
         for (String value : signals.values()) {
             signals2.add(value);
         }
-        double totalArea = computeArea(spec1, signals1, eventuallySteps).doubleValue() + computeArea(spec2, signals2, eventuallySteps).doubleValue();
-        Map<String, Set<Box>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallySteps);
-        Map<String, Set<Box>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallySteps);
+        double totalArea = computeArea(spec1, signals1, eventuallySteps, union).doubleValue() + computeArea(spec2, signals2, eventuallySteps, union).doubleValue();
+        List<Map<String, Set<Box>>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallySteps, union);
+        List<Map<String, Set<Box>>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallySteps, union);
         Map<String, Set<Box>> modifiedBoxes1 = new HashMap<String, Set<Box>>();
         Map<String, Set<Box>> modifiedBoxes2 = new HashMap<String, Set<Box>>();
         Set<String> sigs = new HashSet<String>();
         int counter = 0;
         for (String key : signals.keySet()) {
             String sig = "" + counter;
-            modifiedBoxes1.put(sig, boxes1.get(key));
-            modifiedBoxes2.put(sig, boxes2.get(signals.get(key)));
+            modifiedBoxes1.put(sig, boxes1.get(0).get(key));
+            modifiedBoxes2.put(sig, boxes2.get(0).get(signals.get(key)));
             sigs.add(sig);
             counter ++;
         }
@@ -109,17 +125,30 @@ public class AreaOfSatisfaction {
         return maxCompatibilityThreshold >= (differenceArea / totalArea);
     }
     
-    public BigDecimal computeArea(STLSharp spec, int eventuallySteps) {
-        Map<String, Set<Box>> boxes = nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps);
-        Set<String> signals = new HashSet<String>();
-        for (String key : boxes.keySet()) {
-            signals.add(key);
+    public BigDecimal computeArea(STLSharp spec, int eventuallySteps, boolean union) {
+        BigDecimal area = null;
+        for (Map<String, Set<Box>> boxes : nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps, union)) {
+            Set<String> signals = new HashSet<String>();
+            for (String key : boxes.keySet()) {
+                signals.add(key);
+            }
+            BigDecimal newArea = computeArea(boxes, signals);
+            if (area == null || newArea.compareTo(area) > 0) {
+                area = newArea;
+            }
         }
-        return computeArea(boxes, signals);
+        return area;
     }
     
-    public BigDecimal computeArea(STLSharp spec, Set<String> signals, int eventuallySteps) {
-        return computeArea(nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps), signals);
+    public BigDecimal computeArea(STLSharp spec, Set<String> signals, int eventuallySteps, boolean union) {
+        BigDecimal area = null;
+        for (Map<String, Set<Box>> boxes : nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps, union)) {
+            BigDecimal newArea = computeArea(boxes, signals);
+            if (area == null || newArea.compareTo(area) > 0) {
+                area = newArea;
+            }
+        }
+        return area;
     }
     
     private BigDecimal computeArea(Map<String, Set<Box>> boxes, Set<String> signals) {
@@ -148,7 +177,7 @@ public class AreaOfSatisfaction {
         return area;
     }
 
-    private Map<String, Set<Box>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, int eventuallySteps) {
+    public List<Map<String, Set<Box>>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, int eventuallySteps, boolean union) {
         switch (node.op) {
 //            case CONCAT:
 //                // TODO: Special case of shift and conjunction
@@ -163,7 +192,7 @@ public class AreaOfSatisfaction {
 //                // TODO: Special case of conjunction
 //                break;
             case BOOL:
-                return new HashMap<String, Set<Box>>();
+                return new ArrayList<Map<String, Set<Box>>>();
             case PRED:
                 LinearPredicateLeaf pred = (LinearPredicateLeaf) node;
                 Box box = null;
@@ -181,25 +210,31 @@ public class AreaOfSatisfaction {
                         break;
                 }
                 if (box != null) {
+                    List<Map<String, Set<Box>>> maps = new ArrayList<Map<String, Set<Box>>>(); 
                     Map<String, Set<Box>> boxMap = new HashMap<String, Set<Box>>();
                     Set<Box> boxes = new HashSet<Box>();
                     boxes.add(box);
                     boxMap.put(pred.variable, boxes);
-                    return boxMap;
+                    maps.add(boxMap);
+                    return maps;
                 }
                 break;
             case ALWAYS:
                 AlwaysNode always = (AlwaysNode) node;
-                Map<String, Set<Box>> childBoxMap = nodeToBoxes(always.child, limitsMap, eventuallySteps);
-                Map<String, Set<Box>> boxMap = new HashMap<String, Set<Box>>();
-                for (String key : childBoxMap.keySet()) {
-                    Set<Box> boxes = new HashSet<Box>();
-                    for (Box b : childBoxMap.get(key)) {
-                        addBoxToSet(new Box(new BigDecimal(always.low + b.getLowerTime().doubleValue()), new BigDecimal(always.high + b.getUpperTime().doubleValue()), b.getLowerBound(), b.getUpperBound()), boxes);
+                List<Map<String, Set<Box>>> childBoxes = nodeToBoxes(always.child, limitsMap, eventuallySteps, union);
+                for (int i = 0; i < childBoxes.size(); i++) {
+                    Map<String, Set<Box>> childBoxMap = childBoxes.get(i);
+                    Map<String, Set<Box>> boxMap = new HashMap<String, Set<Box>>();
+                    for (String key : childBoxMap.keySet()) {
+                        Set<Box> boxes = new HashSet<Box>();
+                        for (Box b : childBoxMap.get(key)) {
+                            addBoxToSet(new Box(new BigDecimal(always.low + b.getLowerTime().doubleValue()), new BigDecimal(always.high + b.getUpperTime().doubleValue()), b.getLowerBound(), b.getUpperBound()), boxes);
+                        }
+                        boxMap.put(key, boxes);
                     }
-                    boxMap.put(key, boxes);
+                    childBoxes.set(i, boxMap);
                 }
-                return boxMap;
+                return childBoxes;
             case EVENT:
                 EventNode event = (EventNode) node;
                 double eventuallyStepSize = (event.high - event.low) / eventuallySteps;
@@ -209,31 +244,72 @@ public class AreaOfSatisfaction {
                         abstraction = new DisjunctionNode(abstraction, new AlwaysNode(event.child, i, Double.min(i+eventuallyStepSize, event.high)));
                     }
                 }
-                return nodeToBoxes(abstraction, limitsMap, eventuallySteps);
+                return nodeToBoxes(abstraction, limitsMap, eventuallySteps, union);
             case UNTIL:
                 // TODO: Figure out how to convert to boxes
                 break;
             case AND:
                 if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps), Operation.AND).get(0);
+                    List<Map<String, Set<Box>>> maps = new ArrayList<Map<String, Set<Box>>>(); 
+                    for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps, union)) {
+                            maps.add(mergeBoxes(left, right, Operation.AND).get(0));
+                        }
+                    }
+                    return maps;
                 }
                 else {
-                    return mergeBoxes(nodeToBoxes(((ConjunctionNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((ConjunctionNode) node).right, limitsMap, eventuallySteps), Operation.AND).get(0);
+                    List<Map<String, Set<Box>>> maps = new ArrayList<Map<String, Set<Box>>>(); 
+                    for (Map<String, Set<Box>> left : nodeToBoxes(((ConjunctionNode) node).left, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((ConjunctionNode) node).right, limitsMap, eventuallySteps, union)) {
+                            maps.add(mergeBoxes(left, right, Operation.AND).get(0));
+                        }
+                    }
+                    return maps;
                 }
             case OR:
-                if (node instanceof ModuleNode) {
-                    return mergeBoxes(nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps), Operation.OR).get(0);
+                List<Map<String, Set<Box>>> maps = new ArrayList<Map<String, Set<Box>>>();
+                if (union) {
+                    if (node instanceof ModuleNode) {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps, union)) {
+                            for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps, union)) {
+                                maps.add(mergeBoxes(left, right, Operation.OR).get(0));
+                            }
+                        }
+                    }
+                    else {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallySteps, union)) {
+                            for (Map<String, Set<Box>> right : nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallySteps, union)) {
+                                maps.add(mergeBoxes(left, right, Operation.OR).get(0));
+                            }
+                        }
+                    }
+                } else {
+                    if (node instanceof ModuleNode) {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps, union)) {
+                            maps.add(left);
+                        }
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps, union)) {
+                            maps.add(right);
+                        }
+                    }
+                    else {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallySteps, union)) {
+                            maps.add(left);
+                        }
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallySteps, union)) {
+                            maps.add(right);
+                        }
+                    }
                 }
-                else {
-                    return mergeBoxes(nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallySteps), nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallySteps), Operation.OR).get(0);
-                }
+                return maps;
             case NOT:
                 // Not currently handled
                 break;
             case NOP:
-                return new HashMap<String, Set<Box>>();
+                return new ArrayList<Map<String, Set<Box>>>();
         }
-        return new HashMap<String, Set<Box>>();
+        return new ArrayList<Map<String, Set<Box>>>();
     }
 
     /**
