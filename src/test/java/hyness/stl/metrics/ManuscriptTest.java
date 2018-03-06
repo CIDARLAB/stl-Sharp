@@ -6,6 +6,8 @@
 package hyness.stl.metrics;
 
 import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,6 +27,20 @@ public class ManuscriptTest {
     public static String latch;
     
     public static String desired;
+    
+    public static String spec1;
+    
+    public static String spec2;
+    
+    public static String spec3;
+    
+    public static String spec4;
+    
+    public static String spec5;
+    
+    public static String spec6;
+    
+    public static String spec7;
     
     
     public ManuscriptTest() {
@@ -68,6 +84,69 @@ public class ManuscriptTest {
                 + "io {x: x}\n"
                 + "limits [{x : {max:350,min:0}}]\n"
                 ;
+        
+        spec1 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (F[0,10]((x>=0.2) && (x<=0.4)))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
+        
+        spec2 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (F[0,10]((x>=0.2) && (x<=0.44)))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
+        
+        spec3 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (G[0,10]((x>=0.2) && (x<=0.4)))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
+        
+        spec4 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (F[0,8]((x>=0.2) && (x<=0.4)))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
+        
+        spec5 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = ((G[0,10]((x>=0.2) && (x<=0.4))) && (F[0,10]((x>=0.2) && (x<=0.44))))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
+        
+        spec6 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = ((G[0,4]((x>=0.2) && (x<=0.4))) && (G[6,10]((x>=0.2) && (x<=0.44))))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
+        
+        spec7 = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (G[0,10](F[0,4]((x>=0.2) && (x<=0.4))))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
          
     }
     
@@ -84,10 +163,10 @@ public class ManuscriptTest {
     }
 
     /**
-     * Test of computeDistance method, of class DistanceMetric.
+     * Test of synthetic biology case study formulae.
      */
     @Test
-    public void testManuscriptSpecs() {
+    public void testSynBioSpecs() {
                 
         STLSharpAbstractSyntaxTreeExtractor desiredSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired);
         STLSharpAbstractSyntaxTreeExtractor constitutiveSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(constitutive);
@@ -103,6 +182,31 @@ public class ManuscriptTest {
         System.out.println("Distance between desired and latch: " + aos.computeDistance(desiredSTL.spec, latchSTL.spec, false, 100));
 //        System.out.println("Distance between latch and desired: " + aos.computeDistance(latchSTL.spec, desiredSTL.spec, false, 100));
 
+    }
+    
+    /**
+     * Test of computing the symmetric difference between the table formulae.
+     */
+    @Test
+    public void testTableFormulae() {
+        
+        List<STLSharpAbstractSyntaxTreeExtractor> formulae = new ArrayList<STLSharpAbstractSyntaxTreeExtractor>();
+        
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1));
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2));
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3));
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec4));
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec5));
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec6));
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec7));
+        
+        AreaOfSatisfaction aos = new AreaOfSatisfaction();
+        
+        for (int i = 0; i < formulae.size(); i ++) {
+            for (int j = 0; j < formulae.size(); j ++) {
+                System.out.println("Distance between spec" + (i+1) + " and spec" + (j+1) + ": " + aos.computeDistance(formulae.get(i).spec, formulae.get(j).spec, false, 10));
+            }
+        }
     }
     
 }
