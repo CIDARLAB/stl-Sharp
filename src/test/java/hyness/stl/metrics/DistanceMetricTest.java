@@ -944,12 +944,12 @@ public class DistanceMetricTest {
         
         AreaOfSatisfaction aos = new AreaOfSatisfaction();
         
-        System.out.println("Distance between desired and constitutive: " + aos.computeDistance(desireSTL.spec, conSTL.spec, false, 100, true));
-//        System.out.println("Distance between constitutive and desired: " + aos.computeDistance(conSTL.spec, desireSTL.spec, false, 100));
-        System.out.println("Distance between desired and induction: " + aos.computeDistance(desireSTL.spec, inductSTL.spec, false, 100, true));
-//        System.out.println("Distance between induction and desired: " + aos.computeDistance(inductSTL.spec, desireSTL.spec, false, 100));
-        System.out.println("Distance between desired and latch: " + aos.computeDistance(desireSTL.spec, latchSTL.spec, false, 100, true));
-//        System.out.println("Distance between latch and desired: " + aos.computeDistance(latchSTL.spec, desireSTL.spec, false, 100));
+        System.out.println("Distance between desired and constitutive: " + aos.computeDistance(desireSTL.spec, conSTL.spec, false, 0.1, 300, true));
+//        System.out.println("Distance between constitutive and desired: " + aos.computeDistance(conSTL.spec, desireSTL.spec, false, 0.1, 300, true));
+        System.out.println("Distance between desired and induction: " + aos.computeDistance(desireSTL.spec, inductSTL.spec, false, 0.1, 300, true));
+//        System.out.println("Distance between induction and desired: " + aos.computeDistance(inductSTL.spec, desireSTL.spec, false, 0.1, 300, true));
+        System.out.println("Distance between desired and latch: " + aos.computeDistance(desireSTL.spec, latchSTL.spec, false, 0.1, 300, true));
+//        System.out.println("Distance between latch and desired: " + aos.computeDistance(latchSTL.spec, desireSTL.spec, false, 0.1, 300, true));
 
 
 
@@ -1280,7 +1280,7 @@ public class DistanceMetricTest {
 //        cost.setAlphaG(1);
 //        cost.setAlphaGprime(1);
         
-        return cost.computeDistance(mod1mod2, stlcascade1.spec, ignoreInternal, 100, true);
+        return cost.computeDistance(mod1mod2, stlcascade1.spec, ignoreInternal, 0.1, 250, true);
     }
     
     public List<BigDecimal> getDistanceBetweenDesiredAndCascade(String desired, String cascade, boolean ignoreInternal) {
@@ -1304,7 +1304,7 @@ public class DistanceMetricTest {
         AreaOfSatisfaction area = new AreaOfSatisfaction();
         
         distances.add(area.computeDistance(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired).spec,
-                STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal, 100, true));
+                STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(cascade).spec, ignoreInternal, 0.1, 250, true));
         
         return distances;
     }

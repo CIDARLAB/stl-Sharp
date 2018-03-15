@@ -31,10 +31,21 @@ import java.util.Set;
  */
 public class AreaOfSatisfaction {
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, int eventuallySteps, boolean union) {
+    /**
+     * Computes the symmetric difference between two STL specifications.
+     * 
+     * @param spec1 - the first STL specification
+     * @param spec2 - the second STL Specification
+     * @param ignoreInternal - flag indicating whether or not internal signals should be ignored
+     * @param deltaThreshold - time threshold used to convert an eventually predicate to a disjunction of globally predicates
+     * @param maxTimeHorizon - the maximum time bound to normalize the result by
+     * @param union - flag indicating whether or not disjunction should be treated as a union or as a choice of satisfaction areas
+     * @return a BigDecimal representing the symmetric difference between the provided STL specifications
+     */
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, double deltaThreshold, double maxTimeHorizon, boolean union) {
         BigDecimal distance = null;
-        for (Map<String, Set<Box>> boxes1 : nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps, union)) {
-            for (Map<String, Set<Box>> boxes2 : nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps, union)) {
+        for (Map<String, Set<Box>> boxes1 : nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, deltaThreshold, union)) {
+            for (Map<String, Set<Box>> boxes2 : nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, deltaThreshold, union)) {
                 Set<String> signals = new HashSet<String>();
                 for (String key : boxes1.keySet()) {
                     signals.add(key);
@@ -44,7 +55,7 @@ public class AreaOfSatisfaction {
                         signals.add(key);
                     }
                 }
-                BigDecimal newDistance = computeDistance(boxes1, boxes2, signals);
+                BigDecimal newDistance = computeDistance(boxes1, boxes2, signals, maxTimeHorizon);
                 if (distance == null || newDistance.compareTo(distance) < 0) {
                     distance = newDistance;
                 }
@@ -53,11 +64,23 @@ public class AreaOfSatisfaction {
         return distance;
     }
     
-    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, int eventuallySteps, boolean union) {
+    /**
+     * Computes the symmetric difference between two STL specifications.
+     * 
+     * @param spec1 - the first STL specification
+     * @param spec2 - the second STL Specification
+     * @param ignoreInternal - flag indicating whether or not internal signals should be ignored
+     * @param deltaThreshold - time threshold used to convert an eventually predicate to a disjunction of globally predicates
+     * @param signals - the signals for which the symmetric difference should be computed
+     * @param maxTimeHorizon - the maximum time bound to normalize the result by
+     * @param union - flag indicating whether or not disjunction should be treated as a union or as a choice of satisfaction areas
+     * @return a BigDecimal representing the symmetric difference between the provided STL specifications
+     */
+    public BigDecimal computeDistance(STLSharp spec1, STLSharp spec2, boolean ignoreInternal, Set<String> signals, double deltaThreshold, double maxTimeHorizon, boolean union) {
         BigDecimal distance = null;
-        for (Map<String, Set<Box>> boxes1 : nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, eventuallySteps, union)) {
-            for (Map<String, Set<Box>> boxes2 : nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, eventuallySteps, union)) {
-                BigDecimal newDistance = computeDistance(boxes1, boxes2, signals);
+        for (Map<String, Set<Box>> boxes1 : nodeToBoxes(spec1.toSTL(ignoreInternal), spec1.limitsMap, deltaThreshold, union)) {
+            for (Map<String, Set<Box>> boxes2 : nodeToBoxes(spec2.toSTL(ignoreInternal), spec2.limitsMap, deltaThreshold, union)) {
+                BigDecimal newDistance = computeDistance(boxes1, boxes2, signals, maxTimeHorizon);
                 if (distance == null || newDistance.compareTo(distance) < 0) {
                     distance = newDistance;
                 }
@@ -66,11 +89,11 @@ public class AreaOfSatisfaction {
         return distance;
     }
     
-    private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals) {      
+    private BigDecimal computeDistance(Map<String, Set<Box>> boxes1, Map<String, Set<Box>> boxes2, Set<String> signals, double maxTimeHorizon) {      
         List<Map<String, Set<Box>>> boxes = mergeBoxes(boxes1, boxes2, Operation.NOP);
         Map<String, Set<Box>> distinctBoxes = boxes.get(0);
-        Map<String, Set<Box>> overlapBoxes = boxes.get(1);
-        double overlap = computeArea(overlapBoxes, signals).doubleValue();
+//        Map<String, Set<Box>> overlapBoxes = boxes.get(1);
+//        double overlap = computeArea(overlapBoxes, signals).doubleValue();
         double distinct = computeArea(distinctBoxes, signals).doubleValue();
         
 //        System.out.println("Distinct:");
@@ -93,23 +116,23 @@ public class AreaOfSatisfaction {
 //        System.out.println();
 
 //        return new BigDecimal((overlap - distinct)/(overlap + distinct));
-        if (overlap + distinct == 0.0) {
-            return new BigDecimal(0.0);
-        }
-        else {
-            return new BigDecimal(distinct/(overlap + distinct));
-        }
+//        if (overlap + distinct == 0.0) {
+//            return new BigDecimal(0.0);
+//        }
+//        else {
+        return new BigDecimal(distinct/(maxTimeHorizon));
+//        }
     }
     
-    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, int eventuallySteps, boolean union) {
+    public boolean computeCompatibility(STLSharp spec1, STLSharp spec2, Map<String, String> signals, double maxCompatibilityThreshold, double deltaThreshold, double maxTimeHorizon,  boolean union) {
         Set<String> signals1 = signals.keySet();
         Set<String> signals2 = new HashSet<String>();
         for (String value : signals.values()) {
             signals2.add(value);
         }
-        double totalArea = computeArea(spec1, signals1, eventuallySteps, union).doubleValue() + computeArea(spec2, signals2, eventuallySteps, union).doubleValue();
-        List<Map<String, Set<Box>>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, eventuallySteps, union);
-        List<Map<String, Set<Box>>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, eventuallySteps, union);
+        double totalArea = computeArea(spec1, signals1, deltaThreshold, union).doubleValue() + computeArea(spec2, signals2, deltaThreshold, union).doubleValue();
+        List<Map<String, Set<Box>>> boxes1 = nodeToBoxes(spec1.toSTL(false), spec1.limitsMap, deltaThreshold, union);
+        List<Map<String, Set<Box>>> boxes2 = nodeToBoxes(spec2.toSTL(false), spec2.limitsMap, deltaThreshold, union);
         Map<String, Set<Box>> modifiedBoxes1 = new HashMap<String, Set<Box>>();
         Map<String, Set<Box>> modifiedBoxes2 = new HashMap<String, Set<Box>>();
         Set<String> sigs = new HashSet<String>();
@@ -121,13 +144,21 @@ public class AreaOfSatisfaction {
             sigs.add(sig);
             counter ++;
         }
-        double differenceArea = computeDistance(modifiedBoxes1, modifiedBoxes2, sigs).doubleValue();
+        double differenceArea = computeDistance(modifiedBoxes1, modifiedBoxes2, sigs, maxTimeHorizon).doubleValue();
         return maxCompatibilityThreshold >= (differenceArea / totalArea);
     }
     
-    public BigDecimal computeArea(STLSharp spec, int eventuallySteps, boolean union) {
+    /**
+     * Computes the area of the satisfaction region for the provided STL specification.
+     * 
+     * @param spec - the STL specification
+     * @param deltaThreshold - time threshold used to convert an eventually predicate to a disjunction of globally predicates
+     * @param union - flag indicating whether or not disjunction should be treated as a union or as a choice of satisfaction areas
+     * @return a BigDecimal representing the area of the satisfaction region for the provided STL specification
+     */
+    public BigDecimal computeArea(STLSharp spec, double deltaThreshold, boolean union) {
         BigDecimal area = null;
-        for (Map<String, Set<Box>> boxes : nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps, union)) {
+        for (Map<String, Set<Box>> boxes : nodeToBoxes(spec.toSTL(false), spec.limitsMap, deltaThreshold, union)) {
             Set<String> signals = new HashSet<String>();
             for (String key : boxes.keySet()) {
                 signals.add(key);
@@ -140,9 +171,18 @@ public class AreaOfSatisfaction {
         return area;
     }
     
-    public BigDecimal computeArea(STLSharp spec, Set<String> signals, int eventuallySteps, boolean union) {
+    /**
+     * Computes the area of the satisfaction region for the provided STL specification.
+     * 
+     * @param spec - the STL specification
+     * @param signals - the signals for which the area should be computed
+     * @param deltaThreshold - time threshold used to convert an eventually predicate to a disjunction of globally predicates
+     * @param union - flag indicating whether or not disjunction should be treated as a union or as a choice of satisfaction areas
+     * @return a BigDecimal representing the area of the satisfaction region for the provided STL specification
+     */
+    public BigDecimal computeArea(STLSharp spec, Set<String> signals, double deltaThreshold, boolean union) {
         BigDecimal area = null;
-        for (Map<String, Set<Box>> boxes : nodeToBoxes(spec.toSTL(false), spec.limitsMap, eventuallySteps, union)) {
+        for (Map<String, Set<Box>> boxes : nodeToBoxes(spec.toSTL(false), spec.limitsMap, deltaThreshold, union)) {
             BigDecimal newArea = computeArea(boxes, signals);
             if (area == null || newArea.compareTo(area) > 0) {
                 area = newArea;
@@ -177,7 +217,7 @@ public class AreaOfSatisfaction {
         return area;
     }
 
-    public List<Map<String, Set<Box>>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, int eventuallySteps, boolean union) {
+    public List<Map<String, Set<Box>>> nodeToBoxes(TreeNode node, HashMap<String, HashMap<String, Double>> limitsMap, double deltaThreshold, boolean union) {
         switch (node.op) {
 //            case CONCAT:
 //                // TODO: Special case of shift and conjunction
@@ -196,17 +236,18 @@ public class AreaOfSatisfaction {
             case PRED:
                 LinearPredicateLeaf pred = (LinearPredicateLeaf) node;
                 Box box = null;
+                BigDecimal value = new BigDecimal(pred.threshold/(limitsMap.get(pred.variable).get("max")-limitsMap.get(pred.variable).get("min")));
                 switch (pred.rop) {
                     case EQ:
-                        box = new Box(new BigDecimal(0), new BigDecimal(0), new BigDecimal(pred.threshold), new BigDecimal(pred.threshold));
+                        box = new Box(new BigDecimal(0), new BigDecimal(0), value, value);
                         break;
                     case LT:
                     case LE:
-                        box = new Box(new BigDecimal(0), new BigDecimal(0), new BigDecimal(0), new BigDecimal(pred.threshold));
+                        box = new Box(new BigDecimal(0), new BigDecimal(0), new BigDecimal(0), value);
                         break;
                     case GT:
                     case GE:
-                        box = new Box(new BigDecimal(0), new BigDecimal(0), new BigDecimal(pred.threshold), new BigDecimal(limitsMap.get(pred.variable).get("max")));
+                        box = new Box(new BigDecimal(0), new BigDecimal(0), value, new BigDecimal(1));
                         break;
                 }
                 if (box != null) {
@@ -221,7 +262,7 @@ public class AreaOfSatisfaction {
                 break;
             case ALWAYS:
                 AlwaysNode always = (AlwaysNode) node;
-                List<Map<String, Set<Box>>> childBoxes = nodeToBoxes(always.child, limitsMap, eventuallySteps, union);
+                List<Map<String, Set<Box>>> childBoxes = nodeToBoxes(always.child, limitsMap, deltaThreshold, union);
                 for (int i = 0; i < childBoxes.size(); i++) {
                     Map<String, Set<Box>> childBoxMap = childBoxes.get(i);
                     Map<String, Set<Box>> boxMap = new HashMap<String, Set<Box>>();
@@ -237,22 +278,21 @@ public class AreaOfSatisfaction {
                 return childBoxes;
             case EVENT:
                 EventNode event = (EventNode) node;
-                double eventuallyStepSize = (event.high - event.low) / eventuallySteps;
-                TreeNode abstraction = new AlwaysNode(event.child, event.low, Double.min(event.low+eventuallyStepSize, event.high));
-                if (event.low+eventuallyStepSize < event.high) {
-                    for (double i = event.low+eventuallyStepSize; i < event.high; i += eventuallyStepSize) {
-                        abstraction = new DisjunctionNode(abstraction, new AlwaysNode(event.child, i, Double.min(i+eventuallyStepSize, event.high)));
+                TreeNode abstraction = new AlwaysNode(event.child, event.low, Double.min(event.low+deltaThreshold, event.high));
+                if (event.low+deltaThreshold < event.high) {
+                    for (double i = event.low+deltaThreshold; i < event.high; i += deltaThreshold) {
+                        abstraction = new DisjunctionNode(abstraction, new AlwaysNode(event.child, i, Double.min(i+deltaThreshold, event.high)));
                     }
                 }
-                return nodeToBoxes(abstraction, limitsMap, eventuallySteps, union);
+                return nodeToBoxes(abstraction, limitsMap, deltaThreshold, union);
             case UNTIL:
                 // TODO: Figure out how to convert to boxes
                 break;
             case AND:
                 if (node instanceof ModuleNode) {
                     List<Map<String, Set<Box>>> maps = new ArrayList<Map<String, Set<Box>>>(); 
-                    for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps, union)) {
-                        for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps, union)) {
+                    for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, deltaThreshold, union)) {
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, deltaThreshold, union)) {
                             maps.add(mergeBoxes(left, right, Operation.AND).get(0));
                         }
                     }
@@ -260,8 +300,8 @@ public class AreaOfSatisfaction {
                 }
                 else {
                     List<Map<String, Set<Box>>> maps = new ArrayList<Map<String, Set<Box>>>(); 
-                    for (Map<String, Set<Box>> left : nodeToBoxes(((ConjunctionNode) node).left, limitsMap, eventuallySteps, union)) {
-                        for (Map<String, Set<Box>> right : nodeToBoxes(((ConjunctionNode) node).right, limitsMap, eventuallySteps, union)) {
+                    for (Map<String, Set<Box>> left : nodeToBoxes(((ConjunctionNode) node).left, limitsMap, deltaThreshold, union)) {
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((ConjunctionNode) node).right, limitsMap, deltaThreshold, union)) {
                             maps.add(mergeBoxes(left, right, Operation.AND).get(0));
                         }
                     }
@@ -271,33 +311,33 @@ public class AreaOfSatisfaction {
                 List<Map<String, Set<Box>>> maps = new ArrayList<Map<String, Set<Box>>>();
                 if (union) {
                     if (node instanceof ModuleNode) {
-                        for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps, union)) {
-                            for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, deltaThreshold, union)) {
+                            for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, deltaThreshold, union)) {
                                 maps.add(mergeBoxes(left, right, Operation.OR).get(0));
                             }
                         }
                     }
                     else {
-                        for (Map<String, Set<Box>> left : nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallySteps, union)) {
-                            for (Map<String, Set<Box>> right : nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((DisjunctionNode) node).left, limitsMap, deltaThreshold, union)) {
+                            for (Map<String, Set<Box>> right : nodeToBoxes(((DisjunctionNode) node).right, limitsMap, deltaThreshold, union)) {
                                 maps.add(mergeBoxes(left, right, Operation.OR).get(0));
                             }
                         }
                     }
                 } else {
                     if (node instanceof ModuleNode) {
-                        for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((ModuleNode) node).left, limitsMap, deltaThreshold, union)) {
                             maps.add(left);
                         }
-                        for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((ModuleNode) node).right, limitsMap, deltaThreshold, union)) {
                             maps.add(right);
                         }
                     }
                     else {
-                        for (Map<String, Set<Box>> left : nodeToBoxes(((DisjunctionNode) node).left, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> left : nodeToBoxes(((DisjunctionNode) node).left, limitsMap, deltaThreshold, union)) {
                             maps.add(left);
                         }
-                        for (Map<String, Set<Box>> right : nodeToBoxes(((DisjunctionNode) node).right, limitsMap, eventuallySteps, union)) {
+                        for (Map<String, Set<Box>> right : nodeToBoxes(((DisjunctionNode) node).right, limitsMap, deltaThreshold, union)) {
                             maps.add(right);
                         }
                     }
