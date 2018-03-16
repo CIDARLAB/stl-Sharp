@@ -41,7 +41,7 @@ public class AlwaysNode extends TemporalUnaryNode {
 
     @Override
     public TreeNode negate() {
-        return new AlwaysNode(this.child.negate(),this.low,this.high);
+        return new EventNode(this.child.negate(),this.low,this.high);
     }
     
     @Override
