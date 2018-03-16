@@ -17,12 +17,12 @@ public class ImplicationNode extends BooleanBinaryNode {
 
     @Override
     public double robustness(Trace s, double t) {
-        return Math.min(-left.robustness(s, t), right.robustness(s, t));
+        return Math.max(-left.robustness(s, t), right.robustness(s, t));
     }
 
     @Override
     public TreeNode negate() {
-        return new DisjunctionNode(this.left,this.right.negate());
+        return new ConjunctionNode(this.left, this.right.negate());
     }
     
     @Override
