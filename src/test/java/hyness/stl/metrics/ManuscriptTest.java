@@ -40,7 +40,7 @@ public class ManuscriptTest {
     
     public static String spec6;
     
-    public static String spec7;
+    public static String alwaysTrue;
     
     
     public ManuscriptTest() {
@@ -85,9 +85,18 @@ public class ManuscriptTest {
                 + "limits [{x : {max:350,min:0}}]\n"
                 ;
         
+        alwaysTrue = "phi1(x)\n"
+                + "\n"
+                + "phi1 = (G[0,20]((x>=0) && (x<=1)))\n"
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:1,min:0}}]\n"
+                ;
+        
         spec1 = "phi1(x)\n"
                 + "\n"
-                + "phi1 = (F[0,10]((x>=0.2) && (x<=0.4)))\n"
+                + "phi1 = (G[0,20]((x>=0.2) && (x<=0.4)))\n"
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
@@ -96,7 +105,7 @@ public class ManuscriptTest {
         
         spec2 = "phi1(x)\n"
                 + "\n"
-                + "phi1 = (F[0,10]((x>=0.2) && (x<=0.44)))\n"
+                + "phi1 = (G[0,20]((x>=0.2) && (x<=0.44)))\n"
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
@@ -105,7 +114,7 @@ public class ManuscriptTest {
         
         spec3 = "phi1(x)\n"
                 + "\n"
-                + "phi1 = (G[0,10]((x>=0.2) && (x<=0.4)))\n"
+                + "phi1 = (F[0,20]((x>=0.2) && (x<=0.4)))\n"
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
@@ -114,7 +123,7 @@ public class ManuscriptTest {
         
         spec4 = "phi1(x)\n"
                 + "\n"
-                + "phi1 = (F[0,8]((x>=0.2) && (x<=0.4)))\n"
+                + "phi1 = ((G[0,20]((x>=0.2) && (x<=0.4))) && (F[0,20]((x>=0.2) && (x<=0.44))))\n"
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
@@ -123,7 +132,7 @@ public class ManuscriptTest {
         
         spec5 = "phi1(x)\n"
                 + "\n"
-                + "phi1 = ((G[0,10]((x>=0.2) && (x<=0.4))) && (F[0,10]((x>=0.2) && (x<=0.44))))\n"
+                + "phi1 = ((G[0,10]((x>=0.2) && (x<=0.4))) && (G[12,20]((x>=0.2) && (x<=0.44))))\n"
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
@@ -132,16 +141,7 @@ public class ManuscriptTest {
         
         spec6 = "phi1(x)\n"
                 + "\n"
-                + "phi1 = ((G[0,4]((x>=0.2) && (x<=0.4))) && (G[6,10]((x>=0.2) && (x<=0.44))))\n"
-                + "\n"
-                + "m1 { x@left: x }\n"
-                + "io {x: x}\n"
-                + "limits [{x : {max:1,min:0}}]\n"
-                ;
-        
-        spec7 = "phi1(x)\n"
-                + "\n"
-                + "phi1 = (G[0,10](F[0,4]((x>=0.2) && (x<=0.4))))\n"
+                + "phi1 = (G[0,16](F[0,4]((x>=0.2) && (x<=0.4))))\n"
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
@@ -192,19 +192,19 @@ public class ManuscriptTest {
         
         List<STLSharpAbstractSyntaxTreeExtractor> formulae = new ArrayList<STLSharpAbstractSyntaxTreeExtractor>();
         
+        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(alwaysTrue));
         formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec1));
         formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec2));
         formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec3));
         formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec4));
         formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec5));
         formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec6));
-        formulae.add(STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(spec7));
         
         AreaOfSatisfaction aos = new AreaOfSatisfaction();
         
         for (int i = 0; i < formulae.size(); i ++) {
             for (int j = 0; j < formulae.size(); j ++) {
-                System.out.println("Distance between spec" + (i+1) + " and spec" + (j+1) + ": " + aos.computeDistance(formulae.get(i).spec, formulae.get(j).spec, false, 1, 10, false));
+                System.out.println("Distance between spec" + i + " and spec" + j + ": " + aos.computeDistance(formulae.get(i).spec, formulae.get(j).spec, false, 1, 20, false));
             }
         }
     }

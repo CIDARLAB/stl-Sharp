@@ -236,7 +236,7 @@ public class AreaOfSatisfaction {
             case PRED:
                 LinearPredicateLeaf pred = (LinearPredicateLeaf) node;
                 Box box = null;
-                BigDecimal value = new BigDecimal(pred.threshold/(limitsMap.get(pred.variable).get("max")-limitsMap.get(pred.variable).get("min")));
+                BigDecimal value = new BigDecimal((pred.threshold-limitsMap.get(pred.variable).get("min"))/(limitsMap.get(pred.variable).get("max")-limitsMap.get(pred.variable).get("min")));
                 switch (pred.rop) {
                     case EQ:
                         box = new Box(new BigDecimal(0), new BigDecimal(0), value, value);
