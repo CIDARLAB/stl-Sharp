@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -123,6 +124,26 @@ public class Utilities {
         String filepath = getFilepath();
         filepath += getSeparater() + "src" + getSeparater() + "main" + getSeparater() + "resources" + getSeparater();
         return filepath;
+    }
+    
+    public static List<String> getFileContentAsStringList(String filepath){
+        List<String> filecontent = null;
+        
+        File file = new File(filepath);
+        try { 
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            filecontent = new ArrayList<String>();
+            String line= "";
+            while((line=reader.readLine()) != null){
+                filecontent.add(line);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, "File at " + filepath + " not found.");
+        } catch (IOException ex) {
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return filecontent;
     }
     
     public static String getFileContentAsString(String filepath){

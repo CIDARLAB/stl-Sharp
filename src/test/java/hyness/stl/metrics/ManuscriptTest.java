@@ -9,6 +9,7 @@ import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -215,126 +216,227 @@ public class ManuscriptTest {
     @Test
     public void testTLI(){
         String basefp = Utilities.getFilepath() + Utilities.getSeparater() + "resources" + Utilities.getSeparater() + "manuscript" + Utilities.getSeparater();
-        String thresh0 = Utilities.getFileContentAsString(basefp + "thresh0.txt");
-        String thresh1 = Utilities.getFileContentAsString(basefp + "thresh1.txt");
-        String thresh2 = Utilities.getFileContentAsString(basefp + "thresh2.txt");
-        String thresh3 = Utilities.getFileContentAsString(basefp + "thresh3.txt");
-        String thresh4 = Utilities.getFileContentAsString(basefp + "thresh4.txt");
-        String thresh5 = Utilities.getFileContentAsString(basefp + "thresh5.txt");
-        String thresh6 = Utilities.getFileContentAsString(basefp + "thresh6.txt");
-        String thresh7 = Utilities.getFileContentAsString(basefp + "thresh7.txt");
         String gt = Utilities.getFileContentAsString(basefp + "gt.txt");
         
         String treetli = Utilities.getFileContentAsString(basefp + "treetli.json");
         JSONArray arr = new JSONArray(treetli);
         
-        
         String sgt = "phi1(x_0,x_1)\n"
                 + "\n"
-                + "phi1 =" + gt + "\n"
+                + "phi1 = " +gt + "\n"
                 + "\n"
-                + "m1 { x_0@left:x_0, x_1@left:x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s0 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh0 + "\n"
-                + "\n"
-                + "m1 { x_0@left:x_0,x_1@left:x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s1 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh1 + "\n"
-                + "\n"
-                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s2 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh2 + "\n"
-                + "\n"
-                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s3 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh3 + "\n"
-                + "\n"
-                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s4 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh4 + "\n"
-                + "\n"
-                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s5 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh5 + "\n"
-                + "\n"
-                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s6 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh6 + "\n"
-                + "\n"
-                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
-                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
-                ;
-        
-        String s7 = "phi1(x_0,x_1)\n"
-                + "\n"
-                + "phi1 =" + thresh7 + "\n"
-                + "\n"
-                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
-                + "io {x_0: x_0,x_1: x_1}\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1 }\n"
+                + "io {x_0: x_0, x_1: x_1}\n"
                 + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
                 ;
         
         STLSharpAbstractSyntaxTreeExtractor stlgt = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(sgt);
         
-        STLSharpAbstractSyntaxTreeExtractor stl0 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s0);
-        STLSharpAbstractSyntaxTreeExtractor stl1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s1);
-        STLSharpAbstractSyntaxTreeExtractor stl2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s2);
-        STLSharpAbstractSyntaxTreeExtractor stl3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s3);
-        STLSharpAbstractSyntaxTreeExtractor stl4 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s4);
-        STLSharpAbstractSyntaxTreeExtractor stl5 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s5);
-        STLSharpAbstractSyntaxTreeExtractor stl6 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s6);
-        STLSharpAbstractSyntaxTreeExtractor stl7 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s7);
+        String output = "";
+        output += "===========Ground Truth Vs Grid TLI===========\n";
+        for(int i=0;i<8;i++){
+            String s = Utilities.getFileContentAsString(basefp + "thresh" +i+ ".txt");
+            String phi = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 = " + s + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1 }\n"
+                + "io {x_0: x_0, x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+            STLSharpAbstractSyntaxTreeExtractor stl =  STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(phi);
+            AreaOfSatisfaction aos = new AreaOfSatisfaction();
+            output += "SD(gt,grid"+i+") = " +  aos.computeDistance(stlgt.spec, stl.spec, false, 0.1, 10, true) + "\n";
+            
+        }
         
-        AreaOfSatisfaction aos = new AreaOfSatisfaction();
-    
-        System.out.println("SD(gt,stl0) = " + aos.computeDistance(stlgt.spec, stl0.spec, false, 0.1, 10, true));
-        System.out.println("SD(gt,stl1) = " + aos.computeDistance(stlgt.spec, stl1.spec, false, 0.1, 10, true));
-        System.out.println("SD(gt,stl2) = " + aos.computeDistance(stlgt.spec, stl2.spec, false, 0.1, 10, true));
-        System.out.println("SD(gt,stl3) = " + aos.computeDistance(stlgt.spec, stl3.spec, false, 0.1, 10, true));
-        System.out.println("SD(gt,stl4) = " + aos.computeDistance(stlgt.spec, stl4.spec, false, 0.1, 10, true));
-        System.out.println("SD(gt,stl5) = " + aos.computeDistance(stlgt.spec, stl5.spec, false, 0.1, 10, true));
-        System.out.println("SD(gt,stl6) = " + aos.computeDistance(stlgt.spec, stl6.spec, false, 0.1, 10, true));
-        System.out.println("SD(gt,stl7) = " + aos.computeDistance(stlgt.spec, stl7.spec, false, 0.1, 10, true));
+        int treecount = 0;
+        List<String> treelist = Utilities.getFileContentAsStringList(basefp + "pnf.txt");
         
-    
+        output += "\n===========Ground Truth Vs Decision TLI===========\n";
+        for(int i=0;i<treelist.size();i+=3){
+            
+            String s = treelist.get(i+2).substring(5);
+            String phi = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 = " + s + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1 }\n"
+                + "io {x_0: x_0, x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+            STLSharpAbstractSyntaxTreeExtractor stl =  STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(phi);
+            AreaOfSatisfaction aos = new AreaOfSatisfaction();
+            output += "SD(gt,grid"+ treecount++ +") = " +  aos.computeDistance(stlgt.spec, stl.spec, false, 0.1, 10, true) + "\n";
+        }
+        /*
+        for(Object o:arr){
+            JSONObject obj = (JSONObject)o;
+            String s = obj.getString("Tree formula");
+            String phi = "phi1(x,y)\n"
+                + "\n"
+                + "phi1 = " + s + "\n"
+                + "\n"
+                + "m1 { x@left: x, y@left: y }\n"
+                + "io {x: x, y: y}\n"
+                + "limits [{x : {max:1,min:0}}, {y : {max:1,min:0}}]\n"
+                ;
+            STLSharpAbstractSyntaxTreeExtractor stl =  STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(phi);
+            AreaOfSatisfaction aos = new AreaOfSatisfaction();
+            output += "SD(gt,grid"+ treecount++ +") = " +  aos.computeDistance(stlgt.spec, stl.spec, false, 0.1, 10, true) + "\n";
+        }*/
+        
+        Utilities.writeToFile(basefp + "res.txt", output);
     }   
     
+    @Test
+    public void testCreatePyScripts(){
+        String basefp = Utilities.getFilepath() + Utilities.getSeparater() + "resources" + Utilities.getSeparater() + "manuscript" + Utilities.getSeparater();
+        String gt = Utilities.getFileContentAsString(basefp + "gt.txt");
+        
+        for(int i=0;i<8;i++){
+            String scr = "'''\n" +
+"Created on Mar 15, 2018\n" +
+"\n" +
+"@author: cristi\n" +
+"'''\n" +
+"\n" +
+"import os\n" +
+"\n" +
+"from antlr4 import InputStream, CommonTokenStream\n" +
+"\n" +
+"from stl import stlLexer, stlParser, STLAbstractSyntaxTreeExtractor, Operation,\\\n" +
+"                RelOperation\n" +
+"\n" +
+"program_string = '''\n" +
+"from ana_STL import STL_computation\n" +
+"from ana_STL import directed_distance\n" +
+"\n" +
+"F=STL_computation({no_variables},{bound})\n" +
+"\n" +
+"{formula1_construction}\n" +
+"{formula2_construction}\n" +
+"\n" +
+"r=directed_distance(F, {formula1}, {formula2})\n" +
+"print(r)\n" +
+"'''\n" +
+"\n" +
+"formula_string = 'f_{formula_index}'\n" +
+"pred_string = 'f_{formula_index} = F.add_predicate({variable},\"{relation}\",{threshold})'\n" +
+"conj_string = 'f_{formula_index} = F.Conj([{left}, {right}])'\n" +
+"disj_string = 'f_{formula_index} = F.Disj([{left}, {right}])'\n" +
+"alw_string = 'f_{formula_index} = F.G(range({low}, {high}+1), {child})'\n" +
+"evt_string = 'f_{formula_index} = F.F(range({low}, {high}+1), {child})'\n" +
+"\n" +
+"def code_from_stl(stl_ast, variables, count=0):\n" +
+"    '''TODO:\n" +
+"    '''\n" +
+"    if stl_ast.op == Operation.PRED:\n" +
+"        var_index = variables.index(stl_ast.variable) + 1\n" +
+"        return (pred_string.format(formula_index=count, variable=var_index,\n" +
+"                        relation=RelOperation.getString(stl_ast.relation),\n" +
+"                        threshold=stl_ast.threshold),\n" +
+"                formula_string.format(formula_index=count),\n" +
+"                count+1)\n" +
+"    elif stl_ast.op in (Operation.AND, Operation.OR):\n" +
+"        l_constr_string, l_formula, count = code_from_stl(stl_ast.left,\n" +
+"                                                          variables, count)\n" +
+"        r_constr_string, r_formula, count = code_from_stl(stl_ast.right,\n" +
+"                                                          variables, count)\n" +
+"\n" +
+"        if stl_ast.op == Operation.AND:\n" +
+"            constr_string = conj_string.format(formula_index=count,\n" +
+"                                                left=l_formula, right=r_formula)\n" +
+"        else:\n" +
+"            constr_string = disj_string.format(formula_index=count,\n" +
+"                                                left=l_formula, right=r_formula)\n" +
+"\n" +
+"        return ('\\n'.join((l_constr_string, r_constr_string, constr_string)),\n" +
+"                formula_string.format(formula_index=count),\n" +
+"                count+1)\n" +
+"    elif stl_ast.op in (Operation.NOT, Operation.IMPLIES):\n" +
+"        raise ValueError()\n" +
+"    elif stl_ast.op == Operation.UNTIL:\n" +
+"        raise NotImplementedError\n" +
+"    elif stl_ast.op in (Operation.ALWAYS, Operation.EVENT):\n" +
+"        ch_constr_string, ch_formula, count = code_from_stl(stl_ast.child,\n" +
+"                                                            variables, count)\n" +
+"\n" +
+"        ### HACK: multiply by 10\n" +
+"        low = int(stl_ast.low*10)\n" +
+"        high = int(stl_ast.high*10)\n" +
+"        if stl_ast.op == Operation.ALWAYS:\n" +
+"            constr_string = alw_string.format(formula_index=count, low=low,\n" +
+"                                              high=high, child=ch_formula)\n" +
+"        else:\n" +
+"            constr_string = evt_string.format(formula_index=count, low=low,\n" +
+"                                              high=high, child=ch_formula)\n" +
+"\n" +
+"        return ('\\n'.join((ch_constr_string, constr_string)),\n" +
+"                formula_string.format(formula_index=count),\n" +
+"                count+1)\n" +
+"\n" +
+"def translate(formula1, formula2):\n" +
+"    '''TODO:\n" +
+"    '''\n" +
+"    lexer = stlLexer(InputStream(formula1))\n" +
+"    tokens = CommonTokenStream(lexer)\n" +
+"    parser = stlParser(tokens)\n" +
+"    t = parser.stlProperty()\n" +
+"    ast1 = STLAbstractSyntaxTreeExtractor().visit(t)\n" +
+"    print 'AST 1:', ast1\n" +
+"    pnf1 = ast1.pnf()\n" +
+"    print 'PNF 1:', pnf1\n" +
+"\n" +
+"    lexer = stlLexer(InputStream(formula2))\n" +
+"    tokens = CommonTokenStream(lexer)\n" +
+"    parser = stlParser(tokens)\n" +
+"    t = parser.stlProperty()\n" +
+"    ast2 = STLAbstractSyntaxTreeExtractor().visit(t)\n" +
+"    print 'AST 2:', ast2\n" +
+"    pnf2 = ast2.pnf()\n" +
+"    print 'PNF 2:', pnf2\n" +
+"\n" +
+"    variables = list(pnf1.variables() | pnf2.variables())\n" +
+"\n" +
+"    formula1_constr, formula1, count = code_from_stl(pnf1, variables, 0)\n" +
+"    formula2_constr, formula2, count = code_from_stl(pnf2, variables, count)\n" +
+"\n" +
+"    ### HACK: multiply by 10\n" +
+"    bound = int(round(10*max(pnf1.bound(), pnf2.bound())))\n" +
+"    program_12 = program_string.format(bound=bound, no_variables=len(variables),\n" +
+"                    formula1_construction=formula1_constr,\n" +
+"                    formula2_construction=formula2_constr,\n" +
+"                    formula1=formula1, formula2=formula2)\n" +
+"\n" +
+"    program_21 = program_string.format(bound=bound, no_variables=len(variables),\n" +
+"                    formula1_construction=formula1_constr,\n" +
+"                    formula2_construction=formula2_constr,\n" +
+"                    formula1=formula2, formula2=formula1)\n" +
+"\n" +
+"    return program_12, program_21\n" +
+"\n" +
+"if __name__ == '__main__':\n" +
+"\n" +
+"    with open('gt.txt', 'r') as fin:\n" +
+"        ground_truth = fin.readline()\n" +
+"    with open('thresh" + i + ".txt', 'r') as fin:\n" +
+"        phi = fin.readline()\n" +
+"    p12, p21 = translate(ground_truth, phi)\n" +
+"    with open('pyscripts/gt_grid" + i + ".py'\n" +
+"              , 'w') as fout:\n" +
+"        print>>fout, p12\n" +
+"    with open('pyscripts/grid" + i + "_gt.py'\n" +
+"              , 'w') as fout:\n" +
+"        print>>fout, p21\n" +
+"    " ;
+        
+            Utilities.writeToFile(basefp + "scr" + i + ".py", scr);
+        
+        }
+        
+        
+    }
     /**
      * Test of computing the symmetric difference between the table formulae.
      */
