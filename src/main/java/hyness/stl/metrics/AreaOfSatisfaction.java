@@ -11,6 +11,7 @@ import hyness.stl.DisjunctionNode;
 import hyness.stl.EventNode;
 import hyness.stl.LinearPredicateLeaf;
 import hyness.stl.ModuleNode;
+import hyness.stl.NotNode;
 import hyness.stl.Operation;
 import hyness.stl.TreeNode;
 import hyness.stl.grammar.sharp.STLSharp;
@@ -344,8 +345,7 @@ public class AreaOfSatisfaction {
                 }
                 return maps;
             case NOT:
-                // Not currently handled
-                break;
+                return nodeToBoxes(((NotNode) node).child.negate(), limitsMap, deltaThreshold, union);
             case NOP:
                 return new ArrayList<Map<String, Set<Box>>>();
         }
