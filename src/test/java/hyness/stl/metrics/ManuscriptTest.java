@@ -8,6 +8,7 @@ package hyness.stl.metrics;
 import hyness.stl.grammar.sharp.STLSharpAbstractSyntaxTreeExtractor;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,6 +28,8 @@ public class ManuscriptTest {
     public static String latch;
     
     public static String desired;
+    public static String desiredhigh;
+    public static String desiredlow;
     
     public static String spec1;
     
@@ -55,7 +58,7 @@ public class ManuscriptTest {
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
-                + "limits [{x : {max:350,min:0}}]\n"
+                + "limits [{x : {max:320,min:0}}]\n"
                 ;
         
         induction = "phi1(x)\n"
@@ -67,7 +70,7 @@ public class ManuscriptTest {
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
-                + "limits [{x : {max:350,min:0}}]\n"
+                + "limits [{x : {max:320,min:0}}]\n"
                 ;
         
         latch = "phi1(x)\n"
@@ -76,18 +79,39 @@ public class ManuscriptTest {
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
-                + "limits [{x : {max:350,min:0}}]\n"
+                + "limits [{x : {max:320,min:0}}]\n"
                 ;
         
         desired = "phi1(x)\n"
                 + "\n"
                 //+ "phi1 = (G[0,100](x<100) && G[0,100](x>0) && G[100,200](x<270) && G[100,200](x>60) && G[200,300](x<320) && G[200,300](x>160)) || (G[0,100](x<50) && G[0,100](x>0) && G[100,200](x<100) && G[100,200](x>40) && G[200,300](x<130) && G[200,300](x>90)) || (G[0,300](x<40) && G[0,300](x>0))\n"
-                + "phi1 = ((G[0,300](x<35) && G[0,300](x>0))|| (G[0,125](x<200) && G[125,300](x<320) && G[0,150](x>0) && G[150,200](x>100) && G[200,300](x>150)))\n" 
+                + "phi1 = ((G[0,300](x<40) && G[0,300](x>0))|| (G[0,125](x<200) && G[125,300](x<320) && G[0,150](x>0) && G[150,200](x>100) && G[200,300](x>150)))\n" 
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:320,min:0}}]\n"
+                ;
+        
+        desiredlow = "phi1(x)\n"
+                + "\n"
+                //+ "phi1 = (G[0,100](x<100) && G[0,100](x>0) && G[100,200](x<270) && G[100,200](x>60) && G[200,300](x<320) && G[200,300](x>160)) || (G[0,100](x<50) && G[0,100](x>0) && G[100,200](x<100) && G[100,200](x>40) && G[200,300](x<130) && G[200,300](x>90)) || (G[0,300](x<40) && G[0,300](x>0))\n"
+                + "phi1 = (G[0,300](x<40) && G[0,300](x>0))\n" 
+                + "\n"
+                + "m1 { x@left: x }\n"
+                + "io {x: x}\n"
+                + "limits [{x : {max:320,min:0}}]\n"
+                ;
+        
+        desiredhigh = "phi1(x)\n"
+                + "\n"
+                //+ "phi1 = (G[0,100](x<100) && G[0,100](x>0) && G[100,200](x<270) && G[100,200](x>60) && G[200,300](x<320) && G[200,300](x>160)) || (G[0,100](x<50) && G[0,100](x>0) && G[100,200](x<100) && G[100,200](x>40) && G[200,300](x<130) && G[200,300](x>90)) || (G[0,300](x<40) && G[0,300](x>0))\n"
+                + "phi1 = (G[0,125](x<200) && G[125,300](x<320) && G[0,150](x>0) && G[150,200](x>100) && G[200,300](x>150))\n" 
                 + "\n"
                 + "m1 { x@left: x }\n"
                 + "io {x: x}\n"
                 + "limits [{x : {max:350,min:0}}]\n"
                 ;
+        
         
         spec1 = "phi1(x)\n"
                 + "\n"
@@ -169,7 +193,7 @@ public class ManuscriptTest {
     /**
      * Test of synthetic biology case study formulae.
      */
-    @Test
+    //@Test
     public void testSynBioSpecs() {
                 
         STLSharpAbstractSyntaxTreeExtractor desiredSTL = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(desired);
@@ -188,10 +212,133 @@ public class ManuscriptTest {
 
     }
     
+    @Test
+    public void testTLI(){
+        String basefp = Utilities.getFilepath() + Utilities.getSeparater() + "resources" + Utilities.getSeparater() + "manuscript" + Utilities.getSeparater();
+        String thresh0 = Utilities.getFileContentAsString(basefp + "thresh0.txt");
+        String thresh1 = Utilities.getFileContentAsString(basefp + "thresh1.txt");
+        String thresh2 = Utilities.getFileContentAsString(basefp + "thresh2.txt");
+        String thresh3 = Utilities.getFileContentAsString(basefp + "thresh3.txt");
+        String thresh4 = Utilities.getFileContentAsString(basefp + "thresh4.txt");
+        String thresh5 = Utilities.getFileContentAsString(basefp + "thresh5.txt");
+        String thresh6 = Utilities.getFileContentAsString(basefp + "thresh6.txt");
+        String thresh7 = Utilities.getFileContentAsString(basefp + "thresh7.txt");
+        String gt = Utilities.getFileContentAsString(basefp + "gt.txt");
+        
+        String treetli = Utilities.getFileContentAsString(basefp + "treetli.json");
+        JSONArray arr = new JSONArray(treetli);
+        
+        
+        String sgt = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + gt + "\n"
+                + "\n"
+                + "m1 { x_0@left:x_0, x_1@left:x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s0 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh0 + "\n"
+                + "\n"
+                + "m1 { x_0@left:x_0,x_1@left:x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s1 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh1 + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s2 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh2 + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s3 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh3 + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s4 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh4 + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s5 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh5 + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s6 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh6 + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        String s7 = "phi1(x_0,x_1)\n"
+                + "\n"
+                + "phi1 =" + thresh7 + "\n"
+                + "\n"
+                + "m1 { x_0@left: x_0, x_1@left: x_1}\n"
+                + "io {x_0: x_0,x_1: x_1}\n"
+                + "limits [{x_0 : {max:1,min:0}}, {x_1 : {max:1,min:0}}]\n"
+                ;
+        
+        STLSharpAbstractSyntaxTreeExtractor stlgt = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(sgt);
+        
+        STLSharpAbstractSyntaxTreeExtractor stl0 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s0);
+        STLSharpAbstractSyntaxTreeExtractor stl1 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s1);
+        STLSharpAbstractSyntaxTreeExtractor stl2 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s2);
+        STLSharpAbstractSyntaxTreeExtractor stl3 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s3);
+        STLSharpAbstractSyntaxTreeExtractor stl4 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s4);
+        STLSharpAbstractSyntaxTreeExtractor stl5 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s5);
+        STLSharpAbstractSyntaxTreeExtractor stl6 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s6);
+        STLSharpAbstractSyntaxTreeExtractor stl7 = STLSharpAbstractSyntaxTreeExtractor.getSTLSharpAbstractSyntaxTreeExtractor(s7);
+        
+        AreaOfSatisfaction aos = new AreaOfSatisfaction();
+    
+        System.out.println("SD(gt,stl0) = " + aos.computeDistance(stlgt.spec, stl0.spec, false, 0.1, 10, true));
+        System.out.println("SD(gt,stl1) = " + aos.computeDistance(stlgt.spec, stl1.spec, false, 0.1, 10, true));
+        System.out.println("SD(gt,stl2) = " + aos.computeDistance(stlgt.spec, stl2.spec, false, 0.1, 10, true));
+        System.out.println("SD(gt,stl3) = " + aos.computeDistance(stlgt.spec, stl3.spec, false, 0.1, 10, true));
+        System.out.println("SD(gt,stl4) = " + aos.computeDistance(stlgt.spec, stl4.spec, false, 0.1, 10, true));
+        System.out.println("SD(gt,stl5) = " + aos.computeDistance(stlgt.spec, stl5.spec, false, 0.1, 10, true));
+        System.out.println("SD(gt,stl6) = " + aos.computeDistance(stlgt.spec, stl6.spec, false, 0.1, 10, true));
+        System.out.println("SD(gt,stl7) = " + aos.computeDistance(stlgt.spec, stl7.spec, false, 0.1, 10, true));
+        
+    
+    }   
+    
     /**
      * Test of computing the symmetric difference between the table formulae.
      */
-    @Test
+    //@Test
     public void testTableFormulae() {
         
         List<STLSharpAbstractSyntaxTreeExtractor> formulae = new ArrayList<STLSharpAbstractSyntaxTreeExtractor>();
