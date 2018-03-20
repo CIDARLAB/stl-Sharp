@@ -344,8 +344,7 @@ public class AreaOfSatisfaction {
                 }
                 return maps;
             case NOT:
-                // Not currently handled
-                break;
+                return nodeToBoxes(node.negate(), limitsMap, deltaThreshold, union);
             case NOP:
                 return new ArrayList<Map<String, Set<Box>>>();
         }
